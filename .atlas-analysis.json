@@ -1,0 +1,115 @@
+{
+  "projectType": "general",
+  "projectName": "AtlasOS",
+  "projectDescription": "An open and lightweight modification to Windows, designed to optimize performance, privacy and usability.",
+  "theme": "aspen",
+  "primaryColor": "#1b90f7",
+  "lightColor": "#f4fcfc",
+  "darkColor": "#0c4c84",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": [
+              "introduction",
+              "getting-started/what-is-atlas",
+              "getting-started/installation",
+              "getting-started/post-installation"
+            ]
+          },
+          {
+            "group": "Features",
+            "pages": [
+              "features/overview",
+              "features/performance",
+              "features/privacy",
+              "features/security",
+              "features/usability"
+            ]
+          },
+          {
+            "group": "Configuration",
+            "pages": [
+              "configuration/atlas-folder",
+              "configuration/general-configuration",
+              "configuration/interface-tweaks",
+              "configuration/security-settings",
+              "configuration/advanced-configuration"
+            ]
+          },
+          {
+            "group": "FAQ & Troubleshooting",
+            "pages": [
+              "faq/installation",
+              "faq/general",
+              "faq/troubleshooting"
+            ]
+          },
+          {
+            "group": "Contributing",
+            "pages": [
+              "contributing/guidelines",
+              "contributing/building-playbooks",
+              "contributing/testing"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Reference",
+        "groups": [
+          {
+            "group": "Playbook",
+            "pages": [
+              "reference/playbook-structure",
+              "reference/configuration-files",
+              "reference/executables"
+            ]
+          },
+          {
+            "group": "Tweaks",
+            "pages": [
+              "reference/tweaks/privacy",
+              "reference/tweaks/performance",
+              "reference/tweaks/debloat",
+              "reference/tweaks/security",
+              "reference/tweaks/networking"
+            ]
+          },
+          {
+            "group": "Scripts & Modules",
+            "pages": [
+              "reference/scripts/overview",
+              "reference/scripts/powershell-modules",
+              "reference/scripts/utilities"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "Performance optimization through debloating and system tweaks",
+    "Privacy enhancement by removing telemetry and data collection",
+    "Security customization with toggleable features (Defender, UAC, Core Isolation)",
+    "Usability improvements with interface tweaks and app removal",
+    "Open-source AME Wizard Playbook system for transparency",
+    "Post-installation Atlas folder for ongoing configuration",
+    "Support for Windows 11 (24H2 and 25H2 builds)"
+  ],
+  "publicApiSurface": [
+    "AME Wizard Playbook format (.apbx)",
+    "Atlas Desktop folder (post-installation configuration scripts)",
+    "Configuration categories: Software, Drivers, General Configuration, Interface Tweaks, Windows Settings, Advanced Configuration, Security, Additional Tools, Troubleshooting",
+    "183+ YAML configuration files for system tweaks",
+    "PowerShell modules: AtlasModules/Scripts/Modules/",
+    "Batch script utilities: fileAssoc.cmd, taskbarPins.ps1, packageInstall.ps1",
+    "Security toggles: Defender, CPU Mitigations, Core Isolation, UAC",
+    "Performance toggles: Automatic Updates, Background Apps, CPU Idle, Power-saving, Hibernation",
+    "Privacy toggles: Telemetry, Activity Feed, Online Speech Recognition, Tailored Experiences",
+    "Interface toggles: Context Menus, Start Menu, Snap Layouts, Visual Effects"
+  ]
+}
