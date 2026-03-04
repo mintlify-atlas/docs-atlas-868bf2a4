@@ -1,0 +1,386 @@
+---
+title: Utility Scripts
+description: Documentation of utility scripts in AtlasModules/Scripts/
+---
+
+AtlasOS includes several standalone utility scripts for system configuration and management. These scripts are located in `AtlasModules/Scripts/`.
+
+## RunAsTI.cmd
+
+**Purpose:** Elevates scripts to TrustedInstaller/SYSTEM privileges
+
+**Location:** `Scripts/RunAsTI.cmd`
+
+### Features
+
+- Innovative HKCU load without reg load/unload
+- Sets ownership privileges, high priority, and Explorer support
+- Falls back to SYSTEM if TrustedInstaller unavailable
+- Accepts special characters in paths
+- Handles UAC prompts with error detection
+
+### Usage
+
+**Interactive Mode:**
+```batch
+RunAsTI.cmd
+```
+Prompts for program path.
+
+**Direct Execution:**
+```batch
+RunAsTI.cmd "path\to\program.exe" [arguments]
+RunAsTI.cmd "C:\Program Files\App\setup.exe" /silent
+```
+
+**In Scripts:**
+```batch
+whoami /user | find /i "S-1-5-18" > nul 2>&1 || (
+    call RunAsTI.cmd "%~f0" %*
+    exit /b
+)
+```
+
+### Error Codes
+
+- `0` - Success
+- `1` - Elevation failed (unknown error)
+- `2` - UAC prompt declined
+
+## fileAssoc.cmd
+
+**Purpose:** Configures file associations for web browsers and 7-Zip
+
+**Location:** `Scripts/fileAssoc.cmd`
+
+### Features
+
+- Sets default web browser associations
+- Configures 7-Zip file associations if installed
+- Bypasses User Choice Protection Driver (UCPD)
+- Applies settings to all user profiles
+
+### Usage
+
+```batch
+fileAssoc.cmd ["Browser Name"]
+```
+
+**Supported Browsers:**
+- Microsoft Edge (default if no argument)
+- Brave
+- LibreWolf
+- Firefox
+- Google Chrome
+
+**Examples:**
+```batch
+fileAssoc.cmd
+fileAssoc.cmd "Brave"
+fileAssoc.cmd "Firefox"
+```
+
+### File Associations
+
+**Base Associations:**
+- `.url` → InternetShortcut
+
+**Browser Associations:**
+- HTTP/HTTPS protocols
+- `.htm`, `.html`, `.shtml` files
+- `.pdf` files
+
+**7-Zip Associations (if installed):**
+- Archives: `.7z`, `.zip`, `.rar`, `.tar`, `.gz`, `.bz2`, `.xz`
+- Disk images: `.iso`, `.wim`, `.vhd`, `.vhdx`
+- Package formats: `.cab`, `.deb`, `.rpm`
+- And many more...
+
+### Implementation Details
+
+Creates a temporary PowerShell executable with random name to bypass UCPD:
+
+```batch
+set "powershellTemp=%powershellDir%\powershell%random%%random%%random%%random%.exe"
+copy /y "%powershellPath%" "%powershellTemp%" > nul
+"%powershellTemp%" -NoP -NonI -EP Bypass -File ASSOC.ps1
+del /f /q "%powershellTemp%" > nul
+```
+
+## taskbarPins.ps1
+
+**Purpose:** Configures Windows taskbar pinned applications
+
+**Location:** `Scripts/taskbarPins.ps1`
+
+### Features
+
+- Sets browser and File Explorer as taskbar pins
+- Supports multiple browsers
+- Configures for all user profiles
+- Applies changes immediately (restarts Explorer)
+
+### Usage
+
+```powershell
+.\taskbarPins.ps1 [Browser]
+```
+
+**Supported Browsers:**
+- Brave
+- Firefox
+- LibreWolf
+- Google Chrome
+- Microsoft Edge (default)
+
+**Examples:**
+```powershell
+.\taskbarPins.ps1
+.\taskbarPins.ps1 "Brave"
+.\taskbarPins.ps1 "Firefox"
+```
+
+### Default Pins
+
+1. Browser (Edge if installed, otherwise File Explorer)
+2. File Explorer
+
+### Registry Data
+
+The script uses pre-encoded registry binary data for:
+- `Favorites` - Pin locations and order
+- `FavoritesResolve` - Pin resolution data
+
+## packageInstall.ps1
+
+**Purpose:** Installs Windows CBS (Component-Based Servicing) packages
+
+**Location:** `Scripts/packageInstall.ps1`
+
+### Features
+
+- Installs/uninstalls Windows packages online
+- Validates package signatures
+- Creates repair source for SFC/DISM
+- Supports Safe Mode fallback
+- Automated restart handling
+
+### Usage
+
+**Install Packages:**
+```powershell
+.\packageInstall.ps1 -InstallPackages @("*package1*", "*package2*")
+```
+
+**Uninstall Packages:**
+```powershell
+.\packageInstall.ps1 -UninstallPackages @("*package1*", "*package2*")
+```
+
+**Combined:**
+```powershell
+.\packageInstall.ps1 -InstallPackages @("*new*") -UninstallPackages @("*old*")
+```
+
+**Options:**
+```powershell
+-InstallPackages <array>      # Packages to install
+-UninstallPackages <array>    # Packages to uninstall
+-PackagesPath <string>        # Path to CAB files (default: AtlasModules\Packages)
+-NoInteraction                # Non-interactive mode
+-SafeMode                     # Safe Mode operation
+-FailMessage                  # Show failure message box
+```
+
+### Requirements
+
+- Must run as TrustedInstaller/SYSTEM
+- Packages must be signed with Windows test certificate
+- CAB files must match system architecture (amd64/arm64)
+
+### Examples
+
+**Interactive Installation:**
+```powershell
+.\packageInstall.ps1
+# Opens file dialog to select CAB files
+```
+
+**Automated Installation:**
+```powershell
+.\packageInstall.ps1 -InstallPackages @("*NetFx3*") -NoInteraction
+```
+
+**Safe Mode Fallback:**
+```powershell
+.\packageInstall.ps1 -InstallPackages @("*Defender*") -SafeMode
+```
+
+### Repair Source
+
+Automatically creates repair source at:
+```
+%SystemRoot%\AtlasModules\Packages\WinSxS
+```
+
+Configures registry:
+```
+HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\Servicing
+LocalSourcePath = %SystemRoot%\AtlasModules\Packages\WinSxS
+```
+
+This fixes RestoreHealth/SFC "Sources" errors.
+
+## newUsers.ps1
+
+**Purpose:** Configures settings for new user accounts
+
+**Location:** `Scripts/newUsers.ps1`
+
+### Features
+
+- Configures Windows 11 context menu
+- Sets File Explorer options
+- Applies Atlas theme
+- Sets lockscreen wallpaper
+- Configures visual effects
+- Sets taskbar pins
+- Logs out user automatically
+
+### Usage
+
+```powershell
+.\newUsers.ps1
+```
+
+**Note:** Typically called automatically during user account creation.
+
+### Configured Settings
+
+- Old context menu (Windows 11)
+- Disabled Gallery in File Explorer
+- Atlas dark theme (Windows 11)
+- Custom lockscreen wallpaper
+- Disabled Network in navigation pane
+- Disabled automatic folder discovery
+- Atlas visual effects profile
+- Browser-specific taskbar pins
+
+## installToolbox.ps1
+
+**Purpose:** Downloads and installs Atlas Toolbox
+
+**Location:** `Scripts/installToolbox.ps1`
+
+### Features
+
+- Checks for existing installation
+- Downloads latest release from GitHub
+- Silent installation with desktop icon
+
+### Usage
+
+```powershell
+.\installToolbox.ps1
+```
+
+**Installation Path:** `C:\Program Files\Atlas Toolbox`
+
+**Source:** https://github.com/Atlas-OS/atlas-toolbox/releases/latest
+
+## Other Utility Scripts
+
+### edgeCheck.cmd
+
+**Purpose:** Checks if Microsoft Edge is installed
+
+### indexConf.cmd
+
+**Purpose:** Configures Windows Search indexing
+
+### newUsers.cmd
+
+**Purpose:** Batch wrapper for `newUsers.ps1`
+
+### serviceWarning.cmd
+
+**Purpose:** Displays warning about service modifications
+
+### setSvc.cmd
+
+**Purpose:** Configures Windows service startup types
+
+### settingsPages.cmd
+
+**Purpose:** Shows/hides Windows Settings pages
+
+**Usage:**
+```batch
+settingsPages.cmd /hide <page>
+settingsPages.cmd /show <page>
+```
+
+### toggleDev.cmd
+
+**Purpose:** Toggles developer mode
+
+### wingetCheck.cmd
+
+**Purpose:** Checks if Windows Package Manager (winget) is installed
+
+## Script Wrappers
+
+**Location:** `Scripts/ScriptWrappers/`
+
+These scripts provide convenient wrappers for common operations:
+
+- **ConfigVBS.ps1** - Configure Virtualization Based Security
+- **DebloatSendToContextMenu.ps1** - Remove Send To context menu items
+- **DefaultPowerSaving.ps1** - Set default power-saving profile
+- **DisableFileSharing.ps1** - Disable file sharing
+- **DisablePowerSaving.ps1** - Disable power-saving features
+- **EnableFileSharing.ps1** - Enable file sharing
+- **InstallSoftware.ps1** - Install software packages
+- **RemoveEdge.ps1** - Remove Microsoft Edge
+- **TelemetryComponents.ps1** - Configure telemetry components
+- **ToggleDefender.ps1** - Toggle Windows Defender
+- **UpdateDrivers.ps1** - Update system drivers
+
+## Common Usage Patterns
+
+### Running with Elevation
+
+```batch
+call RunAsTI.cmd "script.ps1" -Parameter "value"
+```
+
+### Silent Execution
+
+```batch
+script.cmd /silent
+```
+
+### Error Handling
+
+```powershell
+try {
+    .\script.ps1 -Parameter "value"
+} catch {
+    Write-Host "[ERROR] Script failed: $_" -ForegroundColor Red
+    exit 1
+}
+```
+
+### Checking Prerequisites
+
+```powershell
+if (!(Test-Path "C:\Program Files\App\app.exe")) {
+    Write-Error "Application not installed"
+    exit 1
+}
+```
+
+## See Also
+
+- [Scripting System Overview](/reference/scripts/overview)
+- [PowerShell Modules](/reference/scripts/powershell-modules)

@@ -1,0 +1,199 @@
+---
+title: 'Contribution Guidelines'
+description: 'Learn how to contribute to AtlasOS - code of conduct, PR process, and coding standards'
+---
+
+## Welcome Contributors
+
+Atlas is an open-source project that enhances Windows by applying privacy, usability, and performance optimizations. We welcome contributions from the community to help make Atlas better for everyone.
+
+## Code of Conduct
+
+Atlas follows the [Contributor Covenant 2.1](https://www.contributor-covenant.org/version/2/1/code_of_conduct/). By participating in this project, you agree to abide by its terms.
+
+<Info>
+  Be respectful, inclusive, and collaborative. We're all working together to improve Windows for everyone.
+</Info>
+
+## How to Contribute
+
+<Steps>
+  <Step title="Fork and clone the repository">
+    Fork the [Atlas repository](https://github.com/Atlas-OS/Atlas) and clone it locally to start making changes.
+    
+    ```bash
+    git clone https://github.com/YOUR-USERNAME/Atlas.git
+    cd Atlas
+    ```
+  </Step>
+
+  <Step title="Create a feature branch">
+    Create a new branch for your changes. Use a descriptive name that reflects what you're working on.
+    
+    ```bash
+    git checkout -b feature/your-feature-name
+    ```
+  </Step>
+
+  <Step title="Make your changes">
+    Make your modifications to the playbook files. Follow the coding standards outlined below and test your changes thoroughly.
+  </Step>
+
+  <Step title="Commit and push">
+    Commit your changes with a clear, descriptive commit message and push to your fork.
+    
+    ```bash
+    git add .
+    git commit -m "Add feature: description of changes"
+    git push origin feature/your-feature-name
+    ```
+  </Step>
+
+  <Step title="Open a pull request">
+    Go to the Atlas repository and open a pull request from your fork. Fill out the PR template completely.
+  </Step>
+</Steps>
+
+## Pull Request Process
+
+Before submitting a pull request, ensure you can answer yes to these questions:
+
+<AccordionGroup>
+  <Accordion title="Did you test your changes?">
+    All changes must be tested thoroughly. See our [testing guide](/contributing/testing) for detailed procedures on what to test and how to verify your changes work correctly.
+  </Accordion>
+
+  <Accordion title="Did you follow the contribution guidelines?">
+    Review this page and the [Atlas documentation](https://docs.atlasos.net) to ensure your contribution aligns with the project's goals and standards.
+  </Accordion>
+</AccordionGroup>
+
+### What to Include in Your PR
+
+- **Clear description**: Explain what your changes do and why they're needed
+- **Testing evidence**: Describe how you tested the changes
+- **Related issues**: Link to any related GitHub issues
+- **Breaking changes**: Note if your changes require users to take specific actions
+
+<Warning>
+  Pull requests that haven't been tested or don't follow the guidelines may be closed without merging.
+</Warning>
+
+## Coding Standards
+
+### Playbook Structure
+
+Atlas uses [AME Wizard](https://amelabs.net) Playbooks, which are ZIP archives with the password `malte`. The playbook consists of:
+
+- **Configuration files**: YAML files that define tweaks and modifications
+- **Executables**: PowerShell scripts and utilities
+- **playbook.conf**: XML configuration file defining playbook metadata
+
+### YAML Configuration Guidelines
+
+<CodeGroup>
+
+```yaml Example: Registry Tweak
+actions:
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer'
+      value: 'EnableAutoTray'
+      data: '0'
+      type: 'REG_DWORD'
+```
+
+```yaml Example: Service Configuration
+actions:
+  - !service:
+      name: 'DiagTrack'
+      operation: 'delete'
+```
+
+</CodeGroup>
+
+### Best Practices
+
+<CardGroup cols={2}>
+  <Card title="Test thoroughly" icon="flask">
+    Always test your changes on a clean Windows installation before submitting.
+  </Card>
+
+  <Card title="Document changes" icon="book">
+    Add comments to explain complex modifications and their purpose.
+  </Card>
+
+  <Card title="Balance tradeoffs" icon="scale-balanced">
+    Consider the balance between performance, privacy, security, and compatibility.
+  </Card>
+
+  <Card title="Maintain compatibility" icon="puzzle-piece">
+    Ensure changes work across all supported Windows builds (see playbook.conf).
+  </Card>
+</CardGroup>
+
+### PowerShell Script Standards
+
+When writing PowerShell scripts for Atlas:
+
+- Use clear, descriptive variable names
+- Add error handling with try/catch blocks
+- Include comments explaining complex logic
+- Test on both PowerShell 5.1 and PowerShell 7+
+- Avoid hardcoded paths when possible
+
+```powershell Example
+try {
+    # Clear variable explanation
+    $registryPath = 'HKLM:\SOFTWARE\Atlas'
+    
+    if (Test-Path $registryPath) {
+        # Action description
+        Set-ItemProperty -Path $registryPath -Name 'Setting' -Value 1
+    }
+} catch {
+    Write-Error "Failed to modify registry: $_"
+}
+```
+
+## Project Goals
+
+Atlas strives to maintain an **optimal equilibrium** between:
+
+- **Performance**: Meaningful improvements without placebo tweaks
+- **Privacy**: Remove telemetry while respecting user choice
+- **Security**: Allow customization while informing users of risks
+- **Usability**: Improve the Windows experience for all users
+- **Compatibility**: Maintain essential Windows functionality
+
+<Note>
+  Changes that break essential features or provide only marginal/placebo benefits may not be accepted.
+</Note>
+
+## Getting Help
+
+Need assistance with your contribution?
+
+- **Documentation**: Check [docs.atlasos.net](https://docs.atlasos.net)
+- **Discord**: Join our [Discord community](https://discord.atlasos.net)
+- **Discussions**: Use [GitHub Discussions](https://github.com/Atlas-OS/Atlas/discussions)
+- **Issues**: Search existing [GitHub issues](https://github.com/Atlas-OS/Atlas/issues)
+
+## Additional Resources
+
+<CardGroup cols={2}>
+  <Card title="Building Playbooks" icon="hammer" href="/contributing/building-playbooks">
+    Learn how to build and test the playbook locally.
+  </Card>
+
+  <Card title="Testing Guide" icon="check-double" href="/contributing/testing">
+    Detailed procedures for testing your changes.
+  </Card>
+
+  <Card title="AME Wizard Docs" icon="book-open" href="https://docs.amelabs.net">
+    Official documentation for AME Wizard playbook syntax.
+  </Card>
+
+  <Card title="Security Policy" icon="shield" href="https://github.com/Atlas-OS/Atlas/blob/main/.github/SECURITY.md">
+    Report security vulnerabilities responsibly.
+  </Card>
+</CardGroup>

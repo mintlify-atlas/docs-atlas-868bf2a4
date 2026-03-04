@@ -1,0 +1,282 @@
+---
+title: General Configuration
+description: Configure core Windows features and system behavior in AtlasOS
+---
+
+## Overview
+
+The General Configuration category provides scripts to enable or disable core Windows features and system behaviors. These settings allow you to customize system functionality based on your needs and preferences.
+
+<Note>
+Location: `C:\Atlas\3. General Configuration\`
+</Note>
+
+## AI Features
+
+Control Windows AI-powered features.
+
+### Microsoft Copilot
+
+Enable or disable the Microsoft Copilot AI assistant.
+
+- **Disable Microsoft Copilot (default)** - Removes Copilot from the system
+- **Enable Microsoft Copilot** - Enables the Copilot AI assistant
+
+<Info>
+AtlasOS disables Copilot by default to reduce resource usage and privacy concerns.
+</Info>
+
+### Recall
+
+Manage the Windows Recall feature (AI-powered activity history).
+
+- **Disable Recall Support (default)** - Disables Recall functionality
+- **Enable Recall Support** - Enables Recall for activity tracking
+
+<Warning>
+Recall captures screenshots of your activity and may have privacy implications. Only enable if you understand and accept the privacy trade-offs.
+</Warning>
+
+## Automatic Updates
+
+Control Windows automatic update behavior.
+
+- **Disable Automatic Updates (default)** - Prevents Windows from automatically downloading and installing updates
+- **Enable Automatic Updates** - Allows Windows to automatically update
+
+<Tip>
+AtlasOS disables automatic updates by default so you have full control. You can still manually install updates through Windows Update settings.
+</Tip>
+
+## Background Apps
+
+Manage whether apps can run in the background.
+
+- **Disable Background Apps (default)** - Prevents apps from running in the background
+- **Enable Background Apps** - Allows apps to run background processes
+
+**Impact**: Disabling background apps can improve performance and battery life but may prevent some app functionality like notifications.
+
+## CPU Idle
+
+Control the CPU idle state for power management.
+
+- **Enable Idle (default)** - Allows CPU to enter idle states for power saving
+- **Disable Idle** - Prevents CPU idle states for potentially lower latency
+
+### Desktop Context Menu
+
+Add quick toggle for CPU idle directly to the desktop:
+
+- **Remove Idle Toggle in Desktop Context Menu (default)** - No context menu entry
+- **Add Idle Toggle in Desktop Context Menu** - Adds right-click desktop option
+
+<Info>
+Disabling CPU idle may increase power consumption and temperatures but can reduce latency in some scenarios. Most users should keep idle enabled.
+</Info>
+
+## Delivery Optimization
+
+Control peer-to-peer Windows Update delivery.
+
+- **Disable Delivery Optimization (default)** - Updates only download from Microsoft servers
+- **Enable Delivery Optimization** - Enables P2P update sharing
+
+## FSO and Game Bar
+
+Manage Full Screen Optimizations and Xbox Game Bar.
+
+- **Enable FSO and Game Bar Support (default)** - Enables gaming features
+- **Disable FSO and Game Bar Support** - Removes gaming overlay features
+
+**Features included**:
+- Full Screen Optimizations (FSO)
+- Xbox Game Bar overlay
+- Game Mode
+- Game DVR recording
+
+## File Sharing
+
+Configure Windows file and network sharing capabilities.
+
+- **Disable File Sharing (default)** - Disables SMB file sharing
+- **Enable File Sharing** - Enables network file sharing
+
+### Give Access To Menu
+
+Control the "Give access to" context menu option:
+
+- **Disable Give Access To Menu (default)** - Removes context menu entry
+- **Enable Give Access To Menu** - Shows sharing options in context menu
+
+### Network Navigation Pane
+
+Manage network locations in File Explorer:
+
+- **Disable Network Navigation Pane (default)** - Hides network section
+- **User Network Navigation Pane choice** - Lets Windows decide
+
+## Hibernation
+
+Control hibernation functionality.
+
+- **Disable Hibernation (default)** - Removes hibernation and deletes hiberfil.sys
+- **Enable Hibernation** - Enables hibernation mode
+
+<Tip>
+Disabling hibernation can free up several gigabytes of disk space by removing hiberfil.sys. Only enable if you need hibernation on laptops.
+</Tip>
+
+## Location
+
+Manage Windows location services.
+
+- **Disable Location (default)** - Disables location tracking
+- **Enable Location** - Enables location services for apps
+
+## Mobile Devices (Phone Link)
+
+Control Phone Link and mobile device integration.
+
+- **Disable Mobile Device Settings (default)** - Removes Phone Link functionality
+- **Enable Mobile Device Settings** - Enables phone integration features
+
+## Power-saving
+
+Configure system power-saving features.
+
+- **Default Power-saving (default)** - Standard power management
+- **Disable Power-saving** - Disables power-saving features for maximum performance
+
+<Warning>
+Disabling power-saving will increase power consumption and heat generation. Only recommended for desktop systems.
+</Warning>
+
+## Search Indexing
+
+Control Windows Search indexing behavior.
+
+- **Minimal Search Indexing (default)** - Indexes only essential locations
+- **Enable Search Indexing** - Full indexing of all configured locations
+- **Disable Search Indexing** - Completely disables the search indexer
+
+**Performance impact**: Full indexing can slow down older systems but speeds up file searches.
+
+## Sleep
+
+Manage system sleep functionality.
+
+- **Enable Sleep (default)** - Allows system to enter sleep mode
+- **Disable Sleep** - Prevents automatic sleep
+
+## Sleep Study
+
+Control sleep study diagnostic feature.
+
+- **Disable Sleep Study (default)** - Disables sleep diagnostics
+- **Enable Sleep Study** - Enables sleep tracking for battery diagnostics
+
+<Info>
+Sleep Study is primarily useful for laptop users troubleshooting battery drain during sleep.
+</Info>
+
+## Store App Archiving
+
+Manage automatic archiving of Microsoft Store apps.
+
+- **Disable Store App Archiving (default)** - Prevents automatic app archiving
+- **Enable Store App Archiving** - Allows Windows to archive unused Store apps
+
+## System Restore
+
+Control System Restore functionality.
+
+- **Enable System Restore (default)** - Enables restore point creation
+- **Disable System Restore** - Disables System Restore and frees disk space
+
+<Warning>
+Disabling System Restore removes an important recovery option. Keep it enabled unless you have alternative backup solutions.
+</Warning>
+
+## Timer Resolution
+
+Control high-resolution timer behavior.
+
+- **Disable timer resolution (default)** - Standard timer resolution (15.6ms)
+- **Enable timer resolution** - Forces high-resolution timer (1ms)
+
+<Info>
+High-resolution timers can improve frame pacing in games but may increase power consumption. Most modern games set timer resolution automatically.
+</Info>
+
+## Update Notifications
+
+Manage Windows Update notification behavior.
+
+- **Enable Update Notifications (default)** - Shows update notifications
+- **Disable Update Notifications** - Hides update notifications
+
+## Web Search (includes Search Highlights)
+
+Control web search integration in Start menu search.
+
+- **Disable Web Search (default)** - Search only shows local results
+- **Enable Web Search** - Includes web results and search highlights
+
+## Widgets (News and Interests)
+
+Manage the Windows widgets panel.
+
+- **Disable Widgets (default)** - Removes widgets panel
+- **Enable Widgets** - Enables news and interests widget panel
+
+## Windows Spotlight
+
+Control Windows Spotlight feature for lock screen backgrounds.
+
+- **Disable Windows Spotlight (default)** - Uses static wallpaper
+- **Enable Windows Spotlight** - Downloads and shows featured images
+
+## Windows Updates
+
+Advanced Windows Update management.
+
+- **Toggle Windows Updates** - Enable or disable Windows Update service
+- **Set Windows Update Deferral** - Configure update delay periods
+- **Reset Windows Update Deferral** - Remove deferral configuration
+
+<Tip>
+Use deferrals to delay feature updates while still receiving security updates.
+</Tip>
+
+## Workplace
+
+Manage enterprise workplace features.
+
+- **Disable Workplace** - Removes workplace integration features
+- **Enable Workplace** - Enables enterprise workplace features
+
+## Summary Table
+
+| Feature | Default State | Purpose |
+|---------|--------------|----------|
+| AI Features | Disabled | Privacy and resource savings |
+| Automatic Updates | Disabled | User control over updates |
+| Background Apps | Disabled | Performance optimization |
+| CPU Idle | Enabled | Power management |
+| File Sharing | Disabled | Security (enable if needed) |
+| Hibernation | Disabled | Disk space savings |
+| Search Indexing | Minimal | Balance of performance and functionality |
+| System Restore | Enabled | Recovery option |
+| Web Search | Disabled | Cleaner search experience |
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="Atlas Folder" icon="folder" href="/configuration/atlas-folder">
+    Overview of all categories
+  </Card>
+  <Card title="Interface Tweaks" icon="paintbrush" href="/configuration/interface-tweaks">
+    Customize Windows appearance
+  </Card>
+</CardGroup>

@@ -1,0 +1,210 @@
+---
+title: Debloat Tweaks
+description: AtlasOS debloat tweaks that remove unnecessary features, disable scheduled tasks, and optimize storage management
+---
+
+AtlasOS includes debloat tweaks that remove bloatware, disable unnecessary scheduled tasks, and optimize storage settings. These tweaks are defined in YAML configuration files located in `Configuration/tweaks/debloat/`.
+
+## Overview
+
+Debloat tweaks in AtlasOS focus on:
+
+- Removing unnecessary Windows features
+- Disabling resource-consuming scheduled tasks
+- Optimizing storage management
+- Hiding unused system pages
+- Reducing system overhead
+
+## Scheduled Task Management
+
+### Disable Scheduled Tasks
+
+```yaml
+---
+title: Disable Scheduled Tasks
+description: Disables scheduled tasks to prevent automatic tasks from running at startup, consuming resources and collecting user data
+actions:
+  # Updates compatibility database
+  - !scheduledTask: {path: '\Microsoft\Windows\Application Experience\PcaPatchDbTask', operation: disable, ignoreErrors: true}
+  
+  # Data collection
+  - !scheduledTask: {path: '\Microsoft\Windows\DiskDiagnostic\Microsoft-Windows-DiskDiagnosticDataCollector', operation: disable, ignoreErrors: true}
+  
+  # CEIP - safety measure
+  - !scheduledTask: {path: '\Microsoft\Windows\Customer Experience Improvement Program\Consolidator', operation: disable, ignoreErrors: true}
+  - !scheduledTask: {path: '\Microsoft\Windows\Customer Experience Improvement Program\UsbCeip', operation: disable, ignoreErrors: true}
+  
+  # A/B testing usage reports
+  - !scheduledTask: {path: '\Microsoft\Windows\Flighting\FeatureConfig\UsageDataReporting', operation: disable, ignoreErrors: true}
+  - !registryValue:
+    path: 'HKLM\System\CurrentControlSet\Control\Ubpm'
+    value: 'CriticalMaintenance_UsageDataReporting'
+    operation: delete
+```
+
+This tweak disables several scheduled tasks that:
+- Update compatibility databases
+- Collect diagnostic data
+- Report telemetry to CEIP
+- Send usage data for A/B testing
+- Perform unnecessary background operations
+
+The `ignoreErrors: true` flag ensures the tweak continues even if a task doesn't exist on certain Windows versions.
+
+## Storage Management
+
+### Configure Storage Sense
+
+```yaml
+---
+title: Configure Storage Sense
+description: Configures Storage Sense to automatically cleanup temporary files every month
+actions:
+  # Enable Storage Sense
+  - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy', value: '01', type: REG_DWORD, data: '1'}
+  # Run Storage Sense
+  - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy', value: '1024', type: REG_DWORD, data: '1'}
+  # Run Storage Sense every month
+  - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy', value: '2048', type: REG_DWORD, data: '30'}
+  # Enable cleaning temporary files
+  - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy', value: '04', type: REG_DWORD, data: '1'}
+  # Disable the 'Downloads' from being cleared
+  - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy', value: '32', type: REG_DWORD, data: '0'}
+  # Disable OneDrive cleanup
+  - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy', value: '02', type: REG_DWORD, data: '0'}
+  # Disable Recycle Bin cleanup
+  - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy', value: '08', type: REG_DWORD, data: '0'}
+  # Enable cleaning temp files
+  - !scheduledTask: {path: '\Microsoft\Windows\DiskCleanup\SilentCleanup', operation: enable}
+```
+
+Storage Sense configuration:
+- Enables automatic temporary file cleanup
+- Runs monthly to maintain storage
+- Preserves Downloads folder contents
+- Keeps Recycle Bin intact
+- Disables OneDrive cleanup (as OneDrive is removed)
+- Enables silent disk cleanup task
+
+### Disable Reserved Storage
+
+```yaml
+---
+title: Disable Reserved Storage
+description: Disables reserved storage for Windows Updates to have more storage space
+actions:
+  - !run: {exe: 'DISM.exe', args: '/Online /Set-ReservedStorageState /State:Disabled', weight: 30, ignoreErrors: true}
+```
+
+Disables Windows 10/11 reserved storage feature that sets aside 7GB+ of disk space for updates. This frees up storage space on systems with limited disk capacity.
+
+## Content Delivery Configuration
+
+### Configure Content Delivery
+
+Disables Windows content delivery features including:
+- Suggested apps in Start Menu
+- Tips and recommendations
+- App suggestions in Settings
+- Pre-installed promotional apps
+- Automatic app installation
+
+This reduces bloatware and unwanted app installations.
+
+## Interface Cleanup
+
+### Hide Unused Security Pages
+
+Hides unused Windows Security pages from the security center interface, simplifying the UI by removing features that are disabled or not applicable in AtlasOS.
+
+## Debloat Tweaks Summary
+
+| Category | What's Removed/Disabled | Benefit |
+|----------|------------------------|----------|
+| Scheduled Tasks | Compatibility updates, diagnostics, CEIP, usage reporting | Reduced CPU/disk usage |
+| Storage Sense | Configured for safe cleanup | Automatic maintenance |
+| Reserved Storage | 7GB+ update reserve | More usable storage |
+| Content Delivery | Suggested apps, tips, ads | Cleaner experience |
+| Security Pages | Unused security features | Simplified UI |
+
+## Configuration Location
+
+All debloat tweak YAML files are located in:
+
+```
+src/playbook/Configuration/tweaks/debloat/
+├── config-content-delivery.yml
+├── config-storage-sense.yml
+├── disable-reserved-storage.yml
+├── disable-scheduled-tasks.yml
+└── hide-unused-security-pages.yml
+```
+
+## Disabled Scheduled Tasks
+
+The following scheduled tasks are disabled:
+
+### Application Experience
+- `PcaPatchDbTask` - Program Compatibility Assistant database updates
+
+### UCPD
+- `UCPD velocity` - Universal Control Panel Diagnostics
+
+### Diagnostics
+- `Microsoft-Windows-DiskDiagnosticDataCollector` - Disk diagnostic data collection
+
+### Customer Experience Improvement Program
+- `Consolidator` - CEIP data consolidation
+- `UsbCeip` - USB device telemetry
+
+### Feature Flighting
+- `UsageDataReporting` - A/B testing and feature rollout data
+
+## YAML Structure
+
+Debloat tweaks use several action types:
+
+```yaml
+---
+title: Tweak Name
+description: What is being debloated and why
+actions:
+  # Disable scheduled task
+  - !scheduledTask:
+    path: '\Path\To\Task'
+    operation: disable
+    ignoreErrors: true
+  
+  # Configure registry setting
+  - !registryValue:
+    path: 'HKEY\Path\To\Key'
+    value: 'ValueName'
+    data: '0'
+    type: REG_DWORD
+  
+  # Run system command
+  - !run:
+    exe: 'DISM.exe'
+    args: '/Online /Set-ReservedStorageState /State:Disabled'
+    weight: 30
+    ignoreErrors: true
+```
+
+## Impact on System
+
+Debloat tweaks provide:
+- Reduced startup time
+- Lower idle CPU usage
+- Less disk activity
+- More available storage space
+- Cleaner user interface
+- Fewer background processes
+- Improved system responsiveness
+
+## Safety Considerations
+
+- All tweaks are reversible
+- Tasks use `ignoreErrors: true` for version compatibility
+- Critical system tasks are not disabled
+- Storage Sense preserves user data (Downloads, Recycle Bin)
+- Reserved storage can be re-enabled if needed for major updates

@@ -1,0 +1,134 @@
+---
+title: Features Overview
+description: A comprehensive overview of AtlasOS features including performance optimizations, privacy improvements, security configurations, and usability enhancements
+---
+
+AtlasOS is an open and lightweight modification to Windows, designed to optimize performance, privacy and security. It makes your computer snappier and more private with lots of usability improvements.
+
+## Core Feature Categories
+
+AtlasOS transforms Windows through four key areas of improvement:
+
+<CardGroup cols={2}>
+  <Card title="Performance" icon="rocket" href="/features/performance">
+    Optimize system resources by removing unnecessary background processes, telemetry, and optionally disabling power-saving features
+  </Card>
+  
+  <Card title="Privacy" icon="shield-check" href="/features/privacy">
+    Eliminate Microsoft's tracking, pre-installed apps, and bloatware to make Windows truly private
+  </Card>
+  
+  <Card title="Security" icon="lock" href="/features/security">
+    Configurable security features including toggleable Defender, mitigations, and remote assistance controls
+  </Card>
+  
+  <Card title="Usability" icon="sparkles" href="/features/usability">
+    Remove Windows advertising and fix general annoyances for a more enjoyable experience
+  </Card>
+</CardGroup>
+
+## What Makes AtlasOS Different?
+
+AtlasOS is built on the principle of giving you control over your Windows installation. Unlike stock Windows, Atlas:
+
+- **Removes bloatware** - Pre-installed apps and unnecessary features are removed
+- **Disables telemetry** - Microsoft's data collection is eliminated
+- **Optimizes performance** - Background processes and services are minimized
+- **Enhances privacy** - Tracking and advertising features are disabled
+- **Improves usability** - Annoying Windows behaviors are fixed
+- **Maintains compatibility** - All tweaks are reversible and documented
+
+## Feature Highlights
+
+### Performance Optimizations
+
+- Disabled background apps and unnecessary scheduled tasks
+- Optimized Multimedia Class Scheduler Service (MMCSS) configuration
+- Removed Xbox Game Bar and Game DVR
+- Disabled automatic folder discovery and sleep study
+- Configured Win32 priority separation for better responsiveness
+
+### Privacy Enhancements
+
+- Complete telemetry removal including DiagTrack service
+- Disabled advertising ID and sync provider notifications
+- Removed Windows Recall snapshots (24H2+)
+- Blocked app launch tracking and device monitoring
+- Disabled experimentation and A/B testing
+
+### Security Configuration
+
+<Warning>
+Some security features are **toggleable** during installation. Choose wisely based on your needs and technical expertise.
+</Warning>
+
+- Windows Defender (toggleable - recommended to keep enabled)
+- CPU security mitigations (toggleable)
+- Remote Assistance (disabled by default)
+- Anonymous SAM enumeration (blocked)
+
+### Usability Improvements
+
+- Disabled mouse acceleration for precise 1:1 movement
+- Cleaned Start Menu with removed recommendations
+- Custom Atlas theme with blue tooltips
+- Removed unnecessary tips and suggestions
+- Disabled automatic app archival and Store auto-updates
+
+## Installation Options
+
+During AtlasOS installation, you can customize your experience:
+
+<AccordionGroup>
+  <Accordion title="Windows Defender">
+    Choose to enable (recommended) or disable Windows Defender. Disabling reduces security and is for advanced users only. Defender can be toggled later in the Atlas folder.
+  </Accordion>
+  
+  <Accordion title="Security Mitigations">
+    Keep default Windows mitigations (recommended) or disable them for potential performance gains on older CPUs. Disabling reduces security and could harm performance on modern CPUs.
+  </Accordion>
+  
+  <Accordion title="Automatic Updates">
+    Choose whether to enable or disable automatic Windows Updates. You'll receive update notifications regardless of your choice.
+  </Accordion>
+  
+  <Accordion title="Power Management">
+    Options to disable hibernation, enable maximum performance mode, or disable Core Isolation for additional performance.
+  </Accordion>
+  
+  <Accordion title="Microsoft Edge">
+    Choose to remove Microsoft Edge and optionally install an alternative browser (Brave, LibreWolf, Firefox, or Chrome).
+  </Accordion>
+</AccordionGroup>
+
+## Configuration Management
+
+All AtlasOS features are managed through YAML configuration files located in the playbook structure:
+
+```
+Configuration/tweaks/
+├── performance/     # Performance optimizations
+├── privacy/         # Privacy improvements
+├── security/        # Security configurations
+├── qol/            # Quality of life improvements
+├── debloat/        # Bloatware removal
+├── networking/     # Network optimizations
+└── misc/           # Miscellaneous tweaks
+```
+
+<Info>
+Each tweak is documented with a title, description, and specific registry or system actions taken.
+</Info>
+
+## Next Steps
+
+Explore the detailed documentation for each feature category:
+
+- [Performance Features](/features/performance) - Learn about all performance optimizations
+- [Privacy Features](/features/privacy) - Understand privacy improvements
+- [Security Features](/features/security) - Review security configurations
+- [Usability Features](/features/usability) - Discover UI and UX improvements
+
+<Card title="Need Help?" icon="question" href="https://docs.atlasos.net">
+  Visit the complete AtlasOS documentation for installation guides, troubleshooting, and advanced configuration options.
+</Card>

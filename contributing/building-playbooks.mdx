@@ -1,0 +1,294 @@
+---
+title: 'Building Playbooks'
+description: 'Learn how to build the Atlas playbook locally for development and testing'
+---
+
+## Overview
+
+Atlas uses [AME Wizard](https://amelabs.net) Playbooks to apply modifications to Windows. A playbook is a password-protected ZIP archive (`.apbx` file) containing configuration files, scripts, and executables.
+
+<Info>
+  **Prerequisites**:
+  - PowerShell 7+ (recommended) or PowerShell 5.1
+  - 7-Zip or NanaZip installed
+  - Windows, Linux, or macOS (with PowerShell Core)
+</Info>
+
+## Prerequisites
+
+<AccordionGroup>
+  <Accordion title="PowerShell" icon="terminal">
+    **Windows**: PowerShell 5.1 is included by default. PowerShell 7+ is recommended.
+    
+    **Linux/macOS**: Install PowerShell Core:
+    
+    ```bash
+    # macOS (using Homebrew)
+    brew install --cask powershell
+    
+    # Linux (Ubuntu/Debian)
+    wget https://aka.ms/powershell-release?tag=stable -O powershell.deb
+    sudo dpkg -i powershell.deb
+    ```
+  </Accordion>
+
+  <Accordion title="7-Zip" icon="file-zipper">
+    The build script requires 7-Zip to create the playbook archive.
+    
+    **Windows**:
+    - Download from [7-zip.org](https://www.7-zip.org/)
+    - Or install via `winget install 7zip.7zip`
+    
+    **Linux**:
+    ```bash
+    sudo apt install p7zip-full  # Ubuntu/Debian
+    sudo dnf install p7zip       # Fedora
+    ```
+    
+    **macOS**:
+    ```bash
+    brew install p7zip
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Building the Playbook
+
+Navigate to the playbook directory and run the appropriate build script for your platform.
+
+<CodeGroup>
+
+```bash Windows (Command Prompt)
+cd src\playbook
+build-playbook.cmd
+```
+
+```bash Windows (PowerShell)
+cd src/playbook
+.\build-playbook.cmd
+```
+
+```bash Linux/macOS
+cd src/playbook
+./build-playbook.sh
+```
+
+</CodeGroup>
+
+<Tip>
+  The build script automatically opens the output folder on Windows after a successful build.
+</Tip>
+
+## Build Script Details
+
+The build scripts (`build-playbook.cmd` and `build-playbook.sh`) are wrappers that call the main PowerShell build script with development-friendly options.
+
+### What the Build Script Does
+
+<Steps>
+  <Step title="Validates prerequisites">
+    Checks for 7-Zip installation and verifies the playbook directory structure.
+  </Step>
+
+  <Step title="Creates temporary workspace">
+    Generates a temporary directory to prepare modified configuration files.
+  </Step>
+
+  <Step title="Processes configuration files">
+    - Removes Windows version requirements for easier testing
+    - Removes verification checks
+    - Injects the Atlas version from `playbook.conf` into OEM information
+    - Optionally adds a live log viewer window
+  </Step>
+
+  <Step title="Packages the playbook">
+    Compresses all playbook files into an `.apbx` file with the password `malte`.
+  </Step>
+
+  <Step title="Outputs the result">
+    Creates `Atlas Test.apbx` in the playbook directory (or a numbered variant if the file already exists).
+  </Step>
+</Steps>
+
+### Build Script Parameters
+
+The underlying `local-build.ps1` script supports several parameters:
+
+```powershell Parameters
+powershell -NoP -EP Bypass -File ../dependencies/local-build.ps1 `
+  -AddLiveLog              # Opens a live log window during installation
+  -ReplaceOldPlaybook      # Replaces existing test playbook
+  -DontOpenPbLocation      # Doesn't open output folder
+  -NoPassword              # Creates playbook without password
+  -FileName "Custom Name"  # Custom output filename
+  -Removals "WinverRequirement,Verification"  # Items to remove
+```
+
+<Note>
+  The default build scripts use these flags: `-AddLiveLog -ReplaceOldPlaybook -Removals WinverRequirement, Verification -DontOpenPbLocation`
+</Note>
+
+## Playbook Structure
+
+Understanding the playbook structure helps when making modifications:
+
+```
+src/playbook/
+├── playbook.conf              # Playbook metadata (XML)
+├── Configuration/
+│   ├── atlas/                 # Atlas-specific configurations
+│   │   └── start.yml          # Initial setup actions
+│   ├── tweaks/                # Registry and system tweaks
+│   │   ├── misc/              # Miscellaneous tweaks
+│   │   ├── performance/       # Performance optimizations
+│   │   ├── privacy/           # Privacy modifications
+│   │   └── ...                # Other tweak categories
+│   ├── custom.yml             # Custom actions and setup
+│   └── tweaks.yml             # Main tweaks configuration
+├── Executables/
+│   ├── AtlasDesktop/          # Atlas Desktop application
+│   ├── AtlasModules/          # PowerShell modules
+│   └── [various scripts]      # PowerShell and batch scripts
+└── Images/                    # Icons and images
+```
+
+### Key Files
+
+<CardGroup cols={2}>
+  <Card title="playbook.conf" icon="gear">
+    XML file defining playbook metadata, requirements, and feature pages.
+  </Card>
+
+  <Card title="custom.yml" icon="sliders">
+    Main configuration file for custom actions during installation.
+  </Card>
+
+  <Card title="tweaks.yml" icon="wrench">
+    Central file that includes all tweak categories.
+  </Card>
+
+  <Card title="start.yml" icon="play">
+    Initial setup actions that run at the beginning of installation.
+  </Card>
+</CardGroup>
+
+## Testing Your Build
+
+After building the playbook, you'll have an `Atlas Test.apbx` file ready to install with AME Wizard.
+
+<Warning>
+  **Test on a virtual machine or spare system first!** Atlas makes significant system modifications that are difficult to fully reverse.
+</Warning>
+
+### Installation Steps
+
+<Steps>
+  <Step title="Download AME Wizard">
+    Get the latest version from [amelabs.net](https://amelabs.net/)
+  </Step>
+
+  <Step title="Prepare your test system">
+    - Use a clean Windows 11 installation (build 26100 or 26200)
+    - Disable Windows Defender temporarily
+    - Ensure no pending Windows updates
+    - Connect to the internet
+    - Plug in power (for laptops)
+  </Step>
+
+  <Step title="Run AME Wizard">
+    Open AME Wizard and drag your `Atlas Test.apbx` file into the window.
+  </Step>
+
+  <Step title="Follow the installation wizard">
+    Review and select your preferred options, then proceed with installation.
+  </Step>
+
+  <Step title="Verify your changes">
+    After installation completes and the system reboots, verify that your modifications work as expected.
+  </Step>
+</Steps>
+
+<Tip>
+  The `-AddLiveLog` flag in the build script opens a PowerShell window showing real-time installation logs, helpful for debugging.
+</Tip>
+
+## Development Workflow
+
+A typical development workflow looks like this:
+
+1. **Make changes** to configuration files or scripts
+2. **Build the playbook** using the build script
+3. **Test in a VM** or on a test system
+4. **Verify functionality** and check for issues
+5. **Iterate** until the changes work correctly
+6. **Commit and push** when ready
+
+## Common Build Issues
+
+<AccordionGroup>
+  <Accordion title="7-Zip not found">
+    **Error**: `This script requires 7-Zip or NanaZip to be installed`
+    
+    **Solution**: Install 7-Zip and ensure it's in your system PATH or installed in the default location (`C:\Program Files\7-Zip\7z.exe` on Windows).
+  </Accordion>
+
+  <Accordion title="playbook.conf not found">
+    **Error**: `playbook.conf file not found`
+    
+    **Solution**: Ensure you're running the build script from the `src/playbook` directory.
+  </Accordion>
+
+  <Accordion title="Build fails on Linux/macOS">
+    **Error**: Various errors on non-Windows systems
+    
+    **Solution**: Ensure PowerShell Core is installed (`pwsh`) and 7-Zip is available as `7z` or `7zz` in your PATH.
+  </Accordion>
+
+  <Accordion title="File in use error">
+    **Error**: `Couldn't replace 'Atlas Test.apbx', it's in use`
+    
+    **Solution**: Close AME Wizard or any program that might have the file open, or the build script will create a numbered variant instead.
+  </Accordion>
+</AccordionGroup>
+
+## Advanced: Custom Builds
+
+You can customize the build process by calling `local-build.ps1` directly with custom parameters:
+
+```powershell Custom build example
+cd src/playbook
+pwsh -NoP -EP Bypass -File ../dependencies/local-build.ps1 `
+  -FileName "Atlas Custom" `
+  -AddLiveLog `
+  -ReplaceOldPlaybook
+```
+
+### Remove Dependencies During Testing
+
+If you want to skip dependency installation during testing:
+
+```powershell
+pwsh -NoP -EP Bypass -File ../dependencies/local-build.ps1 `
+  -Removals "Dependencies" `
+  -ReplaceOldPlaybook
+```
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Testing Guide" icon="check-double" href="/contributing/testing">
+    Learn what to test and how to verify your changes.
+  </Card>
+
+  <Card title="Contribution Guidelines" icon="book-open" href="/contributing/guidelines">
+    Review the full contribution guidelines before submitting.
+  </Card>
+
+  <Card title="AME Wizard Documentation" icon="wand-magic-sparkles" href="https://docs.amelabs.net">
+    Official documentation for playbook syntax and actions.
+  </Card>
+
+  <Card title="Atlas Documentation" icon="atlas" href="https://docs.atlasos.net">
+    Browse the complete Atlas documentation.
+  </Card>
+</CardGroup>

@@ -1,0 +1,163 @@
+---
+title: Scripting System Overview
+description: Overview of AtlasOS scripting architecture, organization, and execution
+---
+
+AtlasOS uses a comprehensive scripting system located in `AtlasModules` to configure and optimize Windows. The system combines PowerShell modules, utility scripts, and batch files to provide modular functionality.
+
+## Script Organization
+
+Scripts are organized in the following structure:
+
+```
+AtlasModules/Scripts/
+├── Modules/              # PowerShell modules (.psm1)
+│   ├── AllRegistryUsers/
+│   ├── Debloat/
+│   ├── Miscellaneous/
+│   ├── Performance/
+│   ├── Privacy/
+│   ├── Qol/
+│   ├── Scripts/
+│   ├── Shortcuts/
+│   ├── Themes/
+│   ├── UserPaths/
+│   └── Utils/
+├── Registry/            # Registry configuration files
+├── ScriptWrappers/      # Wrapper scripts for common tasks
+├── [utility scripts]    # Core utility scripts (.ps1, .cmd)
+```
+
+## Script Types
+
+### PowerShell Modules
+
+Reusable modules that provide functions for system configuration. Modules are imported using:
+
+```powershell
+$windir = [Environment]::GetFolderPath('Windows')
+& "$windir\AtlasModules\initPowerShell.ps1"
+```
+
+The `initPowerShell.ps1` script automatically imports all modules and sets up the PowerShell environment.
+
+### Utility Scripts
+
+Standalone scripts for specific tasks:
+- File associations
+- Package installation
+- Taskbar customization
+- Service configuration
+- User setup
+
+### Script Wrappers
+
+Wrapper scripts in `ScriptWrappers/` directory that call core functionality:
+- ConfigVBS.ps1
+- DebloatSendToContextMenu.ps1
+- DefaultPowerSaving.ps1
+- DisableFileSharing.ps1
+- DisablePowerSaving.ps1
+- EnableFileSharing.ps1
+- InstallSoftware.ps1
+- RemoveEdge.ps1
+- TelemetryComponents.ps1
+- ToggleDefender.ps1
+- UpdateDrivers.ps1
+
+## Execution Model
+
+### Privilege Elevation
+
+Scripts that require administrative privileges use `RunAsTI.cmd` to elevate to TrustedInstaller/SYSTEM:
+
+```batch
+whoami /user | find /i "S-1-5-18" > nul 2>&1 || (
+    call RunAsTI.cmd "%~f0" %*
+    exit /b
+)
+```
+
+### Initialization
+
+Most PowerShell scripts start with:
+
+```powershell
+$windir = [Environment]::GetFolderPath('Windows')
+& "$windir\AtlasModules\initPowerShell.ps1"
+```
+
+This ensures:
+- All modules are loaded
+- Execution policy is set
+- Common functions are available
+
+### Error Handling
+
+Scripts follow these error handling patterns:
+
+```powershell
+try {
+    # Operation
+} catch {
+    Write-Host "[ERROR] Operation failed: $_" -ForegroundColor Red
+    $script:errorLevel++
+}
+```
+
+## Common Patterns
+
+### Registry User Iteration
+
+Many scripts iterate over all user registry hives:
+
+```powershell
+foreach ($userKey in (Get-RegUserPaths -NoDefault).PsPath) {
+    $sid = Split-Path $userKey -Leaf
+    # Operations on user registry
+}
+```
+
+### Batch File Execution
+
+Batch files use temporary PowerShell executables to bypass User Choice Protection Driver (UCPD):
+
+```batch
+set "powershellTemp=%powershellDir%\powershell%random%%random%%random%%random%.exe"
+copy /y "%powershellPath%" "%powershellTemp%" > nul
+"%powershellTemp%" -NoP -NonI -EP Bypass -File script.ps1
+del /f /q "%powershellTemp%" > nul
+```
+
+### Silent Execution
+
+Scripts support silent execution for automation:
+
+```batch
+if "%~1" == "/silent" goto silent
+```
+
+## Integration with Playbook
+
+Scripts are called from AME Wizard playbook YAML files:
+
+```yaml
+- !powerShell:
+  command: |
+    $windir = [Environment]::GetFolderPath('Windows')
+    & "$windir\AtlasModules\Scripts\packageInstall.ps1" -InstallPackages @("package1", "package2")
+```
+
+## Best Practices
+
+1. **Always use absolute paths** - Use `[Environment]::GetFolderPath()` instead of hardcoded paths
+2. **Initialize PowerShell** - Call `initPowerShell.ps1` at the start of scripts
+3. **Handle elevation** - Use `RunAsTI.cmd` for TrustedInstaller privileges when needed
+4. **Error reporting** - Track error and warning levels
+5. **User interaction** - Support `/silent` or `-NoInteraction` flags
+6. **Logging** - Output informative messages with color coding
+
+## See Also
+
+- [PowerShell Modules](/reference/scripts/powershell-modules)
+- [Utility Scripts](/reference/scripts/utilities)

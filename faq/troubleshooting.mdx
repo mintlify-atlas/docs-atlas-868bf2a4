@@ -1,0 +1,595 @@
+---
+title: Troubleshooting FAQ
+description: Common issues and solutions for AtlasOS, including network problems, Safe Mode access, performance issues, and missing features.
+---
+
+## Troubleshooting Tools
+
+<Accordion title="Where are the AtlasOS troubleshooting tools?">
+Atlas includes troubleshooting tools in the Atlas folder:
+
+**Location:** `C:\Windows\AtlasDesktop\9. Troubleshooting`
+
+**Available tools:**
+- **Repair Windows Components** - Fixes corrupt system files
+- **Fix Errors 2502 and 2503** - Resolves installer permission issues
+- **Set services to defaults** - Restores Windows services configuration
+- **Telemetry Components** - Manages Windows telemetry settings
+- **Network folder** - Network troubleshooting scripts
+- **Safe Mode folder** - Safe Mode boot options
+- **Reset this PC** - Link to Windows reset instructions
+
+All tools require administrator privileges. Right-click and select "Run as administrator" to execute.
+</Accordion>
+
+<Accordion title="How do I repair Windows components on AtlasOS?">
+If you're experiencing system instability or errors:
+
+**Using the built-in repair tool:**
+1. Navigate to `C:\Windows\AtlasDesktop\9. Troubleshooting`
+2. Right-click "Repair Windows Components.cmd"
+3. Select "Run as administrator"
+4. Press any key to continue when prompted
+5. Wait for the process to complete (this may take 15-30 minutes)
+6. Restart your computer
+
+**What it does:**
+- Runs `DISM /Online /Cleanup-Image /RestoreHealth` - Repairs component store
+- Runs `sfc /scannow` - Scans and repairs system files
+- Does not revert any Atlas modifications
+- Fixes corrupted Windows components and system files
+
+**Note:** This process can take significant time depending on your system's condition. Be patient and don't interrupt it.
+</Accordion>
+
+## Network Issues
+
+<Accordion title="My internet connection stopped working after installing AtlasOS">
+Network issues after Atlas installation can usually be resolved:
+
+**Quick fixes:**
+1. **Restart your computer** - Solves many network issues
+2. **Restart your router** - Power cycle modem and router
+3. **Check physical connections** - Ensure cables are properly connected
+4. **Update network drivers** - Download latest drivers from manufacturer
+
+**Using Atlas network reset tools:**
+
+Navigate to: `C:\Windows\AtlasDesktop\9. Troubleshooting\Network`
+
+**Option 1: Reset to Windows Defaults**
+- Right-click "Reset Network to Windows Default.cmd"
+- Select "Run as administrator"
+- Reboot when prompted
+- This resets all network settings to Windows defaults
+
+**Option 2: Reset to Atlas Defaults**
+- Right-click "Reset Network to Atlas Default.cmd"
+- Select "Run as administrator"
+- Reboot when prompted
+- This applies Atlas network optimizations again
+
+If issues persist, check if network adapter drivers need updating in Device Manager.
+</Accordion>
+
+<Accordion title="What does 'Reset Network to Windows Default' do?">
+This script completely resets network configuration to Windows default state:
+
+**Actions performed:**
+- Resets IP stack: `netsh int ip reset`
+- Resets IPv4 interface: `netsh interface ipv4 reset`
+- Resets IPv6 interface: `netsh interface ipv6 reset`
+- Resets TCP stack: `netsh interface tcp reset`
+- Resets Winsock catalog: `netsh winsock reset`
+- Removes and rescans network devices
+
+**When to use:**
+- Internet connection completely broken
+- DNS resolution not working
+- Network adapter not detected
+- After trying "Reset Network to Atlas Default" without success
+
+**After running:** Restart your computer for changes to take effect. You may need to reconfigure static IP addresses if you use them.
+</Accordion>
+
+<Accordion title="What does 'Reset Network to Atlas Default' do?">
+This script applies Atlas network optimizations:
+
+**Actions performed:**
+- Finds your primary network adapter
+- Configures adapter registry settings for performance
+- Disables features that may cause latency:
+  - DMA Coalescing
+  - SipsEnabled (link speed reduction)
+  - ReduceSpeedOnPowerDown
+  - AutoDisableGigabit
+  - ApCompatMode (sets to High Performance)
+
+**When to use:**
+- After resetting to Windows defaults
+- After driver updates reset network settings
+- Network performance seems degraded
+- High latency in games or applications
+
+**Note:** Requires reboot to take effect. These settings optimize for performance and low latency.
+</Accordion>
+
+<Accordion title="Wi-Fi is slower after installing AtlasOS">
+Several factors can affect Wi-Fi performance:
+
+**Check power settings:**
+1. Open Device Manager
+2. Expand "Network adapters"
+3. Right-click your Wi-Fi adapter > Properties
+4. Go to "Power Management" tab
+5. Uncheck "Allow the computer to turn off this device to save power"
+6. Click OK and restart
+
+**Check adapter settings:**
+1. Run "Reset Network to Atlas Default.cmd" in troubleshooting folder
+2. Update Wi-Fi driver from manufacturer website
+3. Check if power-saving mode is enabled (disable if needed)
+
+**Check Windows settings:**
+1. Go to Settings > Network & Internet > Wi-Fi
+2. Click "Manage known networks"
+3. Select your network > Properties
+4. Ensure metered connection is disabled
+
+If issues persist, consider using "Reset Network to Windows Default.cmd" to completely reset network configuration.
+</Accordion>
+
+<Accordion title="Ethernet connection has no internet access">
+If Ethernet shows connected but no internet:
+
+**Basic troubleshooting:**
+1. Check cable connections at both ends
+2. Try a different Ethernet cable
+3. Test on another device to rule out router issues
+4. Restart your router and modem
+
+**Windows troubleshooting:**
+1. Open Command Prompt as Administrator
+2. Run: `ipconfig /release`
+3. Run: `ipconfig /renew`
+4. Run: `ipconfig /flushdns`
+5. Test connection
+
+**Atlas network reset:**
+1. Navigate to `C:\Windows\AtlasDesktop\9. Troubleshooting\Network`
+2. Run "Reset Network to Windows Default.cmd" as administrator
+3. Restart computer
+4. If still broken, run "Reset Network to Atlas Default.cmd"
+5. Restart computer again
+
+**Check DNS settings:**
+1. Open Network Connections (ncpa.cpl)
+2. Right-click Ethernet adapter > Properties
+3. Select "Internet Protocol Version 4 (TCP/IPv4)" > Properties
+4. Select "Obtain DNS server address automatically" or use public DNS (8.8.8.8, 8.8.4.4)
+5. Click OK and test
+</Accordion>
+
+## Safe Mode
+
+<Accordion title="How do I boot into Safe Mode on AtlasOS?">
+Atlas provides convenient scripts for Safe Mode access:
+
+**Location:** `C:\Windows\AtlasDesktop\9. Troubleshooting\Safe Mode`
+
+**Available options:**
+
+1. **Safe Mode.cmd** - Basic Safe Mode with minimal drivers
+2. **Safe Mode with Networking.cmd** - Safe Mode with network support
+3. **Safe Mode with Command Prompt.cmd** - Safe Mode with command line interface
+4. **Exit Safe Mode.cmd** - Return to normal Windows boot
+
+**To boot into Safe Mode:**
+1. Navigate to the Safe Mode folder
+2. Right-click the desired Safe Mode script
+3. Select "Run as administrator"
+4. Your computer will restart into Safe Mode
+
+**To exit Safe Mode:**
+1. Run "Exit Safe Mode.cmd" as administrator
+2. Restart your computer
+3. Windows will boot normally
+
+**Manual method (if Atlas folder inaccessible):**
+1. Hold Shift while clicking Restart
+2. Choose Troubleshoot > Advanced options > Startup Settings
+3. Click Restart
+4. Press 4 for Safe Mode, 5 for Safe Mode with Networking, or 6 for Safe Mode with Command Prompt
+</Accordion>
+
+<Accordion title="When should I use Safe Mode?">
+Safe Mode is useful for troubleshooting serious issues:
+
+**Use Safe Mode when:**
+- Windows won't boot normally
+- System crashes immediately after login
+- Malware infection preventing normal operation
+- Driver issues causing blue screens
+- Need to uninstall problematic software
+- System restore or repair operations needed
+- Troubleshooting startup programs
+
+**What Safe Mode does:**
+- Loads minimal drivers and services
+- Disables third-party startup programs
+- Uses basic video drivers
+- Provides stable environment for troubleshooting
+
+**In Safe Mode you can:**
+- Run "Repair Windows Components.cmd"
+- Run "Set services to defaults.cmd"
+- Uninstall problematic drivers or software
+- Run antivirus scans
+- Access system restore
+- Repair corrupted files
+</Accordion>
+
+<Accordion title="Safe Mode won't start or exits immediately">
+If Safe Mode itself has issues:
+
+**Try different Safe Mode options:**
+- Use "Safe Mode with Command Prompt" instead of regular Safe Mode
+- Try "Safe Mode with Networking" if network drivers aren't the issue
+
+**Use Windows Recovery Environment:**
+1. Force shutdown your PC 3 times during boot (wait for manufacturer logo)
+2. Windows will boot into Recovery Environment
+3. Choose Troubleshoot > Advanced options > Startup Settings
+4. Click Restart
+5. Press 4 for Safe Mode
+
+**If Safe Mode still fails:**
+- Your system may have severe corruption
+- Consider using Windows installation media for repair
+- Boot from Windows USB and choose "Repair your computer"
+- Use Startup Repair or System Restore from recovery options
+- As last resort, use "Reset this PC" to reinstall Windows
+</Accordion>
+
+## Performance Issues
+
+<Accordion title="System performance worse after installing AtlasOS">
+If Atlas didn't improve or worsened performance:
+
+**Common causes and solutions:**
+
+**1. Driver issues:**
+- Update GPU drivers from NVIDIA/AMD/Intel
+- Update chipset drivers from motherboard manufacturer
+- Update network adapter drivers
+
+**2. Power settings:**
+- Check if power plan is set to High Performance
+- Navigate to Atlas folder > General Configuration > Power-saving
+- Disable power saving features if enabled
+
+**3. Background processes:**
+- Check Task Manager for high CPU/disk usage
+- Disable unnecessary startup programs
+- Check if Windows Update is running in background
+
+**4. Services configuration:**
+- Some disabled services might be needed for your use case
+- Run "Set services to defaults.cmd" in troubleshooting folder
+- Selectively enable services you need from Atlas folder
+
+**5. Storage issues:**
+- Check disk health with CrystalDiskInfo
+- Run disk cleanup to free space
+- Defragment HDD (don't defragment SSD)
+- Check if storage is nearly full
+</Accordion>
+
+<Accordion title="High CPU or disk usage after installing AtlasOS">
+Unexpected high resource usage:
+
+**Check Task Manager:**
+1. Press Ctrl+Shift+Esc to open Task Manager
+2. Click "More details" if in simple view
+3. Check which process is using resources
+
+**Common culprits:**
+
+**Windows Update:**
+- May download/install updates in background
+- Let it complete or pause updates in Windows Update settings
+
+**Antivirus scanning:**
+- If you enabled Defender, it may be performing initial scan
+- Wait for scan to complete
+
+**Search indexing:**
+- If you re-enabled indexing, initial indexing causes high disk usage
+- Navigate to Atlas folder > General Configuration > Search Indexing
+- Consider disabling if you don't use Windows Search
+
+**System file issues:**
+- Run "Repair Windows Components.cmd" as administrator
+- Restart computer after repair completes
+
+**Driver problems:**
+- Update all drivers, especially chipset and storage controller
+- Check manufacturer website for latest drivers
+</Accordion>
+
+<Accordion title="Games performing worse or crashing after AtlasOS">
+Gaming issues can have several causes:
+
+**Anti-cheat compatibility:**
+1. Navigate to Atlas folder > Security > Core Isolation
+2. Enable Core Isolation if playing games with kernel-level anti-cheat
+3. Enable CPU Mitigations if disabled
+4. Enable Windows Defender for anti-cheat compatibility
+5. Restart computer
+
+**DirectX and redistributables:**
+- Atlas installs DirectX during setup, but some games need specific versions
+- Install Visual C++ Redistributables (all versions)
+- Install DirectX End-User Runtime
+- Install .NET Framework versions as needed
+
+**GPU drivers:**
+- Completely uninstall GPU drivers using DDU (Display Driver Uninstaller)
+- Atlas folder > Drivers > GPU Drivers > Display Driver Uninstaller (DDU).url
+- Install latest drivers from manufacturer website
+
+**Game Bar and FSO:**
+- Some games need Game Bar enabled
+- Navigate to Atlas folder > General Configuration > FSO and Game Bar
+- Enable and test performance
+
+**Services:**
+- Some games require specific Windows services
+- Run "Set services to defaults.cmd" if game won't start
+- Check game's specific requirements
+</Accordion>
+
+## Missing Features
+
+<Accordion title="Microsoft Store is missing or not working">
+Atlas may remove or break Microsoft Store:
+
+**Restore Microsoft Store:**
+1. Open PowerShell as Administrator
+2. Run: `wsreset -i`
+3. Wait for the process to complete
+4. Run: `Get-AppxPackage -allusers *WindowsStore* | Foreach {Add-AppxPackage -DisableDevelopmentMode -Register "$($_.InstallLocation)\AppPackageManifest.xml"}`
+5. Restart computer
+
+**If Store still doesn't work:**
+1. Run "Repair Windows Components.cmd" from troubleshooting folder
+2. Check Windows Update for pending updates
+3. Reset Store app:
+   - Settings > Apps > Installed apps
+   - Find Microsoft Store > Advanced options
+   - Click "Reset"
+
+**Note:** Some Atlas configurations intentionally remove Store components for debloating. Consider if you really need Store access.
+</Accordion>
+
+<Accordion title="OneDrive is missing or won't install">
+Atlas removes OneDrive by default:
+
+**Reinstall OneDrive:**
+1. Check Atlas folder > File Sharing for OneDrive options
+2. Download OneDrive installer from Microsoft: [https://www.microsoft.com/en-us/microsoft-365/onedrive/download](https://www.microsoft.com/en-us/microsoft-365/onedrive/download)
+3. Run installer as administrator
+4. Sign in with Microsoft account
+5. Configure sync settings
+
+**If OneDrive won't install:**
+1. Run "Set services to defaults.cmd" from troubleshooting folder
+2. Restart computer
+3. Try installing OneDrive again
+
+**Alternative:** Use OneDrive web interface at [https://onedrive.live.com](https://onedrive.live.com) without installing client.
+</Accordion>
+
+<Accordion title="Windows Search doesn't work">
+Atlas may disable Search Indexing for performance:
+
+**Re-enable Windows Search:**
+1. Navigate to `C:\Windows\AtlasDesktop\3. General Configuration\Search Indexing`
+2. Run the script to enable search indexing
+3. Restart computer
+4. Wait for initial indexing to complete (may take time)
+
+**Alternative search methods:**
+- Use Everything Search - faster file search utility
+- Use File Explorer's basic search (slower but doesn't need indexing)
+- Use PowerToys Run for application launching
+
+**Note:** Search indexing causes disk usage and slight performance impact. Consider if you really need it enabled.
+</Accordion>
+
+<Accordion title="Bluetooth not working after AtlasOS installation">
+Bluetooth issues after Atlas:
+
+**Check Bluetooth services:**
+1. Open Services (services.msc)
+2. Find "Bluetooth Support Service"
+3. Right-click > Properties
+4. Set Startup type to "Automatic"
+5. Click "Start" if not running
+6. Click OK and restart
+
+**Check drivers:**
+1. Open Device Manager
+2. Expand "Bluetooth" category
+3. Right-click Bluetooth adapter > Update driver
+4. Choose "Search automatically for drivers"
+5. Or download latest driver from PC manufacturer website
+
+**Use Atlas service restore:**
+1. Navigate to troubleshooting folder
+2. Run "Set services to defaults.cmd" as administrator
+3. Restart computer
+4. Test Bluetooth functionality
+
+**Physical toggle:**
+- Check if laptop has physical Bluetooth switch
+- Check if Fn key combination disables Bluetooth
+- Ensure airplane mode is off
+</Accordion>
+
+## Windows Installer Errors
+
+<Accordion title="Getting errors 2502 or 2503 when installing software">
+These errors relate to Windows TEMP folder permissions:
+
+**Using Atlas fix tool:**
+1. Navigate to `C:\Windows\AtlasDesktop\9. Troubleshooting`
+2. Right-click "Fix Errors 2502 and 2503.cmd"
+3. Select "Run as administrator"
+4. Read the information and press any key to continue
+5. Wait for the process to complete
+6. Try installing your software again
+
+**What this tool does:**
+- Takes ownership of `C:\Windows\Temp` folder as SYSTEM
+- Resets folder permissions to Windows defaults
+- Clears temporary files
+- Fixes installer permission issues
+
+**Note:** These errors are not caused by Atlas itself but can occur on any Windows system with incorrect TEMP folder permissions.
+</Accordion>
+
+<Accordion title="MSI installers fail or hang during installation">
+MSI installer issues can have multiple causes:
+
+**Try these solutions:**
+
+**1. Fix TEMP permissions:**
+- Run "Fix Errors 2502 and 2503.cmd" from troubleshooting folder
+
+**2. Restart Windows Installer service:**
+- Open Services (services.msc)
+- Find "Windows Installer"
+- Right-click > Restart
+- Try installation again
+
+**3. Clear Windows Installer cache:**
+- Open Command Prompt as Administrator
+- Run: `cd %windir%\Installer`
+- Run: `del /f /s /q *.msi` (caution: this removes cached installers)
+- Try installation again
+
+**4. Restore services:**
+- Run "Set services to defaults.cmd" from troubleshooting folder
+- Restart computer
+- Try installation again
+
+**5. Run installer with logging:**
+- Open Command Prompt as Administrator
+- Run: `msiexec /i "path\to\installer.msi" /l*v "%temp%\install.log"`
+- Check log file for specific errors
+</Accordion>
+
+## System Stability
+
+<Accordion title="Getting Blue Screen of Death (BSOD) after AtlasOS">
+BSOD errors need specific troubleshooting based on error code:
+
+**Common BSOD causes on Atlas:**
+
+**Driver issues:**
+- Update all drivers (GPU, chipset, network, audio)
+- Use DDU to clean install GPU drivers
+- Check motherboard manufacturer for latest chipset drivers
+
+**CPU mitigations disabled:**
+- If you disabled CPU mitigations, some systems become unstable
+- Re-enable mitigations in Atlas folder > Security > Mitigations
+- Restart computer
+
+**Core Isolation disabled:**
+- Some drivers expect VBS to be available
+- Re-enable Core Isolation in Atlas folder > Security
+- Restart computer
+
+**Memory issues:**
+- Run Windows Memory Diagnostic
+- Test RAM with MemTest86
+- Reseat RAM modules
+
+**Corrupted system files:**
+- Run "Repair Windows Components.cmd" from troubleshooting folder
+- Run CHKDSK to check disk for errors
+- Check disk health with CrystalDiskInfo
+
+**Identify specific BSOD:**
+- Note the STOP code (e.g., SYSTEM_SERVICE_EXCEPTION)
+- Search for "[STOP CODE] + AtlasOS" online
+- Check Atlas GitHub issues for similar reports
+</Accordion>
+
+<Accordion title="System freezes or becomes unresponsive randomly">
+Random freezes require systematic troubleshooting:
+
+**Check Event Viewer:**
+1. Press Win+X > Event Viewer
+2. Navigate to Windows Logs > System
+3. Look for Critical or Error events around freeze time
+4. Note any error codes or patterns
+
+**Check temperatures:**
+- Use HWInfo or HWMonitor to monitor temperatures
+- Ensure CPU/GPU temps are reasonable under load
+- Check if thermal paste needs replacement
+- Verify all fans are working
+
+**Check storage:**
+- Run `chkdsk /f /r` from Administrator Command Prompt (requires restart)
+- Use CrystalDiskInfo to check drive health
+- Look for pending sector reallocation
+- Consider drive replacement if failing
+
+**Restore services:**
+- Run "Set services to defaults.cmd" from troubleshooting folder
+- Some disabled services might be needed for stability
+
+**Check for conflicts:**
+- Boot into Safe Mode using Atlas Safe Mode scripts
+- If stable in Safe Mode, issue is likely third-party software/driver
+- Uninstall recently installed software
+- Update or rollback recently updated drivers
+
+**Memory test:**
+- Run Windows Memory Diagnostic
+- Run MemTest86 overnight
+- Test with one RAM stick at a time
+</Accordion>
+
+<Accordion title="How do I perform a clean reinstall if nothing works?">
+If all troubleshooting fails, reinstall Windows:
+
+**Option 1: Reset this PC (keeps Atlas folder)**
+1. Navigate to troubleshooting folder
+2. Open "Reset this PC (read first).url" for guidance
+3. Go to Settings > System > Recovery
+4. Click "Reset this PC"
+5. Choose "Keep my files" or "Remove everything"
+6. Follow wizard to completion
+
+**Option 2: Clean Windows installation**
+1. Create Windows installation media from Microsoft
+2. Back up important files
+3. Boot from installation media
+4. Follow clean install process
+5. Reinstall AtlasOS if desired
+
+**Option 3: Restore from backup**
+- If you created a system backup before Atlas, restore from it
+- Use Windows built-in restore or third-party backup software
+
+**After reinstall:**
+- Install all Windows Updates before installing Atlas
+- Update all drivers from manufacturer websites
+- Install Atlas again with recommended settings
+- Create new system backup for future recovery
+</Accordion>

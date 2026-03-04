@@ -1,0 +1,450 @@
+---
+title: Security Features
+description: Comprehensive guide to AtlasOS security configurations including toggleable Windows Defender, CPU mitigations, Core Isolation, remote assistance, and security hardening features
+---
+
+AtlasOS provides configurable security features that let you balance security with performance based on your needs and technical expertise. Several security features are toggleable during installation, giving you full control.
+
+<Warning>
+**Important Security Notice**
+
+Some AtlasOS security features are **optional and toggleable**. Disabling security features reduces protection and is recommended only for advanced users who understand the risks. Choose wisely during installation.
+</Warning>
+
+## Windows Defender Configuration
+
+### Toggleable Defender
+
+Windows Defender is **toggleable** during AtlasOS installation with enable as the recommended option.
+
+<CodeGroup>
+```xml Defender Installation Options
+<RadioPage IsRequired="true" DefaultOption="defender-enable">
+  <Description>Disabling Defender reduces security, and is an option for advanced users only.</Description>
+  <Options>
+    <RadioOption>
+      <Text>Enable Defender (recommended)</Text>
+      <Name>defender-enable</Name>
+    </RadioOption>
+    <RadioOption>
+      <Text>Disable Defender</Text>
+      <Name>defender-disable</Name>
+    </RadioOption>
+  </Options>
+</RadioPage>
+```
+</CodeGroup>
+
+<Tabs>
+  <Tab title="Enabled (Recommended)">
+    **Pros:**
+    - Real-time malware protection
+    - Automatic threat updates
+    - Cloud-delivered protection
+    - Ransomware protection
+    - Network protection
+    
+    **Performance Impact:**
+    - Minimal on modern systems
+    - Slight background CPU usage
+    - Some disk I/O for scanning
+  </Tab>
+  
+  <Tab title="Disabled (Advanced)">
+    **Pros:**
+    - Slightly better performance
+    - No background scanning
+    - Reduced resource usage
+    
+    **Cons:**
+    - No real-time protection
+    - Manual security management required
+    - Higher risk of malware infection
+    - Requires third-party antivirus or advanced security knowledge
+    
+    <Warning>
+    Only disable Defender if you:
+    - Plan to use alternative antivirus software
+    - Have advanced security knowledge
+    - Understand the risks involved
+    - Practice safe computing habits
+    </Warning>
+  </Tab>
+</Tabs>
+
+### Post-Installation Toggle
+
+<Info>
+Defender can be toggled after installation through the Atlas folder, allowing you to change your decision later.
+</Info>
+
+**Documentation:** [Defender Configuration Guide](https://docs.atlasos.net/getting-started/post-installation/atlas-folder/security/#defender)
+
+## CPU Security Mitigations
+
+### Toggleable Mitigations
+
+CPU security mitigations protect against vulnerabilities like Spectre and Meltdown but can impact performance.
+
+<CodeGroup>
+```xml Mitigations Installation Options
+<RadioPage IsRequired="true" DefaultOption="mitigations-default">
+  <Description>Disabling mitigations reduces security, and could harm performance on modern CPUs.</Description>
+  <TopLine Text="Disabling could improve performance on older CPUs."/>
+  <Options>
+    <RadioOption>
+      <Text>Default Windows Mitigations (recommended)</Text>
+      <Name>mitigations-default</Name>
+    </RadioOption>
+    <RadioOption>
+      <Text>Disable All Mitigations</Text>
+      <Name>mitigations-disable</Name>
+    </RadioOption>
+  </Options>
+</RadioPage>
+```
+</CodeGroup>
+
+### Understanding Mitigations
+
+<AccordionGroup>
+  <Accordion title="What are CPU Mitigations?">
+    CPU mitigations are software-based protections against hardware vulnerabilities in processors, including:
+    
+    - **Spectre** - Exploits speculative execution
+    - **Meltdown** - Breaks isolation between applications and OS
+    - **L1TF** - Terminal Fault vulnerability
+    - **MDS** - Microarchitectural Data Sampling
+    - **TAA** - TSX Asynchronous Abort
+  </Accordion>
+  
+  <Accordion title="Performance Impact">
+    **Modern CPUs (8th gen Intel / Zen 2 AMD and newer):**
+    - 0-5% performance impact
+    - Hardware mitigations built-in
+    - Software mitigations less necessary
+    
+    **Older CPUs (7th gen Intel / Zen 1 AMD and older):**
+    - 5-30% performance impact in some workloads
+    - No hardware mitigations
+    - Software mitigations cause more overhead
+  </Accordion>
+  
+  <Accordion title="Security Risk of Disabling">
+    Disabling mitigations exposes your system to:
+    
+    - Privilege escalation attacks
+    - Memory content disclosure
+    - Cross-process data leakage
+    - Sandbox escape vulnerabilities
+    
+    **Risk Level:**
+    - **High** for multi-user systems
+    - **High** for systems running untrusted code
+    - **Medium** for gaming-only systems
+    - **Low** for air-gapped systems
+  </Accordion>
+</AccordionGroup>
+
+<Tip>
+**Recommendation by CPU Generation:**
+
+- **Modern CPUs (2018+):** Keep mitigations enabled - minimal performance impact
+- **Older CPUs (2017 and earlier):** Consider disabling only if performance is critical and you understand risks
+- **Servers/Multi-user:** Always keep enabled
+</Tip>
+
+**Documentation:** [Mitigations Guide](https://docs.atlasos.net/getting-started/post-installation/atlas-folder/security/#mitigations)
+
+## Core Isolation
+
+### Memory Integrity and VBS
+
+Core Isolation (Virtualization-Based Security) can be disabled during installation for performance.
+
+<CodeGroup>
+```xml Core Isolation Option
+<CheckboxOption>
+  <Text>Disable Core Isolation</Text>
+  <Name>disable-core-isolation</Name>
+</CheckboxOption>
+```
+</CodeGroup>
+
+### What is Core Isolation?
+
+Core Isolation uses hardware virtualization to create a secure area of memory isolated from the operating system.
+
+**Features included:**
+- **Memory Integrity (HVCI)** - Prevents code injection attacks
+- **Kernel-mode Code Integrity** - Validates kernel drivers
+- **Credential Guard** - Protects domain credentials
+
+<Tabs>
+  <Tab title="Enabled">
+    **Benefits:**
+    - Protection against kernel exploits
+    - Driver signature enforcement
+    - Advanced malware protection
+    - Credential theft prevention
+    
+    **Requirements:**
+    - TPM 2.0
+    - UEFI firmware
+    - Virtualization support (VT-x/AMD-V)
+    - 64-bit processor
+    
+    **Performance Impact:**
+    - 5-15% gaming performance reduction
+    - Minimal impact on productivity apps
+    - Some driver incompatibilities
+  </Tab>
+  
+  <Tab title="Disabled">
+    **Benefits:**
+    - Better gaming performance
+    - Broader hardware compatibility
+    - Lower resource usage
+    
+    **Drawbacks:**
+    - Less protection against advanced threats
+    - Kernel more vulnerable to exploits
+    - No credential guard protection
+  </Tab>
+</Tabs>
+
+<Info>
+Core Isolation can be toggled after installation in Windows Security settings or through the Atlas folder.
+</Info>
+
+## Remote Access Security
+
+### Remote Assistance Disabled
+
+Remote Assistance is disabled by default as an unused and potentially vulnerable feature.
+
+<CodeGroup>
+```yaml disable-remote-assistance.yml
+title: Disable Remote Assistance
+description: As Remote Assistance is an unused and a potential vulnerable feature, it is disabled
+actions:
+  - !registryValue:
+    path: 'HKLM\SYSTEM\CurrentControlSet\Control\Remote Assistance'
+    value: 'fAllowFullControl'
+    data: '0'
+    type: REG_DWORD
+    
+  - !registryValue:
+    path: 'HKLM\SYSTEM\CurrentControlSet\Control\Remote Assistance'
+    value: 'fAllowToGetHelp'
+    data: '0'
+    type: REG_DWORD
+    
+  - !run:
+    exe: 'netsh'
+    args: 'advfirewall firewall set rule group="Remote Assistance" new enable=no'
+```
+</CodeGroup>
+
+**What this prevents:**
+- Unsolicited remote assistance requests
+- Remote control of your computer
+- Firewall exceptions for remote assistance
+- Potential exploitation of remote access vulnerabilities
+
+**Security benefits:**
+- Reduced attack surface
+- Eliminates remote desktop vulnerabilities
+- Prevents social engineering attacks
+- No unauthorized remote access
+
+## Network Security
+
+### Anonymous SAM Enumeration
+
+Anonymous enumeration of Security Account Manager (SAM) is blocked.
+
+**Configuration:** `security/block-anonymous-enum-sam.yml`
+
+**Prevents:**
+- Anonymous users from listing local accounts
+- Discovery of usernames and security identifiers
+- Reconnaissance for brute force attacks
+- Information leakage
+
+### Network Sharing Security
+
+AtlasOS includes several network security hardening tweaks:
+
+<CardGroup cols={2}>
+  <Card title="Anonymous Access Restriction" icon="user-lock">
+    **Configuration:** `networking/shares/restrict-anonymous-access.yml`
+    
+    Prevents anonymous users from accessing network shares
+  </Card>
+  
+  <Card title="Anonymous Enumeration Block" icon="list">
+    **Configuration:** `networking/shares/restrict-anonymous-enumeration.yml`
+    
+    Blocks enumeration of shares and sessions by anonymous users
+  </Card>
+  
+  <Card title="SMB Bandwidth Settings" icon="network-wired">
+    **Configuration:** `networking/shares/disable-smb-bandwidth-throttling.yml`
+    
+    Optimizes SMB performance while maintaining security
+  </Card>
+  
+  <Card title="LLMNR Disabled" icon="broadcast-tower">
+    **Configuration:** `networking/disable-llmnr.yml`
+    
+    Disables Link-Local Multicast Name Resolution to prevent spoofing attacks
+  </Card>
+</CardGroup>
+
+## Windows Update Security
+
+### Automatic Updates Configuration
+
+Windows Updates are important for security, but automatic updates can be disabled with notifications.
+
+<CodeGroup>
+```xml Update Options
+<RadioPage IsRequired="true" DefaultOption="auto-updates-disable">
+  <Description>Updates are important for security, you'll get update notifications regardless.</Description>
+  <Options>
+    <RadioOption>
+      <Text>Disable Automatic Windows Updates</Text>
+      <Name>auto-updates-disable</Name>
+    </RadioOption>
+    <RadioOption>
+      <Text>Enable Automatic Windows Updates</Text>
+      <Name>auto-updates-default</Name>
+    </RadioOption>
+  </Options>
+</RadioPage>
+```
+</CodeGroup>
+
+<Warning>
+**Important:** Even with automatic updates disabled, you will receive update notifications. It's critical to install security updates manually to maintain system security.
+</Warning>
+
+**Documentation:** [Automatic Updates Guide](https://docs.atlasos.net/getting-started/post-installation/atlas-folder/general-configuration/#automatic-updates)
+
+## Security Visibility Features
+
+### Hidden Unused Security Pages
+
+Unused Windows Security pages are hidden to simplify the security interface.
+
+**Configuration:** `debloat/hide-unused-security-pages.yml`
+
+**Pages hidden:**
+- Family options (on non-family editions)
+- Device security (when features are disabled)
+- Empty or non-functional sections
+
+<Info>
+This improves usability without reducing security - only cosmetic changes to Settings.
+</Info>
+
+## Security Recommendations
+
+<Steps>
+  <Step title="Keep Windows Defender Enabled">
+    Unless you have specific reasons and alternative protection, keep Defender enabled for real-time protection.
+  </Step>
+  
+  <Step title="Enable Mitigations on Modern CPUs">
+    On CPUs from 2018 or newer, keep mitigations enabled for minimal performance impact and maximum security.
+  </Step>
+  
+  <Step title="Consider Core Isolation">
+    If you don't game competitively or use incompatible software, enable Core Isolation for advanced protection.
+  </Step>
+  
+  <Step title="Install Security Updates">
+    Regularly check for and install Windows security updates, even with automatic updates disabled.
+  </Step>
+  
+  <Step title="Use Strong Passwords">
+    AtlasOS doesn't change password requirements - continue using strong, unique passwords.
+  </Step>
+</Steps>
+
+## Security Trade-offs
+
+<CardGroup cols={2}>
+  <Card title="Maximum Security" icon="shield">
+    - Defender enabled
+    - All mitigations enabled
+    - Core Isolation enabled
+    - Automatic updates enabled
+    - Remote features disabled
+    
+    **Best for:** General users, business use, multi-user systems
+  </Card>
+  
+  <Card title="Balanced (Recommended)" icon="scale-balanced">
+    - Defender enabled
+    - Mitigations enabled (modern CPU)
+    - Core Isolation disabled
+    - Manual updates with notifications
+    - Remote features disabled
+    
+    **Best for:** Gaming, performance-focused users, single-user systems
+  </Card>
+  
+  <Card title="Performance Priority" icon="gauge-high">
+    - Defender disabled (with alternative AV)
+    - Mitigations disabled (old CPU only)
+    - Core Isolation disabled
+    - Manual updates
+    - Remote features disabled
+    
+    **Best for:** Advanced users, benchmarking, isolated systems
+    
+    <Warning>Requires alternative security measures and advanced knowledge</Warning>
+  </Card>
+  
+  <Card title="Maximum Performance" icon="rocket">
+    - All features disabled
+    
+    <Warning>
+    **NOT RECOMMENDED** - Only for air-gapped systems or advanced users who fully understand security implications
+    </Warning>
+  </Card>
+</CardGroup>
+
+## Alternative Security Solutions
+
+If you disable Windows Defender, consider these alternatives:
+
+- **Kaspersky Free** - Strong protection, low resource usage
+- **Bitdefender Free** - Excellent detection rates
+- **Malwarebytes** - Good for malware removal
+- **ESET NOD32** - Lightweight and effective
+
+<Tip>
+Combine AtlasOS with:
+- Hardware firewall or router-level filtering
+- DNS-based blocking (Pi-hole, NextDNS)
+- Browser security extensions (uBlock Origin)
+- Regular security audits
+</Tip>
+
+## Security Monitoring
+
+After installation, monitor security status:
+
+1. **Windows Security Center** - Check security status
+2. **Event Viewer** - Review security events
+3. **Firewall Logs** - Monitor connection attempts
+4. **Task Scheduler** - Verify no malicious tasks
+
+## Related Features
+
+- [Privacy Features](/features/privacy) - Privacy improvements that complement security
+- [Performance Features](/features/performance) - Understanding performance vs security trade-offs
+- [Usability Features](/features/usability) - Security UI improvements

@@ -1,0 +1,398 @@
+---
+title: Privacy Features
+description: Complete guide to AtlasOS privacy improvements including telemetry removal, activity tracking prevention, advertising disablement, and data collection blocking
+---
+
+AtlasOS prioritizes your privacy by eliminating Microsoft's notorious tracking, pre-installed data collection mechanisms, and advertising features. With over 34 privacy-focused configuration files, AtlasOS makes Windows truly private.
+
+## Telemetry Removal
+
+### Complete Telemetry Disablement
+
+AtlasOS completely blocks Windows telemetry and data collection at multiple system levels.
+
+<CodeGroup>
+```yaml disallow-data-collection.yml
+title: Disallow Telemetry and Data Collection
+description: Disallows telemetry and data collection to improve privacy
+actions:
+  # Stop DiagTrack service
+  - !service: {name: 'DiagTrack', operation: stop}
+  
+  - !registryValue:
+    path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection'
+    value: 'AllowTelemetry'
+    data: '0'
+    type: REG_DWORD
+    
+  - !registryValue:
+    path: 'HKLM\Software\Policies\Microsoft\Windows\DataCollection'
+    value: 'AllowTelemetry'
+    data: '0'
+    type: REG_DWORD
+    
+  # Disable & clear logger
+  - !registryValue:
+    path: 'HKLM\SYSTEM\CurrentControlSet\Control\WMI\Autologger\Diagtrack-Listener'
+    value: 'Start'
+    data: '0'
+    type: REG_DWORD
+```
+</CodeGroup>
+
+**What gets disabled:**
+- DiagTrack service (Connected User Experiences and Telemetry)
+- Event transcript logging
+- Mini trace slot
+- Device name inclusion in telemetry
+- Automatic logger
+- Diagnostic data collection
+
+### Specific Telemetry Types Blocked
+
+<Tabs>
+  <Tab title="Windows Telemetry">
+    **Configuration:** `privacy/telemetry/disallow-data-collection.yml`
+    
+    Blocks all Windows telemetry levels including:
+    - Security telemetry
+    - Basic telemetry
+    - Enhanced telemetry
+    - Full telemetry
+  </Tab>
+  
+  <Tab title="Activation Telemetry">
+    **Configuration:** `privacy/telemetry/disable-activation-telemetry.yml`
+    
+    Prevents Windows activation data from being sent to Microsoft servers.
+  </Tab>
+  
+  <Tab title="Input Telemetry">
+    **Configuration:** `privacy/telemetry/disable-input-telemetry.yml`
+    
+    Disables typing and handwriting data collection used for improving input methods.
+  </Tab>
+  
+  <Tab title=".NET Telemetry">
+    **Configuration:** `privacy/telemetry/disable-dotnet-cli-telemetry.yml`
+    
+    Blocks .NET Core CLI telemetry through environment variables.
+  </Tab>
+</Tabs>
+
+### CEIP Disablement
+
+The Customer Experience Improvement Program is completely disabled.
+
+**Configuration:** `privacy/telemetry/disable-ceip.yml`
+
+### Diagnostic Tracing
+
+All diagnostic tracing and logging mechanisms are disabled to prevent data collection.
+
+**Configuration:** `privacy/telemetry/disable-diagnostic-tracing.yml`
+
+## Activity Tracking Prevention
+
+### App Launch Tracking
+
+Windows no longer tracks which applications you use most frequently.
+
+<CodeGroup>
+```yaml disable-app-launch-tracking.yml
+title: Disable App Launch Tracking
+description: Prevents Windows from tracking applications you use the most
+actions:
+  - !registryValue:
+    path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced'
+    value: 'Start_TrackProgs'
+    data: '0'
+    type: REG_DWORD
+```
+</CodeGroup>
+
+### Activity Feed Disablement
+
+The Windows activity feed and timeline features are completely disabled.
+
+**Configuration:** `privacy/disable-activity-feed.yml`
+
+**Prevents tracking of:**
+- App usage history
+- Browsing history
+- Document access patterns
+- Media playback history
+
+### Device Monitoring
+
+Device monitoring and tracking features are disabled to prevent hardware usage data collection.
+
+**Configuration:** `privacy/disable-device-monitoring.yml`
+
+### Performance Tracking
+
+Windows performance tracking that collects system usage data is disabled.
+
+**Configuration:** `privacy/disable-perf-track.yml`
+
+## Windows Recall and Snapshots
+
+<Warning>
+Windows Recall is a controversial feature in Windows 11 24H2+ that takes regular screenshots of your activity.
+</Warning>
+
+### Recall Disablement
+
+AtlasOS completely disables Windows Recall snapshots.
+
+<CodeGroup>
+```yaml disable-recall-snap.yml
+title: Disable Recall Snapshots
+description: Disables snapshots of Recall (24H2+)
+builds: [ '>=22000' ]
+actions:
+  - !cmd:
+    command: '"AtlasDesktop\3. General Configuration\AI Features\Recall\Disable Recall Support (default).cmd" /silent'
+```
+</CodeGroup>
+
+**What this prevents:**
+- Automatic screenshot capture
+- OCR processing of screen content
+- Storage of sensitive information
+- AI analysis of your activity
+
+## Advertising and Marketing
+
+### Advertising ID Removal
+
+Your unique advertising identifier is disabled and cannot be used for targeted ads.
+
+<CodeGroup>
+```yaml disable-advertising-info.yml
+title: Disable Advertising ID
+description: Disables Advertising ID for privacy
+actions:
+  - !registryValue:
+    path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\AdvertisingInfo'
+    value: 'Enabled'
+    data: '0'
+    type: REG_DWORD
+    
+  - !registryValue:
+    path: 'HKLM\Software\Policies\Microsoft\Windows\AdvertisingInfo'
+    value: 'DisabledByGroupPolicy'
+    data: '1'
+    type: REG_DWORD
+```
+</CodeGroup>
+
+### Sync Provider Notifications
+
+Advertising and promotional notifications from sync providers are disabled.
+
+**Configuration:** `privacy/advertising/disable-sync-provider-notifs.yml`
+
+## Cloud and Online Features
+
+### Settings Sync Disablement
+
+Your Windows settings are no longer synced to Microsoft's cloud.
+
+**Configuration:** `privacy/cloud/disable-setting-sync.yml`
+
+**Prevents syncing of:**
+- Theme and personalization
+- Passwords and credentials
+- Language preferences
+- Ease of access settings
+- Other Windows settings
+
+### Setup Suggestions
+
+Suggestions to complete Windows setup and link Microsoft accounts are disabled.
+
+**Configuration:** `privacy/cloud/disable-suggest-ways-to-finish-setup.yml`
+
+### Message Cloud Sync
+
+Cloud synchronization of messages and SMS is blocked.
+
+**Configuration:** `privacy/cloud/disallow-message-cloud-sync.yml`
+
+## Experimentation and A/B Testing
+
+### Microsoft Experimentation
+
+AtlasOS prevents Microsoft from using your computer for feature testing.
+
+<CodeGroup>
+```yaml disable-experimentation.yml
+title: Disable Experimentation
+description: Disallows Microsoft from using your computer as a test for certain features
+actions:
+  - !registryValue:
+    path: 'HKLM\SOFTWARE\Microsoft\PolicyManager\default\System\AllowExperimentation'
+    value: 'Value'
+    data: '0'
+    type: REG_DWORD
+```
+</CodeGroup>
+
+**Blocks:**
+- A/B feature testing
+- Experimental feature rollouts
+- Usage-based modifications
+- Feature flighting
+
+## App Permissions and Privacy
+
+### Default App Permissions
+
+Default permissions for all apps are configured to minimize privacy invasion.
+
+**Configuration:** `privacy/config-app-permissions.yml`
+
+<AccordionGroup>
+  <Accordion title="Camera Access">
+    Apps cannot access your camera by default without explicit permission.
+  </Accordion>
+  
+  <Accordion title="Microphone Access">
+    Microphone access is blocked by default for all apps.
+  </Accordion>
+  
+  <Accordion title="Location Services">
+    Location tracking is disabled and apps cannot access your location.
+  </Accordion>
+  
+  <Accordion title="Notifications">
+    App notification permissions are minimized to reduce data collection.
+  </Accordion>
+</AccordionGroup>
+
+### Online Speech Recognition
+
+Cloud-based speech recognition is disabled to prevent voice data transmission.
+
+**Configuration:** `privacy/disable-online-speech-recognition.yml`
+
+### Lock Screen Camera
+
+Camera access from the lock screen is disabled for privacy.
+
+**Configuration:** `privacy/disable-lockscreen-camera.yml`
+
+## Third-Party Application Privacy
+
+### NVIDIA Telemetry
+
+If NVIDIA drivers are installed, their telemetry is automatically disabled.
+
+**Configuration:** `privacy/apps/disable-nvidia-telemetry.yml`
+
+### Office Telemetry
+
+Microsoft Office telemetry and data collection are disabled.
+
+**Configuration:** `privacy/apps/disable-office-telemetry.yml`
+
+## System Privacy Features
+
+### Program Compatibility Assistant (PCA)
+
+The Program Compatibility Assistant is disabled to prevent usage tracking.
+
+**Configuration:** `privacy/disable-pca.yml`
+
+### Privacy Experience
+
+The Windows privacy experience and setup wizards are disabled.
+
+**Configuration:** `privacy/disable-privacy-experience.yml`
+
+### RSOP Logging
+
+Resultant Set of Policy logging is disabled to prevent policy tracking.
+
+**Configuration:** `privacy/disable-rsop-logging.yml`
+
+### Windows Media Player Privacy
+
+Media player usage tracking and online features are disabled.
+
+**Configuration:** `privacy/config-windows-media-player.yml`
+
+## Privacy Impact Summary
+
+<CardGroup cols={2}>
+  <Card title="Data Collection" icon="database">
+    **100% blocked** - No telemetry or diagnostic data sent to Microsoft
+  </Card>
+  
+  <Card title="Activity Tracking" icon="chart-line">
+    **Completely disabled** - Your app usage and behaviors are not monitored
+  </Card>
+  
+  <Card title="Advertising" icon="rectangle-ad">
+    **Eliminated** - No advertising ID or targeted marketing
+  </Card>
+  
+  <Card title="Cloud Sync" icon="cloud">
+    **User controlled** - Settings and data stay on your device
+  </Card>
+</CardGroup>
+
+## Privacy Configuration Files
+
+AtlasOS includes **34 dedicated privacy configuration files** organized by category:
+
+```
+privacy/
+├── advertising/         # Advertising and marketing
+├── apps/               # Third-party app telemetry
+├── cloud/              # Cloud sync features
+├── telemetry/          # All telemetry types
+└── [root configs]      # Core privacy features
+```
+
+## Verifying Privacy Settings
+
+After installation, verify your privacy settings:
+
+<Steps>
+  <Step title="Check DiagTrack Service">
+    Open Services (services.msc) and verify DiagTrack is stopped and disabled
+  </Step>
+  
+  <Step title="Review Privacy Settings">
+    Navigate to Settings > Privacy & Security and review all categories
+  </Step>
+  
+  <Step title="Monitor Network Activity">
+    Use tools like Wireshark or GlassWire to verify no unexpected connections to Microsoft servers
+  </Step>
+</Steps>
+
+<Tip>
+For maximum privacy, combine AtlasOS with DNS-level blocking (Pi-hole, AdGuard DNS) and a privacy-focused browser.
+</Tip>
+
+## Privacy vs Functionality Trade-offs
+
+<Warning>
+Some disabled features may affect functionality:
+</Warning>
+
+- **Timeline disabled** - Cannot view activity history across devices
+- **Cortana limited** - Voice assistant functionality reduced
+- **Sync disabled** - Settings don't sync between devices
+- **Cloud features limited** - OneDrive and cloud integration reduced
+
+These trade-offs prioritize privacy over convenience. Most users find the privacy benefits outweigh the functionality loss.
+
+## Related Features
+
+- [Security Features](/features/security) - Security configurations that complement privacy
+- [Performance Features](/features/performance) - Performance gains from disabled telemetry
+- [Usability Features](/features/usability) - UI improvements including removal of ads

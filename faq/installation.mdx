@@ -1,0 +1,252 @@
+---
+title: Installation FAQ
+description: Frequently asked questions about installing AtlasOS, system requirements, pre-installation steps, and common installation errors.
+---
+
+## System Requirements
+
+<Accordion title="What are the system requirements for AtlasOS?">
+AtlasOS supports the following Windows 11 builds:
+
+- Windows 11 24H2 (build 26100)
+- Windows 11 25H2 (build 26200)
+
+Your system must meet the standard Windows 11 hardware requirements. AtlasOS does not modify Windows activation or licensing.
+
+**Note:** AtlasOS v0.5.0 is specifically designed for Windows 11. Ensure you're running one of the supported builds before installation.
+</Accordion>
+
+<Accordion title="Can I install AtlasOS on Windows 10?">
+AtlasOS v0.5.0 is designed for Windows 11 (builds 24H2 and 25H2). While previous versions supported Windows 10, the latest version focuses on Windows 11 optimization.
+
+Check the [GitHub releases page](https://github.com/Atlas-OS/Atlas/releases) for older versions that support Windows 10 22H2.
+</Accordion>
+
+<Accordion title="Can I upgrade from an older version of Atlas?">
+Yes, AtlasOS v0.5.0 is upgradeable from v0.4.1. The AME Wizard will detect your current Atlas installation and guide you through the upgrade process.
+
+**Important:** Unsupported upgrades (from versions older than v0.4.1) are not allowed and may cause system instability.
+</Accordion>
+
+## Pre-Installation Requirements
+
+<Accordion title="What do I need to do before installing AtlasOS?">
+Before running the AtlasOS Playbook, ensure the following:
+
+1. **Disable Windows Defender temporarily** - Required during installation
+2. **Remove other antivirus software** - Third-party antivirus must be uninstalled
+3. **Install all pending Windows Updates** - System must be fully updated
+4. **Plug in your device** - Installation requires stable power
+5. **Ensure stable internet connection** - Required for downloading components
+6. **Disable User Account Control Parental Decisions (UCPD)** - Must be disabled
+
+The AME Wizard will verify these requirements before beginning installation.
+</Accordion>
+
+<Accordion title="How long does the installation take?">
+AtlasOS installation typically takes approximately **15 minutes**. The actual time may vary depending on your system's hardware specifications and internet connection speed.
+
+During installation, Atlas will:
+- Install essential software (7-Zip, Visual C++ Runtimes, DirectX)
+- Copy configuration folders to your desktop
+- Apply privacy, performance, and usability tweaks
+- Configure Windows settings
+
+You'll see progress updates throughout the installation process.
+</Accordion>
+
+<Accordion title="Do I need to back up my system before installing?">
+Yes, **creating a backup is highly recommended** before installing AtlasOS. While Atlas is designed to be safe and reversible, having a backup ensures you can restore your system if needed.
+
+Recommended backup methods:
+- Create a system restore point
+- Use Windows built-in backup tools
+- Create a full system image
+- Back up important personal files
+
+Atlas includes a "Reset this PC" option in the troubleshooting folder that can help restore Windows to defaults if needed.
+</Accordion>
+
+## Installation Process
+
+<Accordion title="Where do I download AME Wizard and the Atlas Playbook?">
+**AME Wizard:**
+Download from the official AME Labs website: [https://amelabs.net](https://amelabs.net)
+
+**AtlasOS Playbook:**
+Download the latest `.apbx` file from the GitHub releases page: [https://github.com/Atlas-OS/Atlas/releases/latest](https://github.com/Atlas-OS/Atlas/releases/latest)
+
+Always download from these official sources to ensure you're getting authentic, unmodified files.
+</Accordion>
+
+<Accordion title="How do I run the AtlasOS Playbook?">
+1. Extract AME Wizard to a folder on your computer
+2. Run `AME Wizard.exe` as Administrator
+3. Click "Open Playbook" and select the downloaded `.apbx` file
+4. Review the installation options and configure your preferences
+5. Click "Run" to begin the installation
+6. Follow the on-screen instructions
+7. Wait for the process to complete (approximately 15 minutes)
+8. Restart your computer when prompted
+
+The Playbook is a password-protected ZIP archive with the password `malte` - AME Wizard handles this automatically.
+</Accordion>
+
+<Accordion title="What installation options should I choose?">
+During installation, you'll be prompted to choose several options:
+
+**Windows Defender:**
+- Enable Defender (recommended) - Maintains system security
+- Disable Defender - For advanced users only, reduces security
+
+**CPU Mitigations:**
+- Default Windows Mitigations (recommended) - Maintains security
+- Disable All Mitigations - May improve performance on older CPUs but reduces security
+
+**Windows Updates:**
+- Disable Automatic Updates - You'll get notifications but manual control
+- Enable Automatic Updates - Windows updates install automatically
+
+**Additional Options:**
+- Disable Hibernation - Frees up disk space
+- Maximum Performance - Disables power saving features
+- Disable Core Isolation - Reduces security for potential performance gains
+- Remove Microsoft Edge - Uninstalls Edge browser
+- Install a Browser - Choose from Brave, Firefox, LibreWolf, or Chrome
+
+All options can be changed later via the Atlas folder on your desktop.
+</Accordion>
+
+## Common Installation Errors
+
+<Accordion title="Installation fails with 'Defender must be toggled' error">
+This error occurs when Windows Defender is still active. To resolve:
+
+1. Open Windows Security
+2. Go to **Virus & threat protection**
+3. Click **Manage settings**
+4. Turn off **Real-time protection**
+5. Turn off **Cloud-delivered protection**
+6. Turn off **Automatic sample submission**
+7. Restart AME Wizard and try again
+
+Defender will be re-enabled after installation if you selected "Enable Defender" during setup.
+</Accordion>
+
+<Accordion title="Installation fails with 'Pending updates detected' error">
+AtlasOS requires all Windows updates to be installed before proceeding:
+
+1. Open **Settings** > **Windows Update**
+2. Click **Check for updates**
+3. Install all available updates
+4. Restart your computer
+5. Check for updates again until none are available
+6. Retry the Atlas installation
+
+This ensures a stable base system for Atlas modifications.
+</Accordion>
+
+<Accordion title="Installation fails with 'Antivirus detected' error">
+Third-party antivirus software must be completely uninstalled before installing Atlas:
+
+1. Open **Settings** > **Apps** > **Installed apps**
+2. Find your antivirus software (Norton, McAfee, Avast, etc.)
+3. Click the three dots and select **Uninstall**
+4. Follow the uninstallation wizard
+5. Restart your computer
+6. Verify the antivirus is completely removed
+7. Retry the Atlas installation
+
+Windows Defender (if enabled during installation) will provide adequate protection after Atlas is installed.
+</Accordion>
+
+<Accordion title="Installation fails with 'Must be plugged in' error">
+Atlas requires your device to be connected to a power source during installation:
+
+1. Connect your laptop to its power adapter
+2. Ensure the power cable is securely connected
+3. Verify the device is charging
+4. Retry the Atlas installation
+
+This prevents installation interruption due to battery depletion, which could cause system instability.
+</Accordion>
+
+<Accordion title="Installation fails with 'Internet connection required' error">
+Atlas needs internet connectivity to download components during installation:
+
+1. Check your network connection
+2. Ensure you can access websites in a browser
+3. Disable VPN if connected
+4. Try restarting your router
+5. Connect via Ethernet cable for more stable connection
+6. Retry the Atlas installation
+
+Internet is required to download software like 7-Zip, Visual C++ Runtimes, and optional browsers.
+</Accordion>
+
+## Post-Installation Issues
+
+<Accordion title="What if installation completes but system is unstable?">
+If you experience issues after installation:
+
+1. **Restart your computer** - Many changes require a reboot
+2. **Check Windows Update** - Install any post-installation updates
+3. **Use troubleshooting tools** - Located in `C:\Windows\AtlasDesktop\9. Troubleshooting`
+4. **Repair Windows components** - Run "Repair Windows Components.cmd" as Administrator
+5. **Reset services** - Run "Set services to defaults.cmd" to restore service configurations
+
+If problems persist, you can use the "Reset this PC" option to restore Windows to default settings.
+</Accordion>
+
+<Accordion title="Can I uninstall AtlasOS?">
+While there's no direct "uninstall" option, you can restore Windows to its default state:
+
+**Option 1: Reset This PC**
+1. Open the troubleshooting folder: `C:\Windows\AtlasDesktop\9. Troubleshooting`
+2. Open "Reset this PC (read first).url" for guidance
+3. Go to **Settings** > **System** > **Recovery**
+4. Click **Reset this PC** and choose to keep or remove files
+
+**Option 2: Reinstall Windows**
+Perform a clean Windows installation using official Microsoft media.
+
+**Note:** AtlasOS modifications are extensive, so a reset or reinstall is the recommended approach for complete removal.
+</Accordion>
+
+<Accordion title="Installation completed but Atlas folder is missing from desktop">
+The Atlas folder should be located at `C:\Windows\AtlasDesktop`. If it's not on your desktop:
+
+1. Navigate to `C:\Windows\AtlasDesktop` in File Explorer
+2. Right-click on "AtlasDesktop"
+3. Select **Send to** > **Desktop (create shortcut)**
+
+Alternatively, you can create a desktop shortcut manually or pin it to Quick Access in File Explorer.
+</Accordion>
+
+## Installation Verification
+
+<Accordion title="How do I verify that AtlasOS installed correctly?">
+After installation and restart, verify Atlas is working:
+
+1. **Check for the Atlas folder** - Should be on your desktop or at `C:\Windows\AtlasDesktop`
+2. **Check AtlasOS Toolbox** - If installed, should be available in Start Menu
+3. **Verify registry entries** - Check `HKLM\SOFTWARE\AtlasOS` exists
+4. **Test performance** - System should feel more responsive
+5. **Review applied settings** - Check Windows Settings for Atlas modifications
+
+You can also check the AME Wizard logs located in the AME Wizard installation directory for detailed installation information.
+</Accordion>
+
+<Accordion title="What should I do immediately after installation?">
+After successfully installing AtlasOS:
+
+1. **Restart your computer** - Essential for changes to take effect
+2. **Install GPU drivers** - Download latest drivers from NVIDIA/AMD/Intel
+3. **Configure security settings** - Review options in Atlas folder > Security
+4. **Install your applications** - Reinstall software you use regularly
+5. **Configure Windows Update** - Enable automatic updates if desired
+6. **Test system functionality** - Verify audio, network, USB devices work
+7. **Create a system restore point** - Backup your fresh Atlas installation
+
+Refer to the Atlas folder on your desktop for additional configuration options.
+</Accordion>

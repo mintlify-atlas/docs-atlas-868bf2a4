@@ -1,0 +1,120 @@
+---
+title: What is Atlas?
+description: Learn about AtlasOS, an open-source Windows modification that optimizes performance, privacy, and usability using AME Wizard Playbooks.
+---
+
+AtlasOS, or Atlas, is an open-source project that enhances Windows by conveniently applying privacy, usability, and performance optimizations, all while maintaining functionality and customizability.
+
+## How Atlas works
+
+Unlike custom Windows ISOs, Atlas uses the **AME Wizard Playbook system** to modify your existing Windows installation. This approach offers several advantages:
+
+- **Transparency**: All modifications are auditable through open-source code
+- **Safety**: No need to download potentially malicious custom ISOs
+- **Flexibility**: Apply changes to your current Windows installation without reinstalling
+- **Reversibility**: Most changes can be toggled back through the Atlas folder
+
+### The AME Wizard Playbook system
+
+AME Wizard is controlled by Playbooks, a customizable script-like system that can perform various tasks. Playbooks are essentially renamed `.zip` archives (password: `malte`) that primarily consist of plain text files, making them easy to audit for security.
+
+The few binaries included in the Playbook are open source in the [Atlas utilities repository](https://github.com/Atlas-OS/utilities), with hashes listed for verification. While AME Wizard's GUI is not open source, its entire backend called [TrustedUninstaller](https://github.com/Ameliorated-LLC/trusted-uninstaller-cli) is open source under MIT license.
+
+<Info>
+The Atlas Playbook is open source under the [GPLv3 license](https://github.com/Atlas-OS/Atlas/blob/main/LICENSE), ensuring complete transparency of all modifications made to your system.
+</Info>
+
+## Why choose Atlas?
+
+### Performance
+
+Atlas strikes a balance between performance and compatibility by implementing numerous meaningful changes to improve Windows performance and responsiveness without breaking essential features.
+
+<Note>
+Atlas will not do tweaks for a placebo effect or marginal gains, making Atlas more stable and compatible than other Windows modifications.
+</Note>
+
+Performance improvements include:
+
+- Removing unnecessary background processes and telemetry
+- Optionally disabling power-saving features for maximum performance
+- Optimizing system services for lower latency
+- Streamlining the Windows interface
+
+### Privacy
+
+Atlas removes the majority of telemetry embedded within Windows and implements numerous group policies to minimize data collection. This includes:
+
+- Eliminating most of Microsoft's tracking services
+- Removing pre-installed bloatware and unnecessary apps
+- Disabling advertising throughout Windows
+- Configuring privacy-focused default settings
+
+<Warning>
+While Atlas enhances privacy within Windows, it cannot ensure privacy outside the scope of Windows, such as in browsers and other third-party applications.
+</Warning>
+
+### Security
+
+Most Windows modifications remove key security features that users need to maintain a secure system. Atlas takes a different approach by allowing you to customize your security at your own risk while informing you about each option's pros and cons.
+
+**Optional security features include:**
+
+- Windows Defender and SmartScreen
+- Windows Update with toggleable automatic updates
+- CPU mitigations (Spectre, Meltdown protection)
+- User Account Control (UAC)
+- Core isolation features (VBS/Memory Integrity)
+
+<Tip>
+Atlas enables Defender by default and recommends keeping it enabled. You can toggle security features through the Atlas folder after installation.
+</Tip>
+
+### Usability
+
+Atlas applies many modifications and default settings to make Windows easier to use:
+
+- Removing commonly unneeded applications (which remain reinstallable)
+- Configuring interface elements for better user experience
+- Disabling intrusive Windows advertisements
+- Fixing general Windows annoyances
+- Providing easy-to-use configuration scripts
+
+## Legal compliance
+
+Atlas is fully compliant with Microsoft's terms of service:
+
+<CardGroup cols={2}>
+  <Card title="No ISO redistribution" icon="circle-check">
+    Atlas doesn't redistribute modified Windows ISOs, complying with [Microsoft Windows Usage Terms](https://www.microsoft.com/content/dam/microsoft/usetm/documents/windows/11/oem-(pre-installed)/UseTerms_OEM_Windows_11_English.pdf)
+  </Card>
+  <Card title="No activation tampering" icon="shield-check">
+    Atlas does not alter Windows activation in any way
+  </Card>
+</CardGroup>
+
+Because Atlas modifies your existing licensed Windows installation rather than distributing modified copies, it remains within Microsoft's acceptable use guidelines.
+
+## Open source and transparent
+
+Transparency is a core principle of AtlasOS:
+
+- All source code is publicly available on [GitHub](https://github.com/Atlas-OS/Atlas)
+- Community contributions are welcome and encouraged
+- All modifications can be audited before installation
+- Regular updates based on community feedback
+
+<Info>
+You can view the complete source code, suggest improvements, and contribute to Atlas development on our [GitHub repository](https://github.com/Atlas-OS/Atlas).
+</Info>
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Installation guide" icon="download" href="/getting-started/installation">
+    Ready to install Atlas? Follow our step-by-step installation guide
+  </Card>
+  <Card title="Join the community" icon="discord" href="https://discord.atlasos.net">
+    Get help and connect with other Atlas users on Discord
+  </Card>
+</CardGroup>

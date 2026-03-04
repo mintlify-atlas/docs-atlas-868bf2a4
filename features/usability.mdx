@@ -1,0 +1,538 @@
+---
+title: Usability Features
+description: Complete guide to AtlasOS usability improvements including removed bloatware, interface tweaks, Start Menu optimization, and quality-of-life enhancements
+---
+
+AtlasOS significantly improves Windows usability by removing advertising, fixing annoyances, and optimizing the user interface. These improvements make Windows more enjoyable and efficient to use daily.
+
+## User Interface Improvements
+
+### Atlas Theme
+
+AtlasOS includes a custom theme that improves visual consistency and aesthetics.
+
+**Configuration:** `qol/appearance/atlas-theme.yml`
+
+**Features:**
+- Custom color scheme optimized for clarity
+- Improved contrast and readability
+- Consistent styling across system components
+- Professional appearance
+
+### Blue Tooltips
+
+Tooltips are styled with blue accents for better visibility and modern aesthetics.
+
+**Configuration:** `qol/appearance/blue-tooltips.yml`
+
+### Theme Protection
+
+Theme changes are restricted to maintain consistency and prevent accidental modifications.
+
+**Configuration:** `qol/appearance/disallow-theme-changes.yml`
+
+### Best Wallpaper Quality
+
+Wallpaper compression is disabled to maintain maximum image quality.
+
+**Configuration:** `qol/best-wallpaper-quality.yml`
+
+<Info>
+This ensures your desktop wallpapers are displayed at full quality without JPEG compression artifacts.
+</Info>
+
+## Start Menu Optimization
+
+### Cleaned Start Menu
+
+The Start Menu is significantly improved with removed clutter and better defaults.
+
+<CodeGroup>
+```yaml config-start-menu.yml
+title: Configure Start Menu
+description: Configures the Start Menu's settings for QoL
+actions:
+  # Remove frequent programs list from the Start Menu
+  - !registryValue:
+    path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer'
+    value: 'NoStartMenuMFUprogramsList'
+    data: '1'
+    type: REG_DWORD
+    
+  # Hide "Most used" list from Start menu
+  - !registryValue:
+    path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\Explorer'
+    value: 'ShowOrHideMostUsedApps'
+    data: '2'
+    type: REG_DWORD
+    
+  # Remove "Recently added" list from Start Menu
+  - !registryValue:
+    path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\Explorer'
+    value: 'HideRecentlyAddedApps'
+    data: '1'
+    type: REG_DWORD
+    
+  # Remove Personalized Website Recommendations
+  - !registryValue:
+    path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\Explorer'
+    value: 'HideRecommendedPersonalizedSites'
+    data: '1'
+    type: REG_DWORD
+```
+</CodeGroup>
+
+**Removed from Start Menu:**
+- Most used apps list
+- Recently added apps
+- Frequent programs tracking
+- Personalized website recommendations
+- Advertising and promotional content
+
+**Custom Pinned Apps:**
+- Settings
+- Windows Terminal
+- File Explorer
+- Microsoft Store
+- Gaming App (Xbox)
+- Calculator
+- Notepad
+- Paint
+- Security
+
+## Input and Mouse Configuration
+
+### Disabled Mouse Acceleration
+
+Mouse acceleration is disabled for precise 1:1 movement, which most gamers prefer.
+
+<CodeGroup>
+```yaml disable-mouse-accel.yml
+title: Disable Mouse Acceleration
+description: Disables mouse acceleration for 1:1 mouse movement
+actions:
+  - !registryValue:
+    path: 'HKCU\Control Panel\Mouse'
+    value: 'MouseSpeed'
+    data: '0'
+    type: REG_SZ
+    
+  - !registryValue:
+    path: 'HKCU\Control Panel\Mouse'
+    value: 'MouseThreshold1'
+    data: '0'
+    type: REG_SZ
+    
+  - !registryValue:
+    path: 'HKCU\Control Panel\Mouse'
+    value: 'MouseThreshold2'
+    data: '0'
+    type: REG_SZ
+```
+</CodeGroup>
+
+**Benefits:**
+- Predictable mouse movement
+- Better for gaming and precision work
+- Consistent cursor speed
+- No acceleration curve
+
+<Tip>
+This is especially beneficial for FPS games, graphic design, and any precision work requiring accurate mouse control.
+</Tip>
+
+### Spell Checking Disabled
+
+Automatic spell checking in Windows text inputs is disabled.
+
+**Configuration:** `qol/disable-spell-checking.yml`
+
+**Reasons:**
+- Reduces background processing
+- Prevents unwanted autocorrect
+- Better for technical content
+- User can enable in specific apps
+
+## Removed Tips and Suggestions
+
+### Windows Tips Disabled
+
+All Windows tips, tricks, and suggestions are disabled.
+
+**Configuration:** `qol/disable-tips.yml`
+
+**Removed:**
+- Get tips, tricks, and suggestions as you use Windows
+- Suggested content in Settings app
+- Feature discovery notifications
+- Tutorial overlays
+
+### Settings Tips Removal
+
+Tips and suggestions in the Settings app are disabled.
+
+**Configuration:** `qol/disable-settings-tips.yml`
+
+### Resume Disabled
+
+The "Pick up where you left off" feature that suggests websites and apps is disabled.
+
+**Configuration:** `qol/disable-resume.yml`
+
+## Taskbar Improvements
+
+AtlasOS includes numerous taskbar configuration improvements located in `qol/taskbar/`:
+
+<CardGroup cols={2}>
+  <Card title="Notification Area" icon="bell">
+    Optimized notification area with removed clutter and better icon management
+  </Card>
+  
+  <Card title="Task View" icon="window-restore">
+    Task view configuration optimized for performance and usability
+  </Card>
+  
+  <Card title="System Tray" icon="grip">
+    System tray icons organized and unnecessary ones removed
+  </Card>
+  
+  <Card title="Taskbar Behavior" icon="bars">
+    Improved taskbar responsiveness and behavior
+  </Card>
+</CardGroup>
+
+## File Explorer Enhancements
+
+File Explorer improvements are located in `qol/explorer/`:
+
+### Key Improvements
+
+- **Faster navigation** - Reduced delays and smoother operation
+- **Better defaults** - Sensible default views and settings
+- **Removed clutter** - Unnecessary panes and features disabled
+- **Improved context menus** - Streamlined right-click menus
+
+### Sharing Settings Shortcut
+
+A convenient shortcut to sharing settings is added for easier access.
+
+**Configuration:** `qol/add-sharing-settings-shortcut.yml`
+
+## Windows Update Experience
+
+Windows Update user experience improvements are in `qol/windows-update/`:
+
+### Improvements
+
+- **Less intrusive notifications** - Update prompts are less annoying
+- **Better scheduling** - More control over when updates install
+- **Clearer interface** - Simplified update status and options
+- **Faster checks** - Optimized update checking process
+
+## Store and App Management
+
+### Store Auto-Updates Disabled
+
+Microsoft Store automatic updates are disabled to give you control.
+
+**Configuration:** `qol/disable-store-auto-updates.yml`
+
+**Benefits:**
+- Control when apps update
+- Prevent unexpected changes
+- Save bandwidth
+- Avoid update-related issues
+
+<Info>
+You can still manually update apps from the Microsoft Store when convenient.
+</Info>
+
+### Auto App Archival Disabled
+
+Windows no longer automatically archives unused apps.
+
+**Configuration:** `qol/disable-auto-app-archival.yml`
+
+**Prevents:**
+- Unexpected app removal
+- Loss of app data
+- Reinstall requirements
+- Confusion about missing apps
+
+## Removed Bloatware Features
+
+### Dynamic Lighting Disabled
+
+Windows 11 Dynamic Lighting feature is disabled.
+
+**Configuration:** `qol/disable-dynamic-lighting.yml`
+
+### Windows Ink Workspace
+
+Ink Workspace is configured for minimal intrusion.
+
+**Configuration:** `qol/config-windows-ink-workspace.yml`
+
+### Touch Keyboard Features
+
+Unnecessary touch keyboard features are disabled on desktop systems.
+
+**Configuration:** `qol/disable-touch-keyboard-features.yml`
+
+### Touch Visual Feedback
+
+Visual feedback for touch interactions is disabled on non-touch systems.
+
+**Configuration:** `qol/disable-touch-visual-feedback.yml`
+
+### Screen Capture Hotkey
+
+The Windows 11 screen capture hotkey (Win+Shift+S is kept, but the dedicated button is removed).
+
+**Configuration:** `qol/disable-screen-capture-hotkey.yml`
+
+## PowerShell Configuration
+
+PowerShell is configured with improved defaults and better usability.
+
+**Configuration:** `qol/config-powershell.yml`
+
+**Improvements:**
+- Better command history
+- Improved autocomplete
+- Enhanced error messages
+- Optimized performance
+
+## Startup and Shutdown
+
+Startup and shutdown behavior improvements are in `qol/startup-shutdown/`:
+
+### Key Improvements
+
+- **Faster boot** - Unnecessary startup items removed
+- **Cleaner shutdown** - Removed shutdown delays
+- **Better restart** - Improved restart experience
+- **Less waiting** - Optimized timing for shutdown tasks
+
+## System Configuration
+
+Various system configuration improvements are in `qol/system/`:
+
+<AccordionGroup>
+  <Accordion title="Ease of Access Optimization">
+    Accessibility features are configured for better defaults while maintaining functionality.
+    
+    **Location:** `qol/ease-of-access/`
+  </Accordion>
+  
+  <Accordion title="BCD Edit Tweaks">
+    Boot Configuration Data tweaks improve boot experience and system behavior.
+    
+    **Configuration:** `qol/bcdedit-tweaks.yml`
+  </Accordion>
+  
+  <Accordion title="Security UI">
+    Security user interface improvements make security features more accessible.
+    
+    **Location:** `qol/security/`
+  </Accordion>
+  
+  <Accordion title="Shell Improvements">
+    Windows Shell behavior is optimized for better responsiveness and usability.
+    
+    **Location:** `qol/shell/`
+  </Accordion>
+</AccordionGroup>
+
+## Microsoft Edge Removal
+
+<Warning>
+**Optional during installation** - You can choose to remove Microsoft Edge and install an alternative browser.
+</Warning>
+
+### Installation Options
+
+<CodeGroup>
+```xml Edge Removal Options
+<CheckboxOption>
+  <Text>Remove Microsoft Edge</Text>
+  <Name>uninstall-edge</Name>
+</CheckboxOption>
+
+<CheckboxOption>
+  <Text>Install a Browser</Text>
+  <Name>install-another-browser</Name>
+</CheckboxOption>
+```
+</CodeGroup>
+
+### Alternative Browsers
+
+If you choose to install a browser, you can select from:
+
+<Tabs>
+  <Tab title="Brave">
+    **Privacy-focused** Chromium-based browser with built-in ad blocking
+    
+    - Built-in ad and tracker blocking
+    - BAT rewards system
+    - Strong privacy defaults
+    - Chromium compatibility
+  </Tab>
+  
+  <Tab title="LibreWolf">
+    **Maximum privacy** Firefox fork with enhanced privacy and security
+    
+    - No telemetry
+    - Enhanced privacy settings
+    - Built-in uBlock Origin
+    - Regular security updates
+  </Tab>
+  
+  <Tab title="Firefox">
+    **Open source** browser from Mozilla with good privacy options
+    
+    - Customizable
+    - Strong extension ecosystem
+    - Good privacy features
+    - Regular updates
+  </Tab>
+  
+  <Tab title="Chrome">
+    **Compatible** but not recommended for privacy
+    
+    - Maximum compatibility
+    - Google integration
+    - Large extension library
+    - Less private than alternatives
+  </Tab>
+</Tabs>
+
+<Info>
+AtlasOS recommends avoiding Chrome for privacy reasons. Brave or LibreWolf are better alternatives.
+</Info>
+
+**Documentation:** [Browser Guide](https://docs.atlasos.net/getting-started/post-installation/software/web-browsers)
+
+## Snipping Tool Removal
+
+The Microsoft Snipping Tool app can be optionally removed during installation.
+
+**Installation option:** `remove-snipping-tool`
+
+<Tip>
+Consider keeping Snipping Tool unless you have an alternative screenshot tool installed.
+</Tip>
+
+## Usability Impact Summary
+
+<CardGroup cols={3}>
+  <Card title="Cleaner Interface" icon="broom">
+    Removed clutter, ads, and suggestions for a professional appearance
+  </Card>
+  
+  <Card title="Better Defaults" icon="sliders">
+    Sensible defaults that match user expectations
+  </Card>
+  
+  <Card title="Less Annoying" icon="face-smile">
+    Disabled tips, suggestions, and intrusive features
+  </Card>
+  
+  <Card title="Faster Navigation" icon="gauge-high">
+    Optimized UI elements for quicker access
+  </Card>
+  
+  <Card title="More Control" icon="hand">
+    User decides when to update apps and system
+  </Card>
+  
+  <Card title="Gaming Optimized" icon="gamepad">
+    Mouse and input settings optimized for gaming
+  </Card>
+</CardGroup>
+
+## Quality of Life Directory Structure
+
+AtlasOS includes extensive QoL improvements organized by category:
+
+```
+qol/
+├── appearance/          # Visual improvements
+├── ease-of-access/      # Accessibility optimization
+├── explorer/            # File Explorer enhancements
+├── security/            # Security UI improvements
+├── shell/               # Windows Shell behavior
+├── startup-shutdown/    # Boot and shutdown
+├── system/              # System configuration
+├── taskbar/             # Taskbar optimization
+├── windows-update/      # Update experience
+└── [individual tweaks]  # Specific improvements
+```
+
+## Before and After Comparison
+
+<Tabs>
+  <Tab title="Start Menu">
+    **Before (Stock Windows):**
+    - Recommended websites and apps
+    - Most used apps tracking
+    - Recently added list
+    - Advertising content
+    - Cluttered layout
+    
+    **After (AtlasOS):**
+    - Clean, organized layout
+    - No tracking or recommendations
+    - User-defined pins only
+    - No advertising
+    - Faster to navigate
+  </Tab>
+  
+  <Tab title="Settings App">
+    **Before (Stock Windows):**
+    - Tips and suggestions everywhere
+    - Promotional content
+    - Confusing organization
+    - Slow to load
+    
+    **After (AtlasOS):**
+    - No tips or suggestions
+    - Clean interface
+    - Logical organization
+    - Fast and responsive
+  </Tab>
+  
+  <Tab title="Notifications">
+    **Before (Stock Windows):**
+    - Constant tips and tricks
+    - Feature discovery prompts
+    - Microsoft account nagging
+    - Edge promotional notifications
+    
+    **After (AtlasOS):**
+    - Only essential notifications
+    - No promotional content
+    - No account pressure
+    - Clean notification center
+  </Tab>
+</Tabs>
+
+## Customization After Installation
+
+All usability features can be further customized after installation through:
+
+1. **Atlas Folder** - Configuration scripts for common tweaks
+2. **Windows Settings** - Built-in settings for personal preferences
+3. **Registry Editor** - Advanced customization (for experienced users)
+4. **Group Policy** - Enterprise-level configuration options
+
+<Warning>
+When making post-installation changes, be careful not to re-enable telemetry or tracking features that AtlasOS disabled.
+</Warning>
+
+## Related Features
+
+- [Performance Features](/features/performance) - Performance benefits of removed bloatware
+- [Privacy Features](/features/privacy) - Privacy improvements that enhance usability
+- [Security Features](/features/security) - Security UI improvements

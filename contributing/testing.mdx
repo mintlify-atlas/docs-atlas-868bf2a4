@@ -1,0 +1,480 @@
+---
+title: 'Testing Changes'
+description: 'How to properly test your Atlas modifications before submitting a pull request'
+---
+
+## Why Testing Matters
+
+Atlas makes significant modifications to Windows that affect millions of users. Thorough testing ensures:
+
+- Changes work as intended across supported Windows builds
+- No unintended side effects or broken functionality
+- Performance, privacy, and usability goals are met
+- The user experience remains smooth and stable
+
+<Warning>
+  **All pull requests must be tested before submission.** Untested PRs may be closed without merging.
+</Warning>
+
+## Testing Environment
+
+### Recommended Setup
+
+<Info>
+  **Best practice**: Always test on a virtual machine (VM) or dedicated test system, never on your primary computer.
+</Info>
+
+Recommended VM solutions:
+- **Hyper-V** (Windows Pro/Enterprise)
+- **VMware Workstation** (Windows/Linux)
+- **VirtualBox** (Free, cross-platform)
+- **Parallels Desktop** (macOS)
+
+### Test System Requirements
+
+<Steps>
+  <Step title="Fresh Windows installation">
+    Start with a clean Windows 11 installation matching a supported build:
+    - Build 26100 (24H2)
+    - Build 26200 (25H2)
+    
+    Check the `playbook.conf` file for the current list of supported builds.
+  </Step>
+
+  <Step title="System preparation">
+    Before installing your test playbook:
+    - Disable Windows Defender (required by AME Wizard)
+    - Install all pending Windows updates
+    - Connect to the internet
+    - Plug in power (for laptops)
+    - Create a VM snapshot for quick rollback
+  </Step>
+
+  <Step title="Install AME Wizard">
+    Download the latest version from [amelabs.net](https://amelabs.net/)
+  </Step>
+</Steps>
+
+<Tip>
+  Create a snapshot after preparing Windows but before installing Atlas. This allows you to quickly test multiple iterations.
+</Tip>
+
+## What to Test
+
+Depending on what you modified, focus your testing on relevant areas:
+
+### General Functionality Tests
+
+These should be checked for every contribution:
+
+<AccordionGroup>
+  <Accordion title="Installation completes successfully" icon="check">
+    - The playbook installs without errors
+    - AME Wizard doesn't crash or hang
+    - System reboots successfully
+    - No critical errors in the installation log
+  </Accordion>
+
+  <Accordion title="System boots and functions" icon="power-off">
+    - Windows boots normally after installation
+    - Desktop loads without errors
+    - Start menu and taskbar work correctly
+    - File Explorer opens and functions
+    - Settings app is accessible
+  </Accordion>
+
+  <Accordion title="Core Windows features" icon="windows">
+    - Windows Update can check for updates
+    - Microsoft Store opens (if not removed)
+    - Windows Search functions
+    - Task Manager works
+    - Control Panel is accessible
+  </Accordion>
+
+  <Accordion title="Atlas-specific features" icon="atlas">
+    - Atlas folder is present in `C:\`
+    - Atlas scripts execute without errors
+    - Configuration options work as expected
+    - Atlas Desktop launches (if installed)
+  </Accordion>
+</AccordionGroup>
+
+### Category-Specific Tests
+
+Focus on these areas based on your changes:
+
+<Tabs>
+  <Tab title="Performance">
+    **If you modified performance tweaks:**
+    
+    - Check CPU usage at idle and under load
+    - Monitor RAM usage
+    - Test disk I/O performance
+    - Verify startup time improvements
+    - Check for any performance regressions
+    - Test gaming performance (if relevant)
+    
+    ```powershell Performance monitoring
+    # Check running processes
+    Get-Process | Sort-Object CPU -Descending | Select-Object -First 10
+    
+    # Monitor system resources
+    Get-Counter '\Processor(_Total)\% Processor Time'
+    ```
+  </Tab>
+
+  <Tab title="Privacy">
+    **If you modified privacy settings:**
+    
+    - Verify telemetry services are disabled
+    - Check scheduled tasks related to telemetry
+    - Test with network monitoring tools
+    - Verify registry keys are set correctly
+    - Check that user data isn't being sent
+    
+    ```powershell Check telemetry services
+    # List telemetry-related services
+    Get-Service | Where-Object { $_.Name -match 'Diag|Track|Telemetry' }
+    ```
+  </Tab>
+
+  <Tab title="Security">
+    **If you modified security features:**
+    
+    - Test Windows Defender status (if modified)
+    - Verify SmartScreen functionality
+    - Check User Account Control (UAC)
+    - Test CPU mitigations
+    - Verify Core Isolation settings
+    - Ensure Windows Update works
+    
+    <Warning>
+      Security changes must be carefully tested. Document any security tradeoffs clearly.
+    </Warning>
+  </Tab>
+
+  <Tab title="Usability">
+    **If you modified UI or usability features:**
+    
+    - Test Start menu customizations
+    - Verify taskbar modifications
+    - Check context menu changes
+    - Test File Explorer tweaks
+    - Verify removed applications stay removed
+    - Test reinstallation of removed apps (if applicable)
+  </Tab>
+
+  <Tab title="Scripts">
+    **If you added or modified PowerShell scripts:**
+    
+    - Run the script multiple times
+    - Test with different user permissions
+    - Verify error handling works
+    - Check script output and logs
+    - Test on both PowerShell 5.1 and 7+
+    - Verify script rollback/undo (if applicable)
+    
+    ```powershell Test script execution
+    # Run with detailed error output
+    $ErrorActionPreference = 'Stop'
+    try {
+        & 'C:\Atlas\path\to\script.ps1'
+    } catch {
+        Write-Error $_.Exception.Message
+    }
+    ```
+  </Tab>
+
+  <Tab title="Registry">
+    **If you modified registry settings:**
+    
+    - Verify registry keys are created/modified correctly
+    - Check registry values have correct data types
+    - Test the effect of the registry changes
+    - Ensure no conflicts with other tweaks
+    - Verify changes persist after reboot
+    
+    ```powershell Verify registry changes
+    # Check specific registry value
+    Get-ItemProperty -Path 'HKLM:\SOFTWARE\Atlas' -Name 'YourSetting'
+    ```
+  </Tab>
+</Tabs>
+
+## Testing Procedures
+
+### Step-by-Step Testing Workflow
+
+<Steps>
+  <Step title="Build your playbook">
+    Follow the [building playbooks guide](/contributing/building-playbooks) to create your test `.apbx` file.
+    
+    ```bash
+    cd src/playbook
+    ./build-playbook.cmd  # Windows
+    ./build-playbook.sh   # Linux/macOS
+    ```
+  </Step>
+
+  <Step title="Restore VM to clean state">
+    Revert your test VM to the pre-Atlas snapshot to ensure a clean test environment.
+  </Step>
+
+  <Step title="Install the test playbook">
+    1. Copy `Atlas Test.apbx` to your VM
+    2. Open AME Wizard
+    3. Drag the playbook file into AME Wizard
+    4. Follow the installation wizard
+    5. Note any errors or warnings during installation
+  </Step>
+
+  <Step title="Document observations">
+    During and after installation:
+    - Screenshot any errors
+    - Note unexpected behavior
+    - Record performance metrics if relevant
+    - Check installation logs in `C:\ProgramData\AME\Logs`
+  </Step>
+
+  <Step title="Run verification tests">
+    Execute the relevant tests from the [What to Test](#what-to-test) section based on your changes.
+  </Step>
+
+  <Step title="Test edge cases">
+    - Test with different Windows language settings
+    - Try with different hardware configurations (if using real hardware)
+    - Test with minimal and maximal feature selections
+    - Verify rollback/undo functionality (if applicable)
+  </Step>
+</Steps>
+
+### Multiple Build Testing
+
+<Info>
+  If Atlas supports multiple Windows builds, test on at least one build from each supported version.
+</Info>
+
+Current supported builds (check `playbook.conf` for latest):
+- Windows 11 24H2 (Build 26100)
+- Windows 11 25H2 (Build 26200)
+
+## Verification Steps
+
+After installation, verify your specific changes:
+
+### Registry Modifications
+
+```powershell
+# Check if your registry changes applied
+$path = 'HKLM:\SOFTWARE\Your\Path'
+$value = 'YourValue'
+
+if (Test-Path $path) {
+    $result = Get-ItemProperty -Path $path -Name $value -ErrorAction SilentlyContinue
+    if ($result) {
+        Write-Host "✓ Registry value exists: $($result.$value)"
+    } else {
+        Write-Host "✗ Registry value not found"
+    }
+} else {
+    Write-Host "✗ Registry path not found"
+}
+```
+
+### Service Status
+
+```powershell
+# Verify service status changes
+$serviceName = 'YourService'
+$service = Get-Service -Name $serviceName -ErrorAction SilentlyContinue
+
+if ($service) {
+    Write-Host "Service: $serviceName"
+    Write-Host "Status: $($service.Status)"
+    Write-Host "Start Type: $($service.StartType)"
+} else {
+    Write-Host "✓ Service removed or doesn't exist"
+}
+```
+
+### Scheduled Tasks
+
+```powershell
+# Check scheduled task modifications
+$taskName = 'YourTask'
+$task = Get-ScheduledTask -TaskName $taskName -ErrorAction SilentlyContinue
+
+if ($task) {
+    Write-Host "Task exists: $($task.State)"
+} else {
+    Write-Host "✓ Task removed successfully"
+}
+```
+
+### File Operations
+
+```powershell
+# Verify file copy/deletion
+$filePath = 'C:\Path\To\File.exe'
+
+if (Test-Path $filePath) {
+    Write-Host "✓ File exists at: $filePath"
+    Get-Item $filePath | Select-Object Name, Length, LastWriteTime
+} else {
+    Write-Host "File not found (expected if removal was intended)"
+}
+```
+
+## Common Issues and Solutions
+
+<AccordionGroup>
+  <Accordion title="Installation fails or hangs">
+    **Symptoms**: AME Wizard crashes, freezes, or shows errors during installation.
+    
+    **Troubleshooting**:
+    - Check the live log window (enabled by default in test builds)
+    - Review logs in `C:\ProgramData\AME\Logs`
+    - Verify YAML syntax in modified configuration files
+    - Check for PowerShell script errors
+    - Ensure all required files are included in the playbook
+  </Accordion>
+
+  <Accordion title="Changes don't apply">
+    **Symptoms**: Your modifications don't take effect after installation.
+    
+    **Troubleshooting**:
+    - Verify the build script included your changes
+    - Check that file paths in YAML are correct
+    - Ensure registry paths use correct hive names
+    - Verify your changes aren't being overridden by later actions
+    - Check if a reboot is required for changes to take effect
+  </Accordion>
+
+  <Accordion title="System becomes unstable">
+    **Symptoms**: Windows crashes, blue screens, or features stop working.
+    
+    **Troubleshooting**:
+    - Revert to the pre-Atlas VM snapshot
+    - Review what you changed - was anything critical disabled?
+    - Test changes incrementally (disable some tweaks to isolate the issue)
+    - Check if your changes conflict with other Atlas tweaks
+    - Verify you're not disabling essential Windows services
+  </Accordion>
+
+  <Accordion title="Performance regressions">
+    **Symptoms**: System is slower after your changes.
+    
+    **Troubleshooting**:
+    - Identify which specific change caused the regression
+    - Test without your changes to establish a baseline
+    - Monitor resource usage to find bottlenecks
+    - Consider whether the tradeoff is acceptable
+    - Document performance impact clearly in your PR
+  </Accordion>
+</AccordionGroup>
+
+## Documenting Test Results
+
+When submitting your pull request, include:
+
+### Test Summary
+
+```markdown
+## Testing
+
+**Environment**:
+- Windows version: Windows 11 Build 26100 (24H2)
+- VM software: Hyper-V
+- RAM: 8GB
+- Atlas options: Default selections
+
+**Tests performed**:
+- ✓ Clean installation completed successfully
+- ✓ System boots normally
+- ✓ Modified registry keys verified
+- ✓ Target service disabled correctly
+- ✓ No errors in installation logs
+- ✓ Performance impact: negligible
+
+**Screenshots**: [Attach relevant screenshots]
+
+**Logs**: [Include relevant log excerpts if there were any issues]
+```
+
+### Before/After Comparisons
+
+For measurable changes, provide before/after data:
+
+```markdown
+**Memory usage at idle**:
+- Before: 3.2 GB
+- After: 2.8 GB
+- Improvement: ~400 MB reduction
+
+**Startup time**:
+- Before: 42 seconds
+- After: 38 seconds
+- Improvement: ~4 seconds faster
+```
+
+## Automated Testing
+
+While manual testing is essential, consider:
+
+- Writing PowerShell validation scripts for complex changes
+- Using AME Wizard's verification features
+- Creating checklists for repetitive test procedures
+- Documenting expected vs. actual behavior
+
+```powershell Example validation script
+# validation.ps1 - Test your changes automatically
+
+$errors = @()
+
+# Test 1: Registry key
+if (-not (Test-Path 'HKLM:\SOFTWARE\Atlas\Setting')) {
+    $errors += "Registry key not found"
+}
+
+# Test 2: Service status
+$service = Get-Service 'ServiceName' -ErrorAction SilentlyContinue
+if ($service -and $service.Status -eq 'Running') {
+    $errors += "Service should be disabled"
+}
+
+# Test 3: File exists
+if (-not (Test-Path 'C:\Atlas\file.txt')) {
+    $errors += "Expected file not found"
+}
+
+if ($errors.Count -eq 0) {
+    Write-Host "✓ All tests passed" -ForegroundColor Green
+} else {
+    Write-Host "✗ Tests failed:" -ForegroundColor Red
+    $errors | ForEach-Object { Write-Host "  - $_" }
+}
+```
+
+## Additional Testing Resources
+
+<CardGroup cols={2}>
+  <Card title="Building Playbooks" icon="hammer" href="/contributing/building-playbooks">
+    Learn how to build your test playbook.
+  </Card>
+
+  <Card title="Contribution Guidelines" icon="book-open" href="/contributing/guidelines">
+    Review the full contribution guidelines.
+  </Card>
+
+  <Card title="Atlas Documentation" icon="atlas" href="https://docs.atlasos.net">
+    Browse user-facing documentation for context.
+  </Card>
+
+  <Card title="AME Wizard Docs" icon="wand-magic-sparkles" href="https://docs.amelabs.net">
+    Learn about AME Wizard's capabilities and actions.
+  </Card>
+</CardGroup>
+
+<Note>
+  **Remember**: Thorough testing protects millions of Atlas users from issues. Take the time to test properly!
+</Note>

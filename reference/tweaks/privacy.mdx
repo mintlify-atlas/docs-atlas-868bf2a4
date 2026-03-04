@@ -1,0 +1,236 @@
+---
+title: Privacy Tweaks
+description: AtlasOS privacy tweaks that disable telemetry, activity tracking, data collection, and advertising features to protect user privacy
+---
+
+AtlasOS includes comprehensive privacy tweaks that disable various Windows telemetry, tracking, and data collection features. These tweaks are defined in YAML configuration files located in `Configuration/tweaks/privacy/`.
+
+## Overview
+
+Privacy tweaks in AtlasOS focus on:
+
+- Disabling telemetry and data collection
+- Preventing activity tracking and monitoring
+- Removing advertising and personalization features
+- Blocking cloud sync and experimentation
+- Restricting third-party app telemetry
+
+## Telemetry Disabling
+
+AtlasOS disables multiple telemetry systems to prevent data collection by Microsoft.
+
+### Disable Telemetry and Data Collection
+
+```yaml
+---
+title: Disallow Telemetry and Data Collection
+description: Disallows telemetry and data collection to improve privacy
+actions:
+  - !service: {name: 'DiagTrack', operation: stop, ignoreErrors: true}
+  - !registryValue:
+    path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection'
+    value: 'AllowTelemetry'
+    data: '0'
+    type: REG_DWORD
+  - !registryValue:
+    path: 'HKLM\Software\Policies\Microsoft\Windows\DataCollection'
+    value: 'AllowTelemetry'
+    data: '0'
+    type: REG_DWORD
+```
+
+This tweak stops the DiagTrack service and sets registry values to completely disable telemetry collection.
+
+### Disable Customer Experience Improvement Program
+
+```yaml
+---
+title: Disable Customer Experience Improvement Program
+description: Disables Customer Experience Improvement Program (CEIP) as it is related to telemetry, for privacy
+actions:
+  - !registryValue:
+    path: 'HKLM\SOFTWARE\Policies\Microsoft\AppV\CEIP'
+    value: 'CEIPEnable'
+    data: '0'
+    type: REG_DWORD
+  - !registryValue:
+    path: 'HKLM\SOFTWARE\Policies\Microsoft\SQMClient\Windows'
+    value: 'CEIPEnable'
+    data: '0'
+    type: REG_DWORD
+```
+
+The Customer Experience Improvement Program (CEIP) collects usage data and is disabled for privacy.
+
+### Other Telemetry Tweaks
+
+AtlasOS also disables:
+
+- **Activation Telemetry** - Prevents activation-related telemetry
+- **Diagnostic Tracing** - Disables diagnostic trace logging
+- **.NET CLI Telemetry** - Blocks .NET command-line telemetry
+- **Input Telemetry** - Disables keyboard and input tracking
+
+## Activity Tracking Prevention
+
+### Disable Activity Feed
+
+```yaml
+---
+title: Disable Activity Feed
+description: Disables Activity Feed in Task View for privacy and QoL
+actions:
+  - !registryValue:
+    path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\System'
+    value: 'EnableActivityFeed'
+    data: '0'
+    type: REG_DWORD
+```
+
+Prevents Windows from tracking your activities across devices and displaying them in Task View.
+
+### Disable App Launch Tracking
+
+Disables tracking of application launches to prevent Microsoft from monitoring which apps you use and when.
+
+### Disable User Tracking
+
+```yaml
+---
+title: Disable Most Frequently Used Applications
+description: Disables the most frequently used applications in the start menu for privacy
+actions:
+  - !registryValue:
+    path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer'
+    value: 'NoInstrumentation'
+    data: '1'
+    type: REG_DWORD
+```
+
+Prevents Windows from tracking your most frequently used applications.
+
+## Advertising Removal
+
+### Disable Advertising ID
+
+```yaml
+---
+title: Disable Advertising ID
+description: Disables Advertising ID for privacy
+actions:
+  - !registryValue:
+    path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\AdvertisingInfo'
+    value: 'Enabled'
+    data: '0'
+    type: REG_DWORD
+  - !registryValue:
+    path: 'HKLM\Software\Policies\Microsoft\Windows\AdvertisingInfo'
+    value: 'DisabledByGroupPolicy'
+    data: '1'
+    type: REG_DWORD
+```
+
+Disables the Windows Advertising ID that apps use to show personalized advertisements.
+
+### Disable Sync Provider Notifications
+
+Prevents advertising-related sync provider notifications from appearing in the system.
+
+## Data Collection Prevention
+
+### Disable Experimentation
+
+```yaml
+---
+title: Disable Experimentation
+description: Disallows Microsoft from using your computer as a test for certain features for privacy and stability
+actions:
+  - !registryValue:
+    path: 'HKLM\SOFTWARE\Microsoft\PolicyManager\default\System\AllowExperimentation'
+    value: 'Value'
+    data: '0'
+    type: REG_DWORD
+```
+
+Prevents Microsoft from using your system for A/B testing and feature experiments.
+
+### Disable Device Monitoring
+
+Disables Windows device monitoring features that collect system performance and usage data.
+
+### Disable Performance Tracking
+
+Prevents collection of performance metrics and system diagnostics.
+
+### Disallow User Activity Upload
+
+Blocks upload of user activity data to Microsoft servers.
+
+## Cloud and Sync Features
+
+AtlasOS disables various cloud-connected features:
+
+- **Disable Setting Sync** - Prevents syncing of Windows settings to Microsoft account
+- **Disable Suggest Ways to Finish Setup** - Removes cloud-based setup suggestions
+- **Disallow Message Cloud Sync** - Prevents message synchronization to cloud
+
+## Third-Party App Telemetry
+
+### Disable NVIDIA Telemetry
+
+Blocks telemetry collection from NVIDIA drivers and software.
+
+### Disable Office Telemetry
+
+Disables Microsoft Office telemetry and data collection features.
+
+## Additional Privacy Tweaks
+
+- **Disable Windows Error Reporting** - Prevents crash reports from being sent to Microsoft
+- **Disable Online Speech Recognition** - Disables cloud-based speech recognition
+- **Disable Tailored Experiences** - Prevents personalized experiences based on diagnostics
+- **Disable Privacy Experience** - Disables privacy setup prompts
+- **Disable Web Language List Access** - Prevents websites from accessing language preferences
+- **Disable Lockscreen Camera** - Removes camera access from lock screen
+- **Configure App Permissions** - Sets restrictive default app permissions
+- **Disable RSOP Logging** - Disables Resultant Set of Policy logging
+- **Disable Speech Auto Updates** - Prevents automatic speech recognition updates
+- **Disable Program Compatibility Assistant** - Disables PCA telemetry collection
+- **Disable Recall Snap** - Disables Windows Recall snapshot feature
+- **Disallow Microsoft Accounts** - Restricts Microsoft account usage for local accounts
+
+## Configuration Location
+
+All privacy tweak YAML files are located in:
+
+```
+src/playbook/Configuration/tweaks/privacy/
+├── advertising/
+├── apps/
+├── cloud/
+├── telemetry/
+└── [individual tweak files]
+```
+
+## YAML Structure
+
+Each privacy tweak follows this structure:
+
+```yaml
+---
+title: Tweak Name
+description: What the tweak does and why
+actions:
+  - !registryValue:
+    path: 'HKEY\Path\To\Key'
+    value: 'ValueName'
+    data: '0'
+    type: REG_DWORD
+```
+
+Actions can include:
+- `!registryValue` - Modify Windows registry
+- `!service` - Control Windows services
+- `!cmd` - Execute commands
+- `!run` - Run executables
+- `!scheduledTask` - Manage scheduled tasks

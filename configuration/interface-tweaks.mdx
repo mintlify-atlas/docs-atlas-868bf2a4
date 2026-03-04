@@ -1,0 +1,297 @@
+---
+title: Interface Tweaks
+description: Customize the Windows user interface and visual appearance in AtlasOS
+---
+
+## Overview
+
+Interface Tweaks provide scripts to customize the Windows user interface, context menus, visual effects, and File Explorer behavior. These settings let you personalize your Windows experience without affecting core system functionality.
+
+<Note>
+Location: `C:\Atlas\4. Interface Tweaks\`
+</Note>
+
+<Tip>
+Many interface changes require restarting Windows Explorer. Use the "Restart Explorer.cmd" script in this folder to apply changes immediately.
+</Tip>
+
+## Context Menus
+
+Customize right-click context menus throughout Windows.
+
+### Extract
+
+Add or remove archive extraction options to the context menu.
+
+- **Remove Extract (default)** - Standard Windows archive handling
+- **Add Extract** - Adds "Extract here" and "Extract to folder" options
+
+### Run With Priority
+
+Add the ability to launch programs with specific CPU priority.
+
+- **Remove Run With Priority In Context Menu (default)** - Standard context menu
+- **Add Run With Priority In Context Menu** - Adds priority options (Low, Normal, High, Realtime)
+
+<Info>
+Running programs with different priorities can help manage system resources on systems running multiple demanding applications.
+</Info>
+
+### Send To
+
+Clean up the "Send to" context menu.
+
+- **Debloat Send To Context Menu** - Removes unnecessary "Send to" entries
+
+### Take Ownership
+
+Quickly take ownership of files and folders.
+
+- **Remove Take Ownership to Context Menu (default)** - Standard permissions
+- **Add Take Ownership to Context Menu** - Adds "Take Ownership" option
+
+<Warning>
+Taking ownership of system files can break Windows. Only use this feature if you know what you're doing.
+</Warning>
+
+### Terminals
+
+Add terminal shortcuts to the context menu.
+
+- **Remove Terminals Context Menu (default)** - No terminal shortcuts
+- **Add Terminals** - Adds PowerShell and Windows Terminal options
+- **Add Terminals (no Windows Terminal)** - Adds PowerShell only
+
+### Windows 11 Context Menu
+
+Choose between Windows 11's new context menu and the classic Windows 10 menu.
+
+- **Old Context Menu (default)** - Shows classic full context menu immediately
+- **New Context Menu** - Uses Windows 11's simplified context menu
+
+<Tip>
+The old context menu provides quicker access to all options without the extra click required by the new menu.
+</Tip>
+
+## Edge Swipe
+
+Control edge swipe gestures on touchscreens and trackpads.
+
+- **Allow Edge Swipe (default)** - Enables swipe gestures from screen edges
+- **Disallow Edge Swipe** - Disables edge swipe functionality
+
+## File Explorer Customization
+
+Extensive File Explorer appearance and behavior options.
+
+### App Icons on Thumbnails
+
+Control whether app icons appear on file thumbnails.
+
+- **Enable App Icons on Thumbnails (default)** - Shows application icon overlay
+- **Disable App Icons on Thumbnails** - Shows only file thumbnail
+
+### Automatic Folder Discovery
+
+Determine whether folders automatically optimize for content type.
+
+- **Disable Automatic Folder Discovery (default)** - Manual folder type configuration
+- **Enable Automatic Folder Discovery** - Auto-detects folder type (Pictures, Music, etc.)
+
+### Compact View
+
+Adjust spacing in File Explorer.
+
+- **Enable Compact View (default)** - Reduces spacing for more items on screen
+- **Disable Compact View** - Uses standard spacing
+
+### Gallery
+
+Control the File Explorer gallery view for images.
+
+- **Disable Gallery (default)** - Standard file view
+- **Enable Gallery** - Shows image gallery carousel
+
+### Quick Access
+
+Manage the Quick Access section in File Explorer.
+
+- **Show Quick Access (default)** - Displays recent files and frequent folders
+- **Remove Quick Access** - Hides Quick Access section
+
+### Removable Drives in Sidebar
+
+Control whether removable drives appear in the File Explorer sidebar.
+
+- **Disable Removable Drives in Sidebar (default)** - Hides removable drives
+- **Enable Removable Drives in Sidebar** - Shows USB drives, SD cards, etc.
+
+## Lock Screen
+
+Configure lock screen behavior.
+
+- **Show Lock Screen (default)** - Standard Windows lock screen
+- **Hide Lock Screen** - Goes directly to login screen
+
+<Tip>
+Hiding the lock screen speeds up the login process by skipping an extra screen.
+</Tip>
+
+## Old Flyouts
+
+Replace modern Windows 11 flyouts with classic Windows 10 versions.
+
+### Battery Flyout
+
+- **Modern Battery Flyout (default)** - Windows 11 battery interface
+- **Old Battery Flyout** - Windows 10 battery interface
+
+### Date and Time Flyout
+
+- **Modern Date and Time Flyout (default)** - Windows 11 calendar and time
+- **Old Date and Time Flyout** - Windows 10 calendar interface
+
+### Volume Flyout
+
+- **Modern Volume Flyout (default)** - Windows 11 volume control
+- **Old Volume Flyout** - Windows 10 volume slider
+
+<Info>
+Old flyouts are more compact and faster to interact with compared to the newer, more touch-friendly Windows 11 versions.
+</Info>
+
+## Shortcut Appearance
+
+Customize how shortcuts look on your desktop and in folders.
+
+### Shortcut Icon
+
+Change the arrow overlay on shortcuts.
+
+- **Default Windows (default)** - Standard shortcut arrow
+- **Classic** - Windows 95-style shortcut arrow
+- **None (security risk)** - No arrow indicator
+
+<Warning>
+Removing the shortcut arrow entirely makes it impossible to visually distinguish shortcuts from actual files, which can be a security risk.
+</Warning>
+
+### Shortcut Text
+
+Control the "- Shortcut" suffix on shortcut names.
+
+- **Disable Shortcut Text (default)** - No "- Shortcut" suffix added
+- **Restore Shortcut Text** - Adds "- Shortcut" to new shortcut names
+
+## Snap Layouts
+
+Manage Windows 11's snap layouts feature.
+
+- **Enable Snap Layouts (default)** - Shows snap layout options when hovering over maximize
+- **Disable Snap Layouts** - Disables snap layout popup
+
+## Start Menu
+
+Customize the Windows Start menu.
+
+- **Install Open-Shell** - Installs Open-Shell for a classic Start menu experience
+
+<Info>
+Open-Shell provides a highly customizable Start menu with classic Windows 7-style options.
+</Info>
+
+## Recent Items
+
+Control recent items tracking in File Explorer and Jump Lists.
+
+- **Disable Recent Items (default)** - Doesn't track recently used files
+- **Unlock Recent Items** - Enables recent file tracking
+
+**Privacy impact**: Disabling recent items prevents Windows from tracking your file usage.
+
+## Verbose Status Messages
+
+Show detailed status messages during startup and shutdown.
+
+- **Disable Verbose Messages (default)** - Shows standard loading screen
+- **Enable Verbose Messages** - Shows detailed text status messages
+
+<Tip>
+Verbose messages can help troubleshoot boot issues by showing exactly what's happening during startup.
+</Tip>
+
+## Visual Effects (Animations)
+
+Adjust Windows animations and visual effects.
+
+- **Atlas Visual Effects (default)** - Balanced selection for performance and aesthetics
+- **Default Windows Visual Effects** - All animations and effects enabled
+
+**Atlas defaults include**:
+- Taskbar animations
+- Window minimize/maximize animations
+- Disabled transparency effects
+- Disabled shadows under windows
+- Optimized for performance while maintaining usability
+
+<Info>
+Atlas visual effects provide a good balance between visual appeal and performance. Fully disabling effects can make Windows feel more responsive on older hardware.
+</Info>
+
+## Restart Explorer
+
+Quick utility to restart Windows Explorer.
+
+- **Restart Explorer.cmd** - Immediately restarts Explorer to apply interface changes
+
+<Tip>
+Use this after making interface tweaks to see changes without logging out or restarting.
+</Tip>
+
+## Summary of Defaults
+
+| Feature | Default | Reason |
+|---------|---------|--------|
+| Context Menu Style | Old/Classic | Faster access to all options |
+| Compact View | Enabled | More items visible |
+| Gallery | Disabled | Cleaner File Explorer |
+| Lock Screen | Shown | Security balance |
+| Flyouts | Modern | Native Windows 11 experience |
+| Recent Items | Disabled | Privacy |
+| Visual Effects | Balanced | Performance + usability |
+| Shortcut Text | Disabled | Cleaner file names |
+
+## Quick Customization Guide
+
+### For Maximum Performance
+
+1. Keep Atlas Visual Effects (default)
+2. Disable Gallery
+3. Enable Compact View
+4. Hide Lock Screen
+5. Use Old Context Menu
+
+### For Best Visual Experience
+
+1. Switch to Default Windows Visual Effects
+2. Enable Modern Flyouts (default)
+3. Enable Gallery
+4. Show Lock Screen
+5. Use New Context Menu
+
+### For Privacy
+
+1. Disable Recent Items (default)
+2. Remove Quick Access
+3. Disable Automatic Folder Discovery
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="Atlas Folder" icon="folder" href="/configuration/atlas-folder">
+    Overview of all categories
+  </Card>
+  <Card title="General Configuration" icon="sliders" href="/configuration/general-configuration">
+    Core system settings
+  </Card>
+</CardGroup>

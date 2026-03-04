@@ -1,0 +1,305 @@
+---
+title: Security Settings
+description: Configure security features and protections in AtlasOS
+---
+
+## Overview
+
+The Security category provides scripts to manage Windows security features, including Core Isolation (VBS), Windows Defender, and security mitigations. These settings allow you to balance security and performance based on your needs.
+
+<Note>
+Location: `C:\Atlas\7. Security\`
+</Note>
+
+<Warning>
+Changing security settings can affect your system's protection against malware and exploits. Only modify these settings if you understand the security implications.
+</Warning>
+
+## Core Isolation (VBS)
+
+Virtualization-Based Security (VBS) provides hardware-based security features using virtualization.
+
+### What is VBS?
+
+Core Isolation uses the Windows hypervisor to create an isolated region of memory, protecting critical system components from tampering. This includes:
+
+- **Memory Integrity (HVCI)** - Prevents malicious code injection
+- **Credential Guard** - Protects authentication credentials
+- **Secure kernel** - Isolates critical kernel operations
+
+### Configuration Options
+
+- **Disable VBS** - Disables Virtualization-Based Security
+- **Enable VBS** - Enables Core Isolation features
+- **Current Configuration** - View current VBS status
+
+### Performance Impact
+
+<Info>
+VBS can reduce gaming and CPU-intensive workload performance by 5-15% due to virtualization overhead. AtlasOS leaves the user to choose based on their security needs.
+</Info>
+
+**Considerations**:
+- **Enable VBS** for maximum security, especially on business/work systems
+- **Disable VBS** for gaming or performance-critical systems
+- Requires compatible CPU with virtualization support (Intel VT-x or AMD-V)
+- Requires UEFI firmware and Secure Boot
+
+### How to Check Current Status
+
+Run **Current Configuration.cmd** to view:
+- VBS running status
+- Memory Integrity (HVCI) status
+- Required security features status
+
+## Windows Defender
+
+Manage Windows Defender antivirus and related features.
+
+### Toggle Defender
+
+- **Toggle Defender** - Enable or disable Windows Defender antivirus
+
+<Warning>
+Disabling Windows Defender removes real-time protection against malware. Only disable if you have an alternative antivirus solution or understand the security risks.
+</Warning>
+
+### Hide App and Browser Control
+
+Manage the visibility of Defender's SmartScreen settings.
+
+- **Hide App and Browser Control (default)** - Hides the "App & browser control" section
+- **Show App and Browser Control** - Shows SmartScreen settings in Windows Security
+
+**What is App & Browser Control?**
+- SmartScreen filter for apps and files
+- SmartScreen filter for Microsoft Edge
+- Potentially unwanted app blocking
+- Exploit protection settings
+
+### Security Health Tray
+
+Control the Windows Security tray icon.
+
+- **Remove Security Tray from Startup (default)** - No tray icon on startup
+- **Add Security Tray to Startup** - Shows Windows Security icon in system tray
+
+<Tip>
+Hiding the Security tray icon doesn't disable Defender—it only removes the tray notification icon.
+</Tip>
+
+## Mitigations
+
+Security mitigations are exploit protection features that defend against specific attack vectors.
+
+### What are Mitigations?
+
+Security mitigations include:
+- **DEP (Data Execution Prevention)** - Prevents code execution in data-only memory
+- **ASLR (Address Space Layout Randomization)** - Randomizes memory addresses
+- **SEHOP (Structured Exception Handler Overwrite Protection)** - Protects exception handlers
+- **CFG (Control Flow Guard)** - Validates indirect call targets
+- **SMEP/SMAP** - Supervisor Mode protections
+- **Bottom-up ASLR** - Enhanced ASLR
+- **High-entropy ASLR** - 64-bit ASLR
+
+### Configuration Options
+
+- **Enable All Mitigations** - Turns on all available security mitigations
+- **Set Windows Default Mitigations** - Applies standard Windows mitigation configuration
+- **Disable All Mitigations** - Disables exploit protections
+
+### Fault Tolerant Heap (FTH)
+
+FTH is a Windows feature that detects and mitigates heap corruption.
+
+- **Disable FTH (default)** - Disables Fault Tolerant Heap
+- **Enable FTH** - Enables automatic heap corruption mitigation
+
+<Info>
+FTH can cause performance overhead and compatibility issues with some applications. AtlasOS disables it by default.
+</Info>
+
+### Performance Impact
+
+**Low impact**:
+- DEP - Minimal overhead
+- ASLR - Negligible performance cost
+
+**Medium impact**:
+- CFG - 1-5% overhead in some applications
+- SEHOP - Small overhead
+
+**Variable impact**:
+- FTH - Can cause noticeable slowdowns when triggered
+
+### Security Recommendations
+
+<CardGroup cols={2}>
+  <Card title="Maximum Security" icon="shield-check">
+    **Recommended for**: Work systems, sensitive data
+    
+    - Enable VBS
+    - Enable Windows Defender
+    - Enable All Mitigations
+    - Show Security Tray
+  </Card>
+  
+  <Card title="Balanced (Default)" icon="scale-balanced">
+    **Recommended for**: General use, modern systems
+    
+    - VBS: User choice
+    - Defender: User choice
+    - Windows Default Mitigations
+    - Hide Security Tray
+  </Card>
+  
+  <Card title="Performance Focus" icon="gauge-high">
+    **Recommended for**: Gaming, benchmarking
+    
+    - Disable VBS
+    - Defender: User choice
+    - Disable All Mitigations (risky)
+    - Hide Security Tray
+  </Card>
+  
+  <Card title="Gaming System" icon="gamepad">
+    **Recommended for**: Dedicated gaming PCs
+    
+    - Disable VBS
+    - Keep Defender enabled
+    - Windows Default Mitigations
+    - Hide Security Tray
+  </Card>
+</CardGroup>
+
+## Understanding the Trade-offs
+
+### Security vs. Performance
+
+```
+Security Level          Performance Impact    Risk Level
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Maximum Security        -10 to -15%          Very Low
+Windows Default         -2 to -5%            Low
+Minimal Mitigations     -1 to -2%            Medium
+No Mitigations          0%                   High
+```
+
+### What AtlasOS Changes
+
+AtlasOS takes a **user-choice approach** to security:
+
+1. **Core features** remain available - nothing is removed
+2. **User decides** based on their threat model and performance needs
+3. **Easy toggle scripts** make it simple to enable/disable features
+4. **Documentation provided** to make informed decisions
+
+<Warning>
+AtlasOS does NOT force security settings. You must evaluate your own security needs and configure accordingly.
+</Warning>
+
+## When to Enable Each Feature
+
+### Enable VBS if:
+- You handle sensitive or confidential data
+- You work in a corporate/enterprise environment
+- Your system has modern hardware (8th gen Intel or newer, Ryzen 3000+)
+- Security is more important than a few FPS in games
+
+### Enable Windows Defender if:
+- You don't have another trusted antivirus solution
+- You browse untrusted websites or download files regularly
+- You want automatic protection against malware
+- You open email attachments or USB drives from unknown sources
+
+### Enable All Mitigations if:
+- You run untrusted or legacy software
+- You develop or test applications
+- Maximum exploit protection is critical
+- Performance impact is acceptable for your workload
+
+## Security Best Practices
+
+<Steps>
+  <Step title="Assess Your Threat Model">
+    Determine what security risks you face:
+    - Personal gaming system with minimal browsing?
+    - Work system handling business data?
+    - Development machine running untrusted code?
+  </Step>
+  
+  <Step title="Configure Based on Usage">
+    Apply appropriate security settings:
+    - High-security needs: Enable VBS, Defender, and all mitigations
+    - Balanced needs: Keep Windows defaults
+    - Performance focus: Disable VBS, keep Defender enabled
+  </Step>
+  
+  <Step title="Maintain Other Security Practices">
+    Settings alone don't ensure security:
+    - Keep Windows updated
+    - Use strong passwords
+    - Be cautious with downloads
+    - Regular backups
+  </Step>
+  
+  <Step title="Test and Adjust">
+    Monitor performance and security:
+    - Test game/app performance with VBS enabled
+    - Check for compatibility issues
+    - Adjust settings as needed
+  </Step>
+</Steps>
+
+## Frequently Asked Questions
+
+<AccordionGroup>
+  <Accordion title="Does disabling VBS make Windows insecure?">
+    No. VBS is an additional security layer. Windows still has many other security features:
+    - Windows Defender (if enabled)
+    - User Account Control (UAC)
+    - Windows Firewall
+    - SmartScreen
+    - Standard kernel protections
+    
+    VBS provides extra protection against advanced attacks but isn't required for basic security.
+  </Accordion>
+  
+  <Accordion title="Can I run without Windows Defender?">
+    Yes, but it's not recommended unless you:
+    - Install a reputable alternative antivirus
+    - Understand the security risks
+    - Practice safe computing habits
+    - Don't download or run untrusted files
+  </Accordion>
+  
+  <Accordion title="What's the performance impact of Defender?">
+    Windows Defender has minimal performance impact:
+    - Real-time scanning: 1-3% CPU usage on average
+    - Gaming: Negligible FPS impact in most cases
+    - File operations: Slight slowdown when accessing new files
+    
+    You can add game folders to Defender exclusions if needed.
+  </Accordion>
+  
+  <Accordion title="Should I disable mitigations for gaming?">
+    Most gamers should keep Windows Default Mitigations:
+    - Performance impact is minimal (2-5%)
+    - Protects against exploits in games and drivers
+    - Only disable if you need maximum benchmark scores
+    
+    For competitive gaming where every frame matters, you might consider reducing mitigations, but be aware of the security trade-off.
+  </Accordion>
+</AccordionGroup>
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="Atlas Folder" icon="folder" href="/configuration/atlas-folder">
+    Overview of all categories
+  </Card>
+  <Card title="Advanced Configuration" icon="gear" href="/configuration/advanced-configuration">
+    Power user system settings
+  </Card>
+</CardGroup>

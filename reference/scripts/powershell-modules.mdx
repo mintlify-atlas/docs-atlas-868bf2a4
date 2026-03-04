@@ -1,0 +1,339 @@
+---
+title: PowerShell Modules
+description: Documentation of PowerShell modules in AtlasModules/Scripts/Modules/
+---
+
+AtlasOS includes several PowerShell modules that provide reusable functions for system configuration. All modules are located in `AtlasModules/Scripts/Modules/` and are automatically loaded by `initPowerShell.ps1`.
+
+## AllRegistryUsers Module
+
+**Location:** `Modules/AllRegistryUsers/AllRegistryUsers.psm1`
+
+### Get-RegUserPaths
+
+Retrieves registry paths for all user profiles on the system.
+
+**Syntax:**
+```powershell
+Get-RegUserPaths [-DontCheckEnv] [-NoDefault]
+```
+
+**Parameters:**
+- `-DontCheckEnv` - Don't check for 'Volatile Environment' key (includes built-in accounts)
+- `-NoDefault` - Exclude the default user profile
+
+**Returns:** Array of PSPath objects pointing to user registry hives
+
+**Example:**
+```powershell
+foreach ($userKey in (Get-RegUserPaths -NoDefault).PsPath) {
+    $sid = Split-Path $userKey -Leaf
+    Write-Host "Processing user: $sid"
+    # Modify user registry settings
+}
+```
+
+**Notes:**
+- Only returns proper user accounts with 'Volatile Environment' key
+- Filters out built-in accounts/SIDs unless `-DontCheckEnv` is specified
+
+## Scripts Module
+
+**Location:** `Modules/Scripts/Scripts.psm1`
+
+Provides system-level configuration functions.
+
+### Backup-AtlasServices
+
+Backs up all Windows service startup types to a registry file.
+
+**Syntax:**
+```powershell
+Backup-AtlasServices
+```
+
+**Output:** Creates `atlasServices.reg` in `AtlasModules/Other/`
+
+**Example:**
+```powershell
+Backup-AtlasServices
+```
+
+### Update-ClientCBS
+
+Removes advertisements from Windows Settings 'Accounts' page using ViVeTool.
+
+**Syntax:**
+```powershell
+Update-ClientCBS
+```
+
+**Requirements:**
+- ViVeTool ZIP file must be present
+- Windows 11 (exits on Windows 10)
+
+**Example:**
+```powershell
+Update-ClientCBS
+```
+
+### Disable-CoreIsolation
+
+Disables Core Isolation (VBS/Virtualization Based Security).
+
+**Syntax:**
+```powershell
+Disable-CoreIsolation
+```
+
+### Disable-Devices
+
+Disables unnecessary PnP devices and network adapter bindings.
+
+**Syntax:**
+```powershell
+Disable-Devices
+```
+
+**Devices Disabled:**
+- AMD PSP and SMBus
+- Intel Management Engine and SMBus
+- High precision event timer
+- System speaker and timer
+- Legacy devices
+- Network components (ms_msclient, ms_server, ms_lldp, ms_lltdio, ms_rspndr)
+
+### Set-FileAssociations
+
+Configures default file associations for web browsers.
+
+**Syntax:**
+```powershell
+Set-FileAssociations -Browser <string>
+```
+
+**Parameters:**
+- `-Browser` - Browser name ("Brave", "LibreWolf", "Firefox", "Google Chrome")
+
+**Example:**
+```powershell
+Set-FileAssociations -Browser "Brave"
+```
+
+### Disable-Mitigations
+
+Disables all CPU security mitigations for improved performance.
+
+**Syntax:**
+```powershell
+Disable-Mitigations
+```
+
+### Optimize-PowerShellStartup
+
+Optimizes PowerShell startup time using NGEN (Native Image Generator).
+
+**Syntax:**
+```powershell
+Optimize-PowerShellStartup
+```
+
+**Performance:** Improves PowerShell startup time by up to 10x
+
+### Set-ProfilePictures
+
+Configures Atlas default profile pictures for all users.
+
+**Syntax:**
+```powershell
+Set-ProfilePictures
+```
+
+**Requirements:** `user.png` must be present in current directory
+
+### Set-PowerSettings
+
+Configures Windows power settings.
+
+**Syntax:**
+```powershell
+Set-PowerSettings [-DisablePowerSaving] [-DisableHibernation]
+```
+
+**Parameters:**
+- `-DisablePowerSaving` - Disable power-saving features
+- `-DisableHibernation` - Disable hibernation
+
+**Example:**
+```powershell
+Set-PowerSettings -DisablePowerSaving -DisableHibernation
+```
+
+## Shortcuts Module
+
+**Location:** `Modules/Shortcuts/Shortcuts.psm1`
+
+### New-Shortcut
+
+Creates Windows shortcuts (.lnk files).
+
+**Syntax:**
+```powershell
+New-Shortcut -Source <string> -Destination <string> [-WorkingDir <string>] [-Arguments <string>] [-Icon <string>] [-IfExist]
+```
+
+**Parameters:**
+- `-Source` - Path to target executable or file (required)
+- `-Destination` - Path for the shortcut file (required)
+- `-WorkingDir` - Working directory for the shortcut
+- `-Arguments` - Command-line arguments
+- `-Icon` - Path to icon file
+- `-IfExist` - Only create if destination already exists
+
+**Example:**
+```powershell
+New-Shortcut -Source "C:\Program Files\App\app.exe" `
+             -Destination "C:\Users\Public\Desktop\App.lnk" `
+             -WorkingDir "C:\Program Files\App" `
+             -Arguments "--startup" `
+             -Icon "C:\Program Files\App\icon.ico"
+```
+
+## Utils Module
+
+**Location:** `Modules/Utils/Utils.psm1`
+
+Provides utility functions for common tasks.
+
+### Write-Title
+
+Writes a formatted title with underline.
+
+**Syntax:**
+```powershell
+Write-Title -Text <string>
+```
+
+**Example:**
+```powershell
+Write-Title "Configuring System Settings"
+# Output:
+# ------------------------------------
+# Configuring System Settings
+# ------------------------------------
+```
+
+### Read-Pause
+
+Pauses execution and waits for user input.
+
+**Syntax:**
+```powershell
+Read-Pause [-Message <string>] [-NewLine]
+```
+
+**Parameters:**
+- `-Message` - Custom message (default: "Press Enter to exit")
+- `-NewLine` - Add blank line before prompt
+
+**Example:**
+```powershell
+Read-Pause "Press Enter to continue"
+Read-Pause -NewLine
+```
+
+### Read-MessageBox
+
+Displays a Windows message box dialog.
+
+**Syntax:**
+```powershell
+Read-MessageBox -Title <string> -Body <string> [-Icon <MsgIcon>] [-Buttons <MsgButtons>] [-Timeout <int>] [-NoTopmost]
+```
+
+**Parameters:**
+- `-Title` - Dialog title (required)
+- `-Body` - Dialog message (required)
+- `-Icon` - Icon type (Stop, Question, Warning, Info)
+- `-Buttons` - Button layout (Ok, OkCancel, AbortRetryIgnore, YesNoCancel, YesNo, RetryAndCancel)
+- `-Timeout` - Auto-close timeout in seconds
+- `-NoTopmost` - Don't make dialog topmost window
+
+**Returns:** String indicating which button was clicked ("Ok", "Cancel", "Yes", "No", etc.)
+
+**Example:**
+```powershell
+$result = Read-MessageBox -Title "Confirm Action" `
+                          -Body "Do you want to continue?" `
+                          -Icon Question `
+                          -Buttons YesNo
+if ($result -eq 'Yes') {
+    # Proceed
+}
+```
+
+### Stop-ProcessesUnderRoots
+
+Stops all processes running from specified root directories.
+
+**Syntax:**
+```powershell
+Stop-ProcessesUnderRoots -RootsLower <string[]>
+```
+
+**Parameters:**
+- `-RootsLower` - Array of lowercase directory paths
+
+**Example:**
+```powershell
+$roots = @("c:\\program files\\app")
+Stop-ProcessesUnderRoots -RootsLower $roots
+```
+
+### Stop-TasksUnderRoots
+
+Stops all scheduled tasks that execute from specified root directories.
+
+**Syntax:**
+```powershell
+Stop-TasksUnderRoots -RootsLower <string[]>
+```
+
+**Parameters:**
+- `-RootsLower` - Array of lowercase directory paths
+
+**Example:**
+```powershell
+$roots = @("c:\\program files\\app")
+Stop-TasksUnderRoots -RootsLower $roots
+```
+
+## Other Modules
+
+The following modules exist but contain implementation-specific functions not typically called directly:
+
+- **Debloat** - Functions for removing bloatware
+- **Miscellaneous** - Miscellaneous configuration functions
+- **Performance** - Performance optimization functions
+- **Privacy** - Privacy-related configuration
+- **Qol** - Quality of life improvements
+- **Themes** - Theme management functions
+- **UserPaths** - User path configuration
+
+## Module Loading
+
+All modules are automatically loaded when `initPowerShell.ps1` is executed:
+
+```powershell
+$windir = [Environment]::GetFolderPath('Windows')
+& "$windir\AtlasModules\initPowerShell.ps1"
+
+# Now all module functions are available
+Write-Title "Starting Configuration"
+$users = Get-RegUserPaths -NoDefault
+```
+
+## See Also
+
+- [Scripting System Overview](/reference/scripts/overview)
+- [Utility Scripts](/reference/scripts/utilities)

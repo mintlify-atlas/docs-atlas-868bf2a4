@@ -1,0 +1,405 @@
+---
+title: General FAQ
+description: General frequently asked questions about AtlasOS, including what it does, safety considerations, reversibility, compatibility, Windows updates, and legal compliance.
+---
+
+## About AtlasOS
+
+<Accordion title="What is AtlasOS?">
+AtlasOS (or Atlas) is an open-source Windows modification that enhances your Windows experience by applying privacy, performance, and usability optimizations while maintaining core functionality and customizability.
+
+Atlas is built using AME Wizard Playbooks - a transparent, auditable scripting system that modifies Windows settings, removes telemetry, disables unnecessary services, and configures your system for optimal performance.
+
+**Key improvements:**
+- Enhanced privacy through telemetry removal and group policies
+- Optimized performance by removing bloatware and unnecessary background processes
+- Improved usability with better defaults and reduced advertisements
+- Customizable security features with transparent trade-offs
+- Open-source and auditable modifications
+</Accordion>
+
+<Accordion title="What does AtlasOS actually do to my system?">
+AtlasOS makes extensive modifications to Windows:
+
+**Privacy:**
+- Removes most Windows telemetry and data collection
+- Disables activity tracking and advertising IDs
+- Implements restrictive group policies
+- Removes pre-installed Microsoft apps and bloatware
+
+**Performance:**
+- Removes unnecessary background processes
+- Disables unneeded Windows services
+- Optimizes power settings for performance
+- Disables storage sense and content delivery
+- Removes scheduled tasks that aren't essential
+
+**Usability:**
+- Removes Windows advertisements and suggestions
+- Disables widgets and news feeds
+- Simplifies Windows interface
+- Removes OneDrive integration (can be re-enabled)
+- Configures better default settings
+
+**Software:**
+- Installs essential utilities (7-Zip, Visual C++ Runtimes, DirectX)
+- Optionally removes Microsoft Edge
+- Optionally installs alternative browsers
+- Optionally installs AtlasOS Toolbox
+
+All modifications are documented in the open-source Atlas repository.
+</Accordion>
+
+<Accordion title="How is AtlasOS different from custom Windows ISOs?">
+AtlasOS is fundamentally different from custom Windows ISOs:
+
+**AtlasOS (Playbook-based):**
+- Uses AME Wizard with transparent Playbook scripts
+- You start with genuine Windows installation
+- All modifications are auditable (open source)
+- Complies with Microsoft licensing terms
+- No risk of pre-installed malware
+- Easier to trust and verify
+
+**Custom ISOs:**
+- Pre-modified Windows installation images
+- Difficult to audit what changes were made
+- Multiple entry points for malicious code
+- Often violates Microsoft licensing terms
+- Must trust the ISO creator completely
+- May contain malware or unwanted modifications
+
+Atlas Playbooks are essentially renamed ZIP files (password: `malte`) containing mostly plain text configuration files, making them easy to inspect and verify.
+</Accordion>
+
+<Accordion title="Who develops AtlasOS?">
+AtlasOS is developed by an open-source community of contributors. The project is hosted on GitHub at [https://github.com/Atlas-OS/Atlas](https://github.com/Atlas-OS/Atlas) where you can:
+
+- View all source code and modifications
+- See the complete contributor list
+- Report issues and bugs
+- Participate in discussions
+- Submit pull requests
+- Review changes before they're merged
+
+The project is licensed under GPLv3, ensuring it remains free and open source.
+</Accordion>
+
+## Safety and Security
+
+<Accordion title="Is AtlasOS safe to use?">
+AtlasOS is safe when used with proper understanding:
+
+**What makes it safe:**
+- Completely open source and auditable
+- Uses official Windows installation as base
+- Transparent about all modifications
+- Active community review and testing
+- No malware or backdoors
+- Binaries are open source with published hashes
+
+**Security considerations:**
+- Some security features can be disabled for performance
+- Disabling Windows Defender reduces protection
+- Disabling CPU mitigations can expose vulnerabilities
+- You must maintain good security practices
+
+**Recommendation:** Use the default "Enable Defender" and "Default Windows Mitigations" options during installation for best security while maintaining performance improvements.
+</Accordion>
+
+<Accordion title="Does AtlasOS make my system less secure?">
+Atlas provides **configurable security** rather than blanket removal:
+
+**Optional security features you can disable:**
+- Windows Defender - Not recommended for most users
+- CPU mitigations - Only consider on older CPUs
+- Core Isolation/VBS - Small performance gain, security reduction
+- Windows Update automation - Manual updates still possible
+
+**Security features that remain:**
+- Windows Firewall (unchanged)
+- User Account Control (configurable)
+- SmartScreen (if Defender enabled)
+- Windows Update (available on-demand)
+- Secure Boot (unchanged)
+- BitLocker (can be disabled for compatibility)
+
+Atlas is transparent about security trade-offs and provides documentation for each option. Choose settings based on your security needs and risk tolerance.
+</Accordion>
+
+<Accordion title="Can I still use antivirus software with AtlasOS?">
+Yes, but with important considerations:
+
+**Windows Defender:**
+- Can be enabled during Atlas installation (recommended)
+- Toggleable in the Atlas folder after installation
+- Provides adequate protection for most users
+
+**Third-party antivirus:**
+- Must be uninstalled before Atlas installation
+- Can be reinstalled after Atlas is installed
+- May cause conflicts with some Atlas optimizations
+- Often unnecessary if Defender is enabled
+
+**Recommendation:** Use Windows Defender for best compatibility with Atlas modifications. Third-party antivirus is generally unnecessary and may impact performance.
+</Accordion>
+
+## System Compatibility
+
+<Accordion title="Will my games work with AtlasOS?">
+Yes, AtlasOS is designed to maintain gaming compatibility:
+
+**Maintained features:**
+- DirectX support (DirectPlay enabled during installation)
+- Full GPU driver compatibility
+- Game Bar and Full Screen Optimizations (toggleable)
+- Anti-cheat compatibility (when security features enabled)
+- Steam, Epic Games, Xbox app all work normally
+
+**Important notes:**
+- Some anti-cheat systems require Core Isolation/VBS enabled
+- Competitive games may require Windows Defender enabled
+- Kernel-level anti-cheat works when mitigations are enabled
+
+For competitive gaming, use recommended security settings (Defender enabled, default mitigations) to avoid anti-cheat issues.
+</Accordion>
+
+<Accordion title="Will my applications work with AtlasOS?">
+Most applications work without issues on AtlasOS:
+
+**Fully compatible:**
+- Web browsers (Chrome, Firefox, Edge, Brave, etc.)
+- Office applications (Microsoft Office, LibreOffice, etc.)
+- Creative software (Adobe Suite, DaVinci Resolve, Blender, etc.)
+- Development tools (Visual Studio, VS Code, Git, etc.)
+- Gaming platforms (Steam, Epic, Battle.net, etc.)
+
+**May require adjustments:**
+- Some Microsoft Store apps (Store can be restored)
+- OneDrive (can be re-enabled in Atlas folder)
+- Windows Hello/Biometrics (may need manual setup)
+- Some enterprise software (may need specific services enabled)
+
+**Troubleshooting:** If an application doesn't work, use "Set services to defaults.cmd" in the troubleshooting folder to restore Windows services.
+</Accordion>
+
+<Accordion title="Does AtlasOS work on laptops?">
+Yes, AtlasOS works on laptops, but consider these factors:
+
+**Laptop-specific considerations:**
+- Power-saving features can be disabled for performance
+- Battery life may be reduced if you disable power saving
+- Hibernation can be disabled (frees disk space)
+- Laptop manufacturer utilities usually work fine
+- Function keys and special buttons remain functional
+
+**Recommendations for laptops:**
+- Keep power-saving enabled for better battery life
+- Enable hibernation if you use it frequently
+- Test battery life after installation and adjust settings
+- Keep manufacturer drivers updated
+
+The "Maximum Performance" option during installation disables power saving - consider skipping this on laptops.
+</Accordion>
+
+## Reversibility and Modifications
+
+<Accordion title="Can I undo AtlasOS modifications?">
+Atlas modifications can be reversed, though not with a single click:
+
+**Partial reversal options:**
+- **Reset services** - "Set services to defaults.cmd" in troubleshooting folder
+- **Re-enable features** - Use Atlas folder to toggle individual features
+- **Restore components** - "Repair Windows Components.cmd" repairs system files
+
+**Complete reversal options:**
+- **Reset this PC** - Windows built-in reset (keeps or removes files)
+- **Reinstall Windows** - Clean installation from official Microsoft media
+
+Atlas modifications are extensive and integrated, so complete removal requires Windows reset or reinstallation rather than a simple uninstaller.
+
+**Best practice:** Create a system backup before installing Atlas so you can restore to your previous state if needed.
+</Accordion>
+
+<Accordion title="Can I customize AtlasOS after installation?">
+Yes! Customization is a core feature of AtlasOS:
+
+**Atlas folder location:** `C:\Windows\AtlasDesktop` (also on desktop)
+
+**Available customizations:**
+
+**General Configuration:**
+- Windows Updates (automatic/manual)
+- Power saving settings
+- Hibernation and sleep
+- Search indexing
+- Background apps
+
+**Security:**
+- Windows Defender (enable/disable)
+- CPU mitigations
+- Core Isolation/VBS
+
+**Interface Tweaks:**
+- File Explorer settings
+- Taskbar configuration
+- Context menus
+- Visual effects
+
+**Advanced Configuration:**
+- Windows services
+- Network settings
+- Process Explorer integration
+
+All options are accessible via scripts in the Atlas folder. Most changes require administrator privileges and a system restart.
+</Accordion>
+
+## Windows Updates
+
+<Accordion title="How do Windows Updates work with AtlasOS?">
+Atlas modifies how Windows Updates behave:
+
+**During installation, you can choose:**
+- **Disable Automatic Updates** - Updates don't download/install automatically
+- **Enable Automatic Updates** - Updates download and install like normal Windows
+
+**Regardless of choice:**
+- Update notifications still appear when updates are available
+- You can manually check for and install updates anytime
+- Security updates are still accessible
+- Windows Update service remains functional
+
+**After installation:**
+- Change update behavior via Atlas folder > General Configuration > Automatic Updates
+- Toggle between automatic and manual updates anytime
+
+**Recommendation:** Even with automatic updates disabled, check for and install security updates regularly to maintain system security.
+</Accordion>
+
+<Accordion title="Should I install Windows Updates on AtlasOS?">
+Yes, installing Windows Updates is recommended:
+
+**Why you should update:**
+- Security patches protect against vulnerabilities
+- Bug fixes improve system stability
+- Driver updates enhance hardware compatibility
+- Feature updates may add useful functionality
+
+**How to update safely:**
+1. Check for updates: **Settings** > **Windows Update**
+2. Review available updates
+3. Install updates (or select specific ones)
+4. Restart when prompted
+5. Verify system stability after updates
+
+**If updates cause issues:**
+- Use "Repair Windows Components.cmd" in troubleshooting folder
+- Reset services to defaults if features break
+- Check Atlas GitHub for known update issues
+
+Atlas is designed to remain compatible with Windows Updates, but feature updates may occasionally require adjustment.
+</Accordion>
+
+## Legal and Licensing
+
+<Accordion title="Is AtlasOS legal?">
+Yes, AtlasOS is completely legal:
+
+**Compliance with Microsoft Terms:**
+- Does not redistribute modified Windows ISOs
+- Does not alter Windows activation or licensing
+- Uses official Windows installation as base
+- Makes post-installation modifications (allowed by user)
+- Complies with Windows Usage Terms
+
+**Open source licensing:**
+- Atlas is licensed under GPLv3
+- All source code is publicly available
+- Community can audit, modify, and redistribute
+- Binaries are open source with published hashes
+
+Atlas is a user-side modification tool, similar to changing Windows settings manually - completely within your rights as the system owner.
+</Accordion>
+
+<Accordion title="Does AtlasOS affect my Windows license?">
+No, AtlasOS does not affect your Windows license:
+
+**What Atlas does NOT do:**
+- Modify Windows activation status
+- Bypass license checks
+- Alter product keys
+- Change licensing information
+- Enable piracy or circumvent activation
+
+**Your Windows license:**
+- Remains exactly as it was before installation
+- OEM licenses stay OEM
+- Retail licenses stay retail
+- Digital licenses remain linked to your Microsoft account
+- All activation methods continue working normally
+
+Atlas simply modifies Windows settings and configuration - it has no interaction with the licensing system.
+</Accordion>
+
+<Accordion title="Can I use AtlasOS for commercial purposes?">
+AtlasOS usage depends on your Windows license:
+
+**AtlasOS itself:**
+- Free and open source (GPLv3 license)
+- Can be used personally or commercially
+- No cost or restrictions from Atlas project
+
+**Windows licensing:**
+- You must have a valid Windows license
+- Commercial use requires appropriate Windows license
+- Atlas doesn't bypass Windows licensing requirements
+- Follow Microsoft's licensing terms for your use case
+
+**Recommendation:** Ensure your Windows installation has proper licensing for your intended use (personal/commercial). Atlas itself adds no restrictions beyond normal Windows licensing.
+</Accordion>
+
+## Support and Community
+
+<Accordion title="Where can I get help with AtlasOS?">
+Multiple resources are available for AtlasOS support:
+
+**Official channels:**
+- **Documentation:** [https://docs.atlasos.net](https://docs.atlasos.net)
+- **Discord Server:** [https://discord.atlasos.net](https://discord.atlasos.net) - Active community support
+- **GitHub Issues:** [https://github.com/Atlas-OS/Atlas/issues](https://github.com/Atlas-OS/Atlas/issues) - Bug reports
+- **GitHub Discussions:** [https://github.com/Atlas-OS/Atlas/discussions](https://github.com/Atlas-OS/Atlas/discussions) - Questions and discussions
+
+**Before asking for help:**
+1. Read the documentation thoroughly
+2. Search existing issues and discussions
+3. Check the FAQ sections
+4. Try troubleshooting tools in Atlas folder
+
+**When reporting issues:**
+- Specify Atlas version (v0.5.0)
+- Include Windows build number
+- Describe steps to reproduce
+- Provide hardware specifications
+- Mention any error messages
+</Accordion>
+
+<Accordion title="Can I contribute to AtlasOS?">
+Yes! AtlasOS welcomes community contributions:
+
+**Ways to contribute:**
+- **Code contributions** - Submit pull requests on GitHub
+- **Bug reports** - Report issues you encounter
+- **Documentation** - Improve or translate documentation
+- **Testing** - Test pre-release versions
+- **Community support** - Help other users on Discord
+- **Feedback** - Share your experience and suggestions
+
+**Getting started:**
+1. Read contribution guidelines: [https://docs.atlasos.net/contributing/contribution-guidelines/](https://docs.atlasos.net/contributing/contribution-guidelines/)
+2. Fork the repository on GitHub
+3. Make your changes or improvements
+4. Submit a pull request
+5. Participate in code review
+
+Contributors follow the [Contributor Covenant Code of Conduct](https://github.com/Atlas-OS/.github/blob/main/profile/CODE_OF_CONDUCT.md).
+</Accordion>

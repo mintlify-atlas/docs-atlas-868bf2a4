@@ -1,0 +1,513 @@
+---
+title: Configuration Files
+description: YAML configuration files that define AtlasOS system tweaks and modifications
+---
+
+## Overview
+
+AtlasOS uses YAML configuration files to define system modifications in a declarative format. These files are located in the `Configuration/` directory and are organized by purpose and category.
+
+## Directory Structure
+
+```
+Configuration/
+├── atlas/              # Core Atlas configuration
+│   ├── start.yml      # Initial setup tasks
+│   ├── services.yml   # Service configurations
+│   ├── components.yml # Windows component modifications
+│   ├── appx.yml       # App package management
+│   ├── default.yml    # Default settings
+│   └── revert.yml     # Revert scripts setup
+├── tweaks/            # Categorized system tweaks
+│   ├── debloat/      # Remove unnecessary features
+│   ├── performance/  # Performance optimizations
+│   ├── privacy/      # Privacy enhancements
+│   ├── qol/          # Quality of life improvements
+│   ├── security/     # Security configurations
+│   ├── networking/   # Network optimizations
+│   ├── misc/         # Miscellaneous tweaks
+│   └── scripts/      # Script-based tweaks
+├── custom.yml         # Root orchestration file
+└── tweaks.yml         # Tweaks orchestration file
+```
+
+## YAML File Structure
+
+All configuration files follow a standardized YAML structure:
+
+```yaml
+---
+title: Descriptive Title
+description: What this configuration does and why
+actions:
+  - !actionType:
+    parameter: value
+  - !actionType:
+    parameter: value
+```
+
+### Required Fields
+
+<ParamField path="title" type="string" required>
+  Human-readable name for the configuration
+</ParamField>
+
+<ParamField path="description" type="string" required>
+  Explanation of what the configuration does
+</ParamField>
+
+<ParamField path="actions" type="array" required>
+  List of actions to execute
+</ParamField>
+
+### Optional Fields
+
+<ParamField path="onUpgrade" type="boolean" default="true">
+  Whether to run during playbook upgrades
+</ParamField>
+
+## Core Configuration Files
+
+### services.yml
+
+Configures Windows services and drivers to reduce background resource usage.
+
+<CodeGroup>
+```yaml services.yml:1-20
+---
+title: Services and Drivers
+description: Configures services and drivers to reduce background system resource utilization
+onUpgrade: false
+actions:
+  # Back up default Windows services & drivers
+  - !powerShell:
+    command: |
+      .\BACKUP.ps1 -FilePath """$([Environment]::GetFolderPath('Windows'))\AtlasModules\Other\winServices.reg"""
+    wait: true
+    exeDir: true
+
+  - !writeStatus: {status: 'Disabling File Sharing'}
+  - !powerShell:
+    command: '.\AtlasModules\Scripts\ScriptWrappers\DisableFileSharing.ps1 -Silent'
+    exeDir: true
+    wait: true
+    runas: currentUserElevated
+
+  - !writeStatus: {status: 'Disabling Location'}
+```
+</CodeGroup>
+
+### custom.yml
+
+The root orchestration file that coordinates all configuration tasks.
+
+<CodeGroup>
+```yaml custom.yml:1-26
+---
+title: Root Playbook File
+description: Runs all of the Playbook files
+actions:
+  # Load default user registry hive
+  - !powerShell:
+    command: 'reg load HKU\AME_UserHive_Default C:\Users\Default\NTUSER.DAT'
+    oobe: false
+    wait: true
+  
+  - !writeStatus: { status: "Deleting old AtlasOS folders" }
+  - !powerShell:
+    command: '.\STOPFOLDERPROC.ps1'
+    exeDir: true
+    onUpgrade: true
+    wait: true
+    runas: currentUserElevated
+  
+  - !writeStatus: { status: "Copying files" }
+  - !powerShell:
+    command: |
+      $windir = [Environment]::GetFolderPath('Windows')
+      @(
+          'AtlasModules',
+          'AtlasDesktop'
+      ) | ForEach-Object {
+```
+</CodeGroup>
+
+## Tweak Categories
+
+### Debloat
+
+Removes unnecessary Windows features, scheduled tasks, and bloatware.
+
+**Example: Disable Scheduled Tasks**
+
+<CodeGroup>
+```yaml disable-scheduled-tasks.yml
+---
+title: Disable Scheduled Tasks
+description: Disables scheduled tasks to prevent automatic tasks from running at startup, consuming resources and collecting user data
+actions:
+    # Updates compatibility database
+  - !scheduledTask: {path: '\Microsoft\Windows\Application Experience\PcaPatchDbTask', operation: disable, ignoreErrors: true}
+
+    # UCPD - might not exist on all installs, so ignore errors
+  - !scheduledTask: {path: '\Microsoft\Windows\AppxDeploymentClient\UCPD velocity', operation: disable, ignoreErrors: true}
+
+    # Data collection
+  - !scheduledTask: {path: '\Microsoft\Windows\DiskDiagnostic\Microsoft-Windows-DiskDiagnosticDataCollector', operation: disable, ignoreErrors: true}
+
+    # CEIP - safety measure
+  - !scheduledTask: {path: '\Microsoft\Windows\Customer Experience Improvement Program\Consolidator', operation: disable, ignoreErrors: true}
+  - !scheduledTask: {path: '\Microsoft\Windows\Customer Experience Improvement Program\UsbCeip', operation: disable, ignoreErrors: true}
+```
+</CodeGroup>
+
+<Accordion title="Available debloat tweaks">
+  - `config-content-delivery.yml` - Disable content delivery features
+  - `config-storage-sense.yml` - Configure Storage Sense
+  - `disable-reserved-storage.yml` - Disable reserved storage
+  - `disable-scheduled-tasks.yml` - Disable telemetry scheduled tasks
+  - `hide-unused-security-pages.yml` - Hide unused security settings
+</Accordion>
+
+### Performance
+
+Optimizations to improve system responsiveness and reduce resource usage.
+
+**Example: Configure MMCSS**
+
+<CodeGroup>
+```yaml config-mmcss.yml
+---
+title: Configure the Multimedia Class Scheduler Service
+description: Configures MMCSS for the best performance
+actions:
+    # Set system responsiveness to 10%
+    # Allocates less CPU resources to tasks that request it such as browsers
+  - !registryValue:
+    path: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile'
+    value: 'SystemResponsiveness'
+    data: '10'
+    type: REG_DWORD
+```
+</CodeGroup>
+
+<Accordion title="Available performance tweaks">
+  - `config-automatic-maintenance.yml` - Configure Windows maintenance
+  - `config-mmcss.yml` - Multimedia Class Scheduler Service settings
+  - `disable-auto-folder-discovery.yml` - Disable automatic folder type detection
+  - `disable-background-apps.yml` - Prevent apps from running in background
+  - `disable-fth.yml` - Disable Fault Tolerant Heap
+  - `disable-game-bar.yml` - Disable Xbox Game Bar
+  - `disable-sleep-study.yml` - Disable Modern Standby sleep study
+  - `respect-power-modes-search.yml` - Make search respect power modes
+</Accordion>
+
+### Privacy
+
+Enhances user privacy by disabling telemetry and data collection.
+
+<Accordion title="Privacy tweak categories">
+  **Telemetry** (`privacy/telemetry/`)
+  - `disable-activation-telemetry.yml` - Disable activation telemetry
+  - `disable-ceip.yml` - Disable Customer Experience Improvement Program
+  - `disable-diagnostic-tracing.yml` - Disable diagnostic tracing
+  - `disable-dotnet-cli-telemetry.yml` - Disable .NET CLI telemetry
+  - `disable-input-telemetry.yml` - Disable input data collection
+  - `disallow-data-collection.yml` - Disallow general data collection
+  
+  **Other Privacy**
+  - Advertising controls
+  - Cloud sync settings
+  - Cortana configuration
+  - Feedback controls
+  - OneDrive integration
+</Accordion>
+
+### Quality of Life (QOL)
+
+Usability improvements and annoyance removals.
+
+<Accordion title="Available QOL tweaks">
+  - `add-sharing-settings-shortcut.yml` - Add sharing settings to context menu
+  - `bcdedit-tweaks.yml` - Boot configuration tweaks
+  - `best-wallpaper-quality.yml` - Set maximum wallpaper quality
+  - `config-powershell.yml` - Configure PowerShell environment
+  - `config-start-menu.yml` - Start menu customization
+  - `disable-auto-app-archival.yml` - Prevent automatic app archival
+  - `disable-dynamic-lighting.yml` - Disable RGB lighting control
+  - `disable-mouse-accel.yml` - Disable mouse acceleration
+  - `config-windows-ink-workspace.yml` - Configure Windows Ink
+</Accordion>
+
+### Security
+
+Security-related configurations.
+
+<Accordion title="Security configurations">
+  - Defender settings
+  - Firewall rules
+  - Security mitigations
+  - User Account Control settings
+</Accordion>
+
+### Networking
+
+Network stack optimizations and configurations.
+
+<Accordion title="Network tweaks">
+  - TCP/IP stack optimizations
+  - DNS configuration
+  - Network adapter settings
+  - QoS settings
+</Accordion>
+
+### Miscellaneous
+
+Other system tweaks that don't fit specific categories.
+
+<Accordion title="Available misc tweaks">
+  - `add-music-videos-to-home.yml` - Add media folders to home
+  - `add-newUser-script.yml` - Add new user setup script
+  - `config-oem-information.yml` - Set OEM information
+  - `config-time.yml` - Time and timezone configuration
+  - `create-shortcuts.yml` - Create system shortcuts
+  - `delete-windows-specific-files.yml` - Remove Windows-specific files
+  - `enable-notifications.yml` - Enable notification system
+  - `enable-winre.yml` - Enable Windows Recovery Environment
+</Accordion>
+
+### Scripts
+
+Script-based tweaks that require more complex logic.
+
+## Action Types
+
+### Registry Actions
+
+<CodeGroup>
+```yaml Example
+- !registryValue:
+  path: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile'
+  value: 'SystemResponsiveness'
+  data: '10'
+  type: REG_DWORD
+  operation: add  # or delete
+```
+</CodeGroup>
+
+<ParamField path="path" type="string" required>
+  Registry key path
+</ParamField>
+
+<ParamField path="value" type="string" required>
+  Registry value name
+</ParamField>
+
+<ParamField path="data" type="string">
+  Value data (for add operation)
+</ParamField>
+
+<ParamField path="type" type="string">
+  Registry value type: `REG_SZ`, `REG_DWORD`, `REG_QWORD`, `REG_BINARY`, `REG_MULTI_SZ`
+</ParamField>
+
+<ParamField path="operation" type="string" default="add">
+  Operation: `add` or `delete`
+</ParamField>
+
+### Scheduled Task Actions
+
+<CodeGroup>
+```yaml Example
+- !scheduledTask:
+  path: '\Microsoft\Windows\Application Experience\PcaPatchDbTask'
+  operation: disable
+  ignoreErrors: true
+```
+</CodeGroup>
+
+<ParamField path="path" type="string" required>
+  Task path in Task Scheduler
+</ParamField>
+
+<ParamField path="operation" type="string" required>
+  Operation: `disable`, `enable`, or `delete`
+</ParamField>
+
+<ParamField path="ignoreErrors" type="boolean" default="false">
+  Continue if task doesn't exist
+</ParamField>
+
+### PowerShell Actions
+
+<CodeGroup>
+```yaml Example
+- !powerShell:
+  command: '.\BACKUP.ps1 -FilePath "path\to\file.reg"'
+  wait: true
+  exeDir: true
+  runas: currentUserElevated
+  oobe: false
+  onUpgrade: true
+```
+</CodeGroup>
+
+<ParamField path="command" type="string" required>
+  PowerShell command or script to execute
+</ParamField>
+
+<ParamField path="wait" type="boolean" default="false">
+  Wait for command to complete before continuing
+</ParamField>
+
+<ParamField path="exeDir" type="boolean" default="false">
+  Execute from playbook's Executables directory
+</ParamField>
+
+<ParamField path="runas" type="string">
+  Execution context: `currentUser`, `currentUserElevated`, `system`
+</ParamField>
+
+<ParamField path="oobe" type="boolean" default="true">
+  Run during Out-Of-Box Experience (OOBE)
+</ParamField>
+
+<ParamField path="onUpgrade" type="boolean" default="true">
+  Run during playbook upgrades
+</ParamField>
+
+### Command Actions
+
+<CodeGroup>
+```yaml Example
+- !cmd:
+  command: '"AtlasDesktop\3. General Configuration\Location\Disable Location (default).cmd" /silent'
+  exeDir: true
+  wait: true
+  runas: currentUserElevated
+```
+</CodeGroup>
+
+<ParamField path="command" type="string" required>
+  Command or batch file to execute
+</ParamField>
+
+<ParamField path="exeDir" type="boolean" default="false">
+  Execute from playbook's Executables directory
+</ParamField>
+
+<ParamField path="wait" type="boolean" default="false">
+  Wait for command to complete
+</ParamField>
+
+<ParamField path="runas" type="string">
+  Execution context: `currentUser`, `currentUserElevated`, `system`
+</ParamField>
+
+### Task Actions
+
+<CodeGroup>
+```yaml Example
+- !task:
+  path: 'atlas/services.yml'
+```
+</CodeGroup>
+
+<ParamField path="path" type="string" required>
+  Relative path to another YAML configuration file
+</ParamField>
+
+### Service Actions
+
+<CodeGroup>
+```yaml Example
+- !service:
+  name: 'DiagTrack'
+  operation: delete
+```
+</CodeGroup>
+
+<ParamField path="name" type="string" required>
+  Service name
+</ParamField>
+
+<ParamField path="operation" type="string" required>
+  Operation: `disable`, `enable`, `delete`, `start`, `stop`
+</ParamField>
+
+### Status Update Actions
+
+<CodeGroup>
+```yaml Example
+- !writeStatus:
+  status: 'Optimizing PowerShell'
+```
+</CodeGroup>
+
+<ParamField path="status" type="string" required>
+  Status message to display to user
+</ParamField>
+
+## Best Practices
+
+<CardGroup cols={2}>
+  <Card title="Use Descriptive Names" icon="tag">
+    File names should clearly indicate what the configuration does
+    
+    Good: `disable-scheduled-tasks.yml`
+    
+    Bad: `tasks.yml`
+  </Card>
+  
+  <Card title="Add Comments" icon="comment">
+    Include comments explaining why changes are made
+    
+    ```yaml
+    # Updates compatibility database
+    - !scheduledTask: {...}
+    ```
+  </Card>
+  
+  <Card title="Handle Errors" icon="shield-check">
+    Use `ignoreErrors: true` for optional or system-specific tasks
+    
+    ```yaml
+    ignoreErrors: true
+    ```
+  </Card>
+  
+  <Card title="Test Upgrades" icon="arrow-up">
+    Set `onUpgrade: false` for one-time setup tasks
+    
+    ```yaml
+    onUpgrade: false
+    ```
+  </Card>
+</CardGroup>
+
+## Execution Order
+
+Configuration files are executed in this order:
+
+1. `atlas/start.yml` - Initial setup
+2. `atlas/services.yml` - Service configuration
+3. `atlas/components.yml` - Component modifications
+4. `atlas/appx.yml` - App package management
+5. `atlas/default.yml` - Default settings
+6. `atlas/revert.yml` - Revert script setup
+7. `tweaks.yml` - All tweaks orchestration
+
+<Note>
+The `custom.yml` file orchestrates this execution order and includes additional setup and cleanup tasks.
+</Note>
+
+## Related Resources
+
+<CardGroup cols={2}>
+  <Card title="Playbook Structure" icon="folder-tree" href="/reference/playbook-structure">
+    Understand the overall playbook format
+  </Card>
+  <Card title="Executables" icon="terminal" href="/reference/executables">
+    Learn about scripts and tools
+  </Card>
+</CardGroup>

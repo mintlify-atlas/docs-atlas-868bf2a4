@@ -1,0 +1,152 @@
+---
+title: Introduction
+description: Welcome to AtlasOS - An open and lightweight modification to Windows, designed to optimize performance, privacy and usability.
+mode: custom
+---
+
+<div className="relative overflow-hidden dark:bg-[#0B1224] bg-white py-20">
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="lg:grid lg:grid-cols-12 lg:gap-8 items-center">
+      <div className="lg:col-span-7">
+        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold dark:text-white text-gray-900 mb-6">
+          Optimize Your Windows Experience
+        </h1>
+        <p className="text-lg sm:text-xl dark:text-gray-300 text-gray-600 mb-8 max-w-2xl">
+          AtlasOS is an open-source Windows modification that applies privacy, performance, and usability optimizations while maintaining functionality and customizability.
+        </p>
+        <div className="flex flex-wrap gap-4">
+          <a
+            href="/getting-started/installation"
+            className="inline-flex items-center justify-center px-6 py-3 text-base font-semibold rounded-lg bg-[#1b90f7] text-white hover:bg-[#0c4c84] transition-colors no-underline"
+          >
+            Get Started
+          </a>
+          <a
+            href="/getting-started/what-is-atlas"
+            className="inline-flex items-center justify-center px-6 py-3 text-base font-semibold rounded-lg border dark:border-white/30 dark:bg-white/10 dark:text-white border-gray-300 bg-gray-100 text-gray-900 dark:hover:border-[#1b90f7] hover:border-[#1b90f7] transition-colors no-underline"
+          >
+            Learn More
+          </a>
+        </div>
+      </div>
+      <div className="hidden lg:block lg:col-span-5 mt-12 lg:mt-0">
+        <img
+          src="https://media.brand.dev/f17d75fa-7253-4e12-9d9c-b8c5bf400dd2.svg"
+          alt="AtlasOS Logo"
+          className="w-full h-auto max-w-md mx-auto"
+          noZoom
+        />
+      </div>
+    </div>
+  </div>
+</div>
+
+<div className="mt-16 mb-16 max-w-5xl mx-auto px-6">
+  <h2 className="text-2xl sm:text-3xl font-semibold dark:text-white text-gray-900 mb-4">
+    Why Choose AtlasOS?
+  </h2>
+  <p className="text-base dark:text-gray-400 text-gray-600 mb-8">
+    AtlasOS transforms Windows into a faster, more private, and user-friendly operating system without compromising on essential features.
+  </p>
+
+  <CardGroup cols={3}>
+    <Card title="Enhanced Performance" icon="gauge-high" href="/features/performance">
+      Optimized system performance through debloating and meaningful tweaks that improve responsiveness without breaking compatibility.
+    </Card>
+    <Card title="Privacy First" icon="shield-halved" href="/features/privacy">
+      Remove telemetry and data collection while implementing group policies to minimize tracking within Windows.
+    </Card>
+    <Card title="Customizable Security" icon="lock" href="/features/security">
+      Configure security features at your own risk with full transparency about each option's trade-offs.
+    </Card>
+    <Card title="Better Usability" icon="sparkles" href="/features/usability">
+      Streamlined interface with removed bloatware, disabled advertisements, and improved default settings.
+    </Card>
+    <Card title="Open Source" icon="code-branch" href="/contributing/guidelines">
+      Built on AME Wizard Playbooks - fully transparent and auditable modifications to Windows.
+    </Card>
+    <Card title="Legal Compliance" icon="scale-balanced" href="/getting-started/what-is-atlas">
+      Complies with Microsoft Windows Usage Terms without redistributing modified ISOs or altering activation.
+    </Card>
+  </CardGroup>
+</div>
+
+<div className="mt-16 mb-16 max-w-5xl mx-auto px-6">
+  <h2 className="text-2xl sm:text-3xl font-semibold dark:text-white text-gray-900 mb-4">
+    Quick Start
+  </h2>
+  <p className="text-base dark:text-gray-400 text-gray-600 mb-8">
+    Get AtlasOS running on your Windows 11 system in minutes.
+  </p>
+
+  <Steps>
+    <Step title="Check System Requirements">
+      Ensure you're running Windows 11 (build 26100 or 26200). AtlasOS supports Windows 11 24H2 and 25H2 builds.
+    </Step>
+    <Step title="Download AME Wizard">
+      Download the latest version of AME Wizard from [amelabs.net](https://amelabs.net) and the AtlasOS Playbook from the [GitHub releases page](https://github.com/Atlas-OS/Atlas/releases/latest).
+    </Step>
+    <Step title="Prepare Your System">
+      Disable Windows Defender temporarily, ensure no pending Windows updates, and plug in your device to prevent interruptions during installation.
+    </Step>
+    <Step title="Run the Playbook">
+      Open AME Wizard, load the AtlasOS Playbook (.apbx file), and follow the installation wizard. The process takes approximately 15 minutes.
+    </Step>
+    <Step title="Configure Post-Installation">
+      After installation, access the Atlas folder on your desktop to customize security settings, performance options, and interface tweaks.
+    </Step>
+  </Steps>
+</div>
+
+<div className="mt-16 mb-16 max-w-5xl mx-auto px-6">
+  <h2 className="text-2xl sm:text-3xl font-semibold dark:text-white text-gray-900 mb-4">
+    Explore Documentation
+  </h2>
+  <p className="text-base dark:text-gray-400 text-gray-600 mb-8">
+    Dive deeper into AtlasOS features, configuration options, and technical references.
+  </p>
+
+  <CardGroup cols={2}>
+    <Card title="Installation Guide" icon="download" href="/getting-started/installation">
+      Step-by-step instructions for installing AtlasOS on your Windows 11 system.
+    </Card>
+    <Card title="Configuration" icon="sliders" href="/configuration/atlas-folder">
+      Learn about the Atlas folder and how to customize your system post-installation.
+    </Card>
+    <Card title="Features Overview" icon="star" href="/features/overview">
+      Explore all the performance, privacy, security, and usability improvements.
+    </Card>
+    <Card title="Playbook Reference" icon="book" href="/reference/playbook-structure">
+      Technical documentation on the AME Wizard Playbook structure and components.
+    </Card>
+  </CardGroup>
+</div>
+
+<div className="mt-16 mb-16 max-w-5xl mx-auto px-6">
+  <div className="dark:bg-[#1a1d27] bg-gray-50 rounded-2xl border dark:border-[#27272a] border-gray-200 p-8 sm:p-12">
+    <h2 className="text-2xl sm:text-3xl font-semibold dark:text-white text-gray-900 mb-4">
+      Join the Community
+    </h2>
+    <p className="text-base dark:text-gray-400 text-gray-600 mb-6 max-w-2xl">
+      Connect with thousands of AtlasOS users and contributors. Get help, share your experience, and contribute to the project.
+    </p>
+    <div className="flex flex-wrap gap-4">
+      <a
+        href="https://discord.atlasos.net"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex items-center justify-center px-6 py-3 text-base font-semibold rounded-lg bg-[#1b90f7] text-white hover:bg-[#0c4c84] transition-colors no-underline"
+      >
+        Join Discord
+      </a>
+      <a
+        href="https://github.com/Atlas-OS/Atlas/discussions"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex items-center justify-center px-6 py-3 text-base font-semibold rounded-lg border dark:border-white/30 dark:bg-white/10 dark:text-white border-gray-300 bg-gray-100 text-gray-900 dark:hover:border-[#1b90f7] hover:border-[#1b90f7] transition-colors no-underline"
+      >
+        GitHub Discussions
+      </a>
+    </div>
+  </div>
+</div>

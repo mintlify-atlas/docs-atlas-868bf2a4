@@ -1,0 +1,305 @@
+---
+title: Networking Tweaks
+description: AtlasOS networking tweaks that optimize network settings and enhance network security
+---
+
+AtlasOS includes networking tweaks that apply optimized network configurations and enhance network security. These tweaks are defined in YAML configuration files located in `Configuration/tweaks/networking/`.
+
+## Overview
+
+Networking tweaks in AtlasOS focus on:
+
+- Applying optimized network settings
+- Disabling vulnerable protocols
+- Restricting anonymous network access
+- Optimizing SMB/CIFS file sharing
+- Enhancing network security
+
+## Network Configuration
+
+### Atlas Network Settings
+
+```yaml
+---
+title: Applies Atlas' Network Settings
+description: Applies Atlas' optimised network settings
+actions:
+  - !cmd:
+    command: '"AtlasDesktop\9. Troubleshooting\Network\Reset Network to Atlas Default.cmd" /silent'
+    exeDir: true
+    wait: true
+    runas: currentUserElevated
+```
+
+This tweak applies AtlasOS's optimized network configuration by executing a script that resets and configures network settings to Atlas defaults. The configuration includes optimizations for:
+- Network adapter settings
+- TCP/IP parameters
+- DNS configuration
+- Network performance tuning
+
+## Protocol Security
+
+### Disable LLMNR Protocol
+
+```yaml
+---
+title: Disable LLMNR Protocol
+description: Disable Link-Local Multicast Name Resolution (LLMNR) protocol as it is vulnerable and has been replaced by DNS
+actions:
+  # https://admx.help/?Category=Windows_11_2022&Policy=Microsoft.Policies.DNSClient::Turn_Off_Multicast
+  - !registryValue:
+    path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient'
+    value: 'EnableMulticast'
+    data: '0'
+    type: REG_DWORD
+```
+
+LLMNR (Link-Local Multicast Name Resolution) is disabled because:
+- **Security vulnerability**: Susceptible to man-in-the-middle attacks
+- **Credential theft**: Can be exploited to capture authentication credentials
+- **Obsolete**: Replaced by modern DNS resolution
+- **Network pollution**: Generates unnecessary multicast traffic
+
+**Attack scenario**: Attackers can respond to LLMNR queries and capture NTLM hashes, which can then be cracked or relayed.
+
+## SMB/File Sharing Security
+
+### Restrict Anonymous Enumeration of Shares
+
+```yaml
+---
+title: Restrict Anonymous Enumeration of Shares
+description: Restricts anonymous enumeration of shares
+actions:
+  # https://www.stigviewer.com/stig/microsoft_windows_10/2022-04-08/finding/V-220930
+  - !registryValue:
+    path: 'HKLM\SYSTEM\CurrentControlSet\Control\Lsa'
+    value: 'RestrictAnonymous'
+    data: '1'
+    type: REG_DWORD
+```
+
+Prevents anonymous users from enumerating network shares, protecting against:
+- Information disclosure
+- Reconnaissance attacks
+- Unauthorized access attempts
+
+**Security Standard**: Implements DISA STIG finding V-220930 for Windows 10/11.
+
+### Restrict Anonymous Share Access
+
+Further restricts anonymous access to network shares beyond enumeration, preventing:
+- Anonymous connections to shared resources
+- Null session attacks
+- Unauthorized data access
+
+### Disable SMB Bandwidth Throttling
+
+Removes bandwidth limitations on SMB (Server Message Block) file transfers for improved file sharing performance over local networks.
+
+## Configuration Location
+
+All networking tweak YAML files are located in:
+
+```
+src/playbook/Configuration/tweaks/networking/
+├── atlas-network-settings.yml
+├── disable-llmnr.yml
+└── shares/
+    ├── disable-smb-bandwidth-throttling.yml
+    ├── restrict-anonymous-access.yml
+    └── restrict-anonymous-enumeration.yml
+```
+
+## Networking Tweaks Summary
+
+| Tweak | Purpose | Security Impact | Performance Impact |
+|-------|---------|-----------------|--------------------|
+| Atlas Network Settings | Optimize network configuration | Medium | High |
+| Disable LLMNR | Prevent credential theft | High | None |
+| Restrict Anonymous Enumeration | Block share discovery | High | None |
+| Restrict Anonymous Access | Block share access | High | None |
+| Disable SMB Throttling | Improve transfer speed | None | High |
+
+## Security Standards Compliance
+
+AtlasOS networking tweaks implement DISA STIG findings:
+
+### V-220930: Anonymous Share Enumeration
+**Severity**: Medium  
+**Vulnerability**: Allows anonymous users to enumerate network shares  
+**Fix**: Set `RestrictAnonymous` to `1`
+
+### Related: V-220929 (See Security Tweaks)
+SAM account enumeration restriction (covered in [Security Tweaks](/reference/tweaks/security))
+
+## Network Protocol Security
+
+### Disabled Protocols
+
+- **LLMNR (Link-Local Multicast Name Resolution)**
+  - Port: UDP 5355
+  - Vulnerability: NTLM hash capture
+  - Replacement: DNS
+  - Status: Disabled
+
+### Recommended Additional Security
+
+For enhanced security, also consider disabling:
+- **NetBIOS over TCP/IP** (if not needed)
+- **SMBv1** (already disabled in modern Windows)
+- **IPv6** (if not used on your network)
+
+These are typically handled by the Atlas network reset script.
+
+## SMB/CIFS Optimizations
+
+### File Sharing Performance
+
+AtlasOS optimizes SMB file sharing by:
+
+1. **Removing Bandwidth Throttling**
+   - Allows full network speed utilization
+   - Improves large file transfer times
+   - Benefits local network file sharing
+
+2. **Security Restrictions**
+   - Blocks anonymous access
+   - Prevents information disclosure
+   - Maintains authenticated share access
+
+### SMB Security Features
+
+AtlasOS maintains these SMB security features:
+- SMBv2/v3 encryption support
+- Authenticated access requirements
+- Share access control lists (ACLs)
+- Anonymous access restrictions
+
+## Network Configuration Details
+
+### Registry Modifications
+
+Networking tweaks modify these registry locations:
+
+```
+HKLM\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient
+└── EnableMulticast: 0 (LLMNR disabled)
+
+HKLM\SYSTEM\CurrentControlSet\Control\Lsa
+├── RestrictAnonymous: 1 (enumeration blocked)
+└── RestrictAnonymousSAM: 1 (from security tweaks)
+```
+
+## Atlas Network Reset Script
+
+The Atlas network reset script performs:
+
+- Network adapter reset
+- TCP/IP stack optimization
+- DNS cache flush
+- Winsock reset
+- Network settings optimization
+- Protocol configuration
+
+**Location**: `AtlasDesktop\9. Troubleshooting\Network\Reset Network to Atlas Default.cmd`
+
+## Performance Considerations
+
+### Local Network
+- Disabled SMB throttling improves LAN transfer speeds
+- Optimized TCP/IP settings reduce latency
+- DNS configuration improves name resolution
+
+### Internet Connection
+- TCP window scaling optimization
+- Receive Window Auto-Tuning
+- Congestion control algorithms
+
+## YAML Structure
+
+Networking tweaks use these action types:
+
+```yaml
+---
+title: Network Tweak Name
+description: What the networking tweak does
+actions:
+  # Registry modification
+  - !registryValue:
+    path: 'HKLM\Path\To\Network\Key'
+    value: 'SettingName'
+    data: '0'
+    type: REG_DWORD
+  
+  # Execute network configuration script
+  - !cmd:
+    command: 'network-config-script.cmd /silent'
+    exeDir: true
+    wait: true
+    runas: currentUserElevated
+```
+
+## Reverting Network Tweaks
+
+### Re-enable LLMNR (Not Recommended)
+
+```cmd
+reg delete "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient" /v EnableMulticast /f
+```
+
+### Allow Anonymous Share Enumeration (Not Recommended)
+
+```cmd
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Lsa" /v RestrictAnonymous /t REG_DWORD /d 0 /f
+```
+
+### Reset Network to Windows Default
+
+Windows includes built-in network reset:
+
+```cmd
+Settings > Network & Internet > Advanced network settings > Network reset
+```
+
+Or via command line:
+
+```cmd
+netsh winsock reset
+netsh int ip reset
+netsh advfirewall reset
+ipconfig /release
+ipconfig /renew
+ipconfig /flushdns
+```
+
+## Best Practices
+
+- Keep LLMNR disabled for security
+- Maintain anonymous access restrictions
+- Use the Atlas network reset for optimal settings
+- Enable SMB encryption for sensitive data transfers
+- Regularly update network drivers
+- Monitor network performance after applying tweaks
+
+## Troubleshooting
+
+If you experience network issues after applying tweaks:
+
+1. **Run Atlas Network Reset**
+   - Location: `AtlasDesktop\9. Troubleshooting\Network`
+   - Restores Atlas default configuration
+
+2. **Check Network Adapter**
+   - Update drivers
+   - Verify adapter is enabled
+   - Check physical connection
+
+3. **DNS Issues**
+   - Flush DNS cache: `ipconfig /flushdns`
+   - Try alternative DNS servers (1.1.1.1, 8.8.8.8)
+
+4. **File Sharing Issues**
+   - Verify SMB services are running
+   - Check firewall rules
+   - Ensure correct credentials for share access

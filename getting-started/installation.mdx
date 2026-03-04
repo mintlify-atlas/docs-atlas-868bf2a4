@@ -1,0 +1,222 @@
+---
+title: Installation
+description: Step-by-step guide to installing AtlasOS on Windows 11 using AME Wizard.
+---
+
+This guide will walk you through installing AtlasOS on your Windows 11 system. The installation process takes approximately **15 minutes** and uses the AME Wizard to apply the Atlas Playbook.
+
+## System requirements
+
+Before installing Atlas, ensure your system meets these requirements:
+
+### Windows version
+
+Atlas v0.5.0 supports the following Windows 11 builds:
+
+- **Windows 11 24H2** (Build 26100)
+- **Windows 11 25H2** (Build 26200)
+
+<Warning>
+Atlas only supports these specific Windows 11 builds. Using Atlas on other versions may cause system instability or installation failure.
+</Warning>
+
+### Check your Windows build
+
+To verify your Windows build:
+
+1. Press `Win + R` to open Run
+2. Type `winver` and press Enter
+3. Check that your OS Build matches one of the supported builds above
+
+## Prerequisites
+
+Before starting the installation, you must complete these requirements:
+
+<Steps>
+  <Step title="Toggle Windows Defender">
+    Windows Defender must be toggled before installation. You can re-enable it after installation through the Atlas folder.
+    
+    <Note>
+    The installer will check for this requirement and prevent installation if Defender is not properly toggled.
+    </Note>
+  </Step>
+  
+  <Step title="Remove third-party antivirus">
+    Uninstall any third-party antivirus software (Norton, McAfee, Avast, etc.) as they can interfere with the installation process.
+  </Step>
+  
+  <Step title="Connect to the internet">
+    A stable internet connection is required for the installation process as Atlas downloads necessary components.
+  </Step>
+  
+  <Step title="Install Windows updates">
+    Ensure all pending Windows updates are installed:
+    
+    1. Open Settings > Windows Update
+    2. Install all available updates
+    3. Restart your computer if required
+    4. Check again to ensure no updates remain pending
+  </Step>
+  
+  <Step title="Plug in your device">
+    For laptops, connect to power before installation to prevent interruptions.
+  </Step>
+  
+  <Step title="Disable UCPD (if applicable)">
+    Universal Control Plane Driver must be disabled before installation.
+  </Step>
+</Steps>
+
+<Warning>
+Failing to meet these prerequisites will cause the installation to fail. The AME Wizard will verify all requirements before proceeding.
+</Warning>
+
+## Installation process
+
+<Steps>
+  <Step title="Download AME Wizard and Atlas Playbook">
+    1. Download the latest AME Wizard from [amelabs.net](https://amelabs.net)
+    2. Download the latest Atlas Playbook from [atlasos.net](https://atlasos.net) or [GitHub Releases](https://github.com/Atlas-OS/Atlas/releases/latest)
+    3. Extract both downloads to easily accessible locations
+  </Step>
+  
+  <Step title="Run AME Wizard">
+    1. Right-click `AME Wizard.exe` and select **Run as administrator**
+    2. If prompted by User Account Control, click **Yes**
+    3. Wait for AME Wizard to load
+  </Step>
+  
+  <Step title="Load the Atlas Playbook">
+    1. In AME Wizard, click **Select Playbook** or drag and drop the Atlas `.apbx` file
+    2. AME Wizard will verify the playbook and check your system requirements
+    3. Review the requirement check results - all must pass to continue
+    
+    <Info>
+    If any requirements fail, address them before proceeding. The wizard will provide specific guidance for each failed requirement.
+    </Info>
+  </Step>
+  
+  <Step title="Review installation information">
+    Read the Atlas description and installation information carefully:
+    
+    - Atlas makes your computer snappier and more private with lots of usability improvements
+    - Review the performance, usability, and privacy benefits
+    - Understand that this is a significant system modification
+  </Step>
+  
+  <Step title="Configure Windows Defender">
+    Choose your Defender preference:
+    
+    - **Enable Defender (recommended)**: Keeps Windows Defender enabled for security
+    - **Disable Defender**: For advanced users only, reduces security
+    
+    <Tip>
+    Defender can be toggled later through the Atlas folder on your desktop, so you can change this setting after installation.
+    </Tip>
+  </Step>
+  
+  <Step title="Configure CPU mitigations">
+    Choose your mitigation preference:
+    
+    - **Default Windows Mitigations (recommended)**: Maintains security protections against Spectre/Meltdown
+    - **Disable All Mitigations**: May improve performance on older CPUs but reduces security
+    
+    <Warning>
+    Disabling mitigations reduces security and could harm performance on modern CPUs. Only disable if you understand the security implications.
+    </Warning>
+  </Step>
+  
+  <Step title="Configure automatic updates">
+    Choose your Windows Update preference:
+    
+    - **Disable Automatic Windows Updates**: Updates won't install automatically (you'll still get notifications)
+    - **Enable Automatic Windows Updates**: Updates install automatically for better security
+    
+    <Info>
+    This setting can be changed later in the Atlas folder. Regardless of your choice, you'll receive update notifications.
+    </Info>
+  </Step>
+  
+  <Step title="Configure additional options">
+    Select optional settings:
+    
+    - **Disable Hibernation**: Frees up disk space by removing hibernation file
+    - **Maximum Performance (Disable Power Saving)**: Disables power-saving features for best performance
+    - **Disable Core Isolation**: Disables VBS/Memory Integrity (reduces security but may improve performance)
+    
+    All of these can be changed later through the Atlas folder.
+  </Step>
+  
+  <Step title="Configure application options">
+    Choose applications to modify:
+    
+    - **Remove Snipping Tool App**: Removes the built-in screenshot tool
+    - **Remove Microsoft Edge**: Uninstalls Edge browser
+    - **Install a Browser**: Optionally install Brave, LibreWolf, Firefox, or Chrome
+    
+    If you choose to install a browser, you'll select your preferred option on the next screen.
+  </Step>
+  
+  <Step title="Install Atlas Toolbox (optional)">
+    Optionally install the Atlas Toolbox (BETA), a graphical tool for managing Atlas settings.
+  </Step>
+  
+  <Step title="Begin installation">
+    1. Review all your selections
+    2. Click **Install** or **Next** to begin
+    3. The installation will take approximately **15 minutes**
+    4. Your computer will restart automatically during the process
+    
+    <Warning>
+    Do not interrupt the installation process or turn off your computer. Let the process complete automatically.
+    </Warning>
+  </Step>
+  
+  <Step title="Installation progress">
+    During installation, Atlas will:
+    
+    - Install software and configuration folders
+    - Apply Windows tweaks and optimizations
+    - Configure selected options
+    - Restart your computer as needed
+    
+    <Info>
+    Follow the Atlas documentation at [docs.atlasos.net](https://docs.atlasos.net) during installation for additional guidance.
+    </Info>
+  </Step>
+</Steps>
+
+## Post-installation
+
+Once installation completes:
+
+1. Your computer will restart to the Windows desktop
+2. You'll find an **Atlas** folder on your desktop
+3. All Atlas configurations and tools are accessible through this folder
+
+<CardGroup cols={2}>
+  <Card title="Post-installation setup" icon="gear" href="/getting-started/post-installation">
+    Learn about the Atlas folder and important first steps
+  </Card>
+  <Card title="Get help" icon="discord" href="https://discord.atlasos.net">
+    Join our Discord community for support
+  </Card>
+</CardGroup>
+
+## Troubleshooting
+
+If you encounter issues during installation:
+
+- **Requirements check fails**: Carefully review each failed requirement and address it before retrying
+- **Installation freezes**: Wait at least 30 minutes before forcing a restart, as some steps take time
+- **System won't boot**: Use Windows Recovery Environment to restore from a system restore point
+
+<Tip>
+Create a system restore point before installing Atlas to ensure you can revert if needed.
+</Tip>
+
+For more help, visit:
+
+- [Installation FAQ](https://docs.atlasos.net/install-faq/removed-features/)
+- [Discord Support](https://discord.atlasos.net)
+- [GitHub Discussions](https://github.com/Atlas-OS/Atlas/discussions)

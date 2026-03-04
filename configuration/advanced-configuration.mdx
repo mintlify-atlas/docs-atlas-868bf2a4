@@ -1,0 +1,453 @@
+---
+title: Advanced Configuration
+description: Advanced system configuration options for power users in AtlasOS
+---
+
+## Overview
+
+Advanced Configuration provides power users with fine-grained control over boot settings, drivers, system services, and advanced Windows components. These settings require technical knowledge and can significantly affect system behavior.
+
+<Note>
+Location: `C:\Atlas\6. Advanced Configuration\`
+</Note>
+
+<Warning>
+Advanced configuration changes can cause system instability or boot failures if configured incorrectly. Always create a system restore point before making changes, and ensure you understand what each setting does.
+</Warning>
+
+## Boot Configuration
+
+Customize Windows boot appearance and behavior.
+
+### View Current Values
+
+- **View Current Values.cmd** - Displays current boot configuration settings
+
+Run this script first to see your current boot configuration before making changes.
+
+### Appearance
+
+Customize the visual aspects of the Windows boot process.
+
+#### Boot Logo
+
+- **Boot Logo** - Configure the Windows logo display during boot
+
+**Options**:
+- Show Windows logo
+- Hide boot logo for faster perceived boot time
+
+#### New Boot Menu
+
+- **New Boot Menu** - Switch between legacy and modern boot menu styles
+
+**Menu styles**:
+- Modern (Windows 8+) - Touch-friendly, graphical interface
+- Legacy (Windows 7) - Text-based, faster boot menu
+
+#### Spinning Animation
+
+- **Spinning Animation** - Control the boot loading animation
+
+**Options**:
+- Show spinning animation (default)
+- Hide animation for cleaner boot screen
+
+### Behavior
+
+Configure functional aspects of the boot process.
+
+#### Always Go to Advanced Boot Options
+
+- **Always Go to Advanced Boot Options** - Automatically show advanced options on every boot
+
+<Info>
+Useful for troubleshooting or if you frequently need to access Safe Mode or other boot options.
+</Info>
+
+#### Automatic Repair
+
+- **Automatic Repair** - Enable or disable Windows automatic startup repair
+
+**Options**:
+- Enable - Windows attempts automatic repair after failed boots
+- Disable - Skips automatic repair, potentially faster boot after crashes
+
+<Warning>
+Disabling automatic repair means you'll need to manually access recovery options if Windows fails to boot.
+</Warning>
+
+#### Editing Kernel Parameters on Startup
+
+- **Editing Kernel Parameters on Startup** - Allow editing boot parameters during startup
+
+**Use case**: Advanced debugging and boot customization
+
+#### Highest Mode
+
+- **Highest Mode** - Force Windows to use the highest display resolution during boot
+
+**Options**:
+- Enable - Uses maximum resolution for boot screens
+- Disable - Uses standard boot resolution (faster)
+
+## Driver Configuration
+
+Links to external tools for advanced driver management and optimization.
+
+<Note>
+The Driver Configuration folder contains shortcuts to specialized tools rather than scripts. These tools provide advanced functionality for driver tuning.
+</Note>
+
+### Available Tools
+
+#### AutoGpuAffinity
+
+**Purpose**: Automatically sets GPU affinity for optimal multi-GPU configurations
+
+**Use case**: Systems with multiple GPUs, particularly for gaming and rendering
+
+#### GoInterruptPolicy
+
+**Purpose**: Configure device interrupt policies and priorities
+
+**Use case**: Optimizing interrupt handling for low-latency audio or high-performance networking
+
+#### Interrupt Affinity Tool
+
+**Purpose**: Manually assign device interrupts to specific CPU cores
+
+**Use case**: Advanced latency optimization, particularly for audio production and competitive gaming
+
+<Info>
+Interrupt affinity tuning can reduce latency by preventing interrupt conflicts and ensuring critical devices have dedicated CPU resources.
+</Info>
+
+#### MSI Utility V3
+
+**Purpose**: Enable Message Signaled Interrupts (MSI) for devices
+
+**Use case**: Improve device performance and reduce latency by using MSI instead of legacy line-based interrupts
+
+**Benefits of MSI**:
+- Lower latency interrupt handling
+- Better interrupt distribution across CPU cores
+- Reduced interrupt sharing and conflicts
+- Improved GPU, NVMe, and audio device performance
+
+<Warning>
+Improperly configuring interrupt settings can cause device instability or driver crashes. Research your specific hardware before making changes.
+</Warning>
+
+## Microsoft Store
+
+Manage Microsoft Store availability.
+
+- **Enable Microsoft Store (default)** - Microsoft Store is available
+- **Disable Microsoft Store** - Completely disables the Microsoft Store
+
+<Tip>
+Disabling the Microsoft Store can free up system resources but prevents installing Store apps and receiving Store app updates.
+</Tip>
+
+**Considerations**:
+- Some features require the Store (Xbox app, certain system settings)
+- Store can be re-enabled at any time
+- Disabling doesn't remove already-installed Store apps
+
+## Process Explorer
+
+Install or uninstall Microsoft's advanced task manager replacement.
+
+- **Install Process Explorer** - Installs Process Explorer as the default task manager
+- **Uninstall Process Explorer** - Removes Process Explorer and restores standard Task Manager
+
+### What is Process Explorer?
+
+Process Explorer is an advanced system monitoring tool from Microsoft Sysinternals that provides:
+- Detailed process information
+- DLL and handle information
+- Process tree visualization
+- Performance graphs
+- Network activity monitoring
+- GPU usage tracking
+
+<Info>
+Process Explorer is significantly more powerful than Task Manager and is essential for advanced troubleshooting and system analysis.
+</Info>
+
+**Features**:
+- **Process tree view** - See parent-child relationships
+- **DLL view** - See what libraries each process uses
+- **Handle view** - See all file handles, registry keys, and threads
+- **Verify signatures** - Check code signing status
+- **VirusTotal integration** - Check processes against VirusTotal database
+- **GPU monitoring** - Per-process GPU usage
+
+## Services
+
+Configure Windows services for specific functionality.
+
+<Note>
+Windows services run in the background and provide system functionality. Disabling services can break related features.
+</Note>
+
+### Bluetooth
+
+Manage Bluetooth functionality.
+
+- **Enable Bluetooth (default)** - Bluetooth devices work normally
+- **Disable Bluetooth** - Disables Bluetooth stack and services
+
+**Impact**: Disabling saves minimal resources and improves security on desktop systems without Bluetooth hardware.
+
+### Lanman Workstation (SMB)
+
+Control SMB (Server Message Block) client functionality.
+
+- **Enable Lanman Workstation (default)** - Can access network shares
+- **Disable Lanman Workstation** - Disables network share access
+
+<Warning>
+Disabling Lanman Workstation prevents accessing network shares, mapped drives, and some network functionality.
+</Warning>
+
+**What uses Lanman Workstation**:
+- Network file shares (\\\\server\\share)
+- Mapped network drives
+- Some network printers
+- Network resource browsing
+
+### Network Discovery
+
+Manage network discovery services.
+
+- **Enable Network Discovery Services (default)** - Can discover other devices on network
+- **Disable Network Discovery Services** - Hides your PC from network and vice versa
+
+**Services affected**:
+- Function Discovery Provider Host
+- Function Discovery Resource Publication
+- SSDP Discovery
+- UPnP Device Host
+
+**Impact**: Disabling improves privacy and reduces network traffic but prevents:
+- Discovering network printers
+- Seeing other computers in Network folder
+- Some smart home device functionality
+
+### NVIDIA Display Container
+
+Control NVIDIA's background services (NVIDIA GPU users only).
+
+- **Enable NVIDIA Display Container LS (default)** - NVIDIA services run normally
+- **Disable NVIDIA Display Container LS** - Disables NVIDIA telemetry and some features
+
+#### Context Menu
+
+Add quick access to toggle NVIDIA services:
+
+- **Remove Container Context Menu (default)** - No context menu entry
+- **Add Container Context Menu** - Right-click desktop toggle for NVIDIA services
+
+<Info>
+Disabling the Display Container LS service can reduce memory usage and startup time but may break NVIDIA Control Panel and some GPU features.
+</Info>
+
+**What you lose when disabled**:
+- NVIDIA Control Panel (may not launch)
+- Automatic driver update notifications
+- Some overlay features
+- Telemetry and usage data collection (benefit)
+
+### Printing
+
+Manage Windows printing services.
+
+- **Enable Printing (default)** - Printing functionality available
+- **Disable Printing** - Disables print spooler and related services
+
+<Tip>
+Disabling printing on systems that never print can free up memory and reduce attack surface (print spooler has had security vulnerabilities).
+</Tip>
+
+**Services affected**:
+- Print Spooler
+- PrintWorkflow
+- Related printer services
+
+### Superfetch
+
+Control Superfetch/SysMain service.
+
+- **Enable SuperFetch (default)** - Superfetch preloads frequently used applications
+- **Disable SuperFetch** - Disables intelligent memory management
+
+**What is Superfetch/SysMain?**
+- Analyzes application usage patterns
+- Preloads frequently used apps into memory
+- Aims to improve application launch times
+
+<Info>
+Superfetch benefits HDDs more than SSDs. On systems with SSDs, the performance benefit is minimal while it consumes RAM and CPU cycles.
+</Info>
+
+**Disable Superfetch if**:
+- You have an SSD (minimal benefit)
+- You have limited RAM (less than 8GB)
+- You experience high disk usage from SysMain
+
+**Keep Superfetch enabled if**:
+- You have an HDD as your primary drive
+- You have plenty of RAM (16GB+)
+- You frequently use the same applications
+
+## Best Practices
+
+<Steps>
+  <Step title="Research First">
+    Before changing advanced settings:
+    - Understand what the setting does
+    - Research your specific hardware compatibility
+    - Read community experiences with the setting
+  </Step>
+  
+  <Step title="Create Restore Point">
+    Always create a system restore point:
+    - Open System Properties
+    - System Protection tab
+    - Create restore point
+  </Step>
+  
+  <Step title="Change One Setting at a Time">
+    Make changes incrementally:
+    - Apply one change
+    - Test thoroughly
+    - Verify stability before next change
+  </Step>
+  
+  <Step title="Document Your Changes">
+    Keep notes on what you changed:
+    - What was modified
+    - When it was changed
+    - Why you made the change
+    - Results/impact observed
+  </Step>
+  
+  <Step title="Monitor Stability">
+    After changes, watch for:
+    - Boot issues
+    - Application crashes
+    - Performance problems
+    - Missing functionality
+  </Step>
+</Steps>
+
+## Common Configuration Profiles
+
+### Gaming-Focused Configuration
+
+**Boot**:
+- Hide boot logo and animations for faster boot
+- Disable automatic repair for faster crash recovery
+
+**Services**:
+- Disable Bluetooth (if not used)
+- Disable Printing (if not needed)
+- Disable Superfetch (especially with SSD)
+- Keep Network Discovery enabled (for multiplayer)
+
+**Tools**:
+- Install Process Explorer for monitoring
+- Consider MSI Utility for GPU and peripherals
+
+### Workstation Configuration
+
+**Boot**:
+- Keep default boot settings
+- Enable automatic repair
+
+**Services**:
+- Enable all services as needed for work
+- Enable Network Discovery for file sharing
+- Enable Printing if needed
+- Keep Superfetch enabled
+
+**Tools**:
+- Install Process Explorer for troubleshooting
+- Enable Microsoft Store for apps
+
+### Privacy-Focused Configuration
+
+**Services**:
+- Disable Network Discovery
+- Disable NVIDIA Display Container (telemetry)
+- Disable Bluetooth when not needed
+
+**Other**:
+- Disable Microsoft Store if not needed
+
+### Performance-Focused Configuration
+
+**Boot**:
+- Hide all boot animations
+- Disable automatic repair
+- Legacy boot menu
+
+**Services**:
+- Disable Superfetch
+- Disable Printing (if not needed)
+- Disable Network Discovery (if not needed)
+- Disable Bluetooth (if not needed)
+
+**Tools**:
+- MSI Utility for device latency optimization
+- Interrupt Affinity tuning for critical devices
+
+## Troubleshooting
+
+### Boot Issues
+
+If boot configuration changes cause problems:
+
+1. **Access Advanced Startup**:
+   - Power off forcefully 2-3 times to trigger recovery
+   - Or use Windows installation media
+
+2. **Boot to Command Prompt**:
+   - Use `bcdedit` to view/reset boot settings
+   - Example: `bcdedit /set {current} bootmenupolicy legacy`
+
+3. **Restore from Restore Point**:
+   - Use System Restore in recovery environment
+
+### Service Issues
+
+If disabling services causes problems:
+
+1. **Re-enable the service** using the enable script
+2. **Check Event Viewer** for service-related errors
+3. **Run the "Set services to defaults.cmd"** from Troubleshooting folder
+
+### Driver Configuration Issues
+
+If driver tuning causes instability:
+
+1. **Boot to Safe Mode**
+2. **Revert changes** in the driver configuration tool
+3. **Update drivers** to latest version
+4. **Check manufacturer forums** for known issues
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="Atlas Folder" icon="folder" href="/configuration/atlas-folder">
+    Overview of all categories
+  </Card>
+  <Card title="Security Settings" icon="shield" href="/configuration/security-settings">
+    Security feature configuration
+  </Card>
+  <Card title="General Configuration" icon="sliders" href="/configuration/general-configuration">
+    Core system settings
+  </Card>
+</CardGroup>

@@ -1,0 +1,206 @@
+---
+title: Security Tweaks
+description: AtlasOS security tweaks that disable remote assistance and block anonymous enumeration to improve system security
+---
+
+AtlasOS includes security tweaks that enhance system security by disabling unnecessary remote access features and preventing anonymous network enumeration. These tweaks are defined in YAML configuration files located in `Configuration/tweaks/security/`.
+
+## Overview
+
+Security tweaks in AtlasOS focus on:
+
+- Disabling remote assistance features
+- Blocking anonymous enumeration attacks
+- Restricting remote access capabilities
+- Hardening network security
+- Following security best practices from DISA STIG
+
+## Remote Assistance
+
+### Disable Remote Assistance
+
+```yaml
+---
+title: Disable Remote Assistance
+description: As Remote Assistance is an unused and a potential vulnerable feature, it is disabled
+actions:
+  - !registryValue:
+    path: 'HKLM\SYSTEM\CurrentControlSet\Control\Remote Assistance'
+    value: 'fAllowFullControl'
+    data: '0'
+    type: REG_DWORD
+  - !registryValue:
+    path: 'HKLM\SYSTEM\CurrentControlSet\Control\Remote Assistance'
+    value: 'fAllowToGetHelp'
+    data: '0'
+    type: REG_DWORD
+  - !run: {exe: 'netsh', args: 'advfirewall firewall set rule group="Remote Assistance" new enable=no'}
+```
+
+This tweak completely disables Windows Remote Assistance by:
+- Disabling full control remote assistance (`fAllowFullControl`)
+- Disabling all remote assistance requests (`fAllowToGetHelp`)
+- Blocking Remote Assistance through Windows Firewall
+
+**Why disable Remote Assistance?**
+- Rarely used by most users
+- Potential security vulnerability if misconfigured
+- Can be exploited by attackers for unauthorized access
+- Users who need remote support typically use third-party tools
+
+## Anonymous Enumeration Prevention
+
+### Block Anonymous Enumeration of SAM Accounts
+
+```yaml
+---
+title: Blocks Anonymous Enumeration of SAM Accounts
+description: Blocks the anonymous enumeration of SAM accounts to prevent the ability to list the potential points of attack to the system
+actions:
+  # https://www.stigviewer.com/stig/microsoft_windows_10/2022-04-08/finding/V-220929
+  - !registryValue:
+    path: 'HKLM\SYSTEM\CurrentControlSet\Control\Lsa'
+    value: 'RestrictAnonymousSAM'
+    data: '1'
+    type: REG_DWORD
+```
+
+This tweak blocks anonymous users from enumerating Security Account Manager (SAM) accounts, preventing attackers from:
+- Listing user accounts on the system
+- Identifying potential targets for attacks
+- Gathering information for social engineering
+- Discovering administrator accounts
+
+**Security Standard**: This follows DISA STIG finding V-220929 for Windows 10/11.
+
+## Configuration Location
+
+All security tweak YAML files are located in:
+
+```
+src/playbook/Configuration/tweaks/security/
+├── block-anonymous-enum-sam.yml
+└── disable-remote-assistance.yml
+```
+
+## Security Tweaks Summary
+
+| Tweak | Security Issue Addressed | STIG Reference |
+|-------|--------------------------|----------------|
+| Disable Remote Assistance | Unauthorized remote access | Best practice |
+| Block Anonymous SAM Enumeration | Information disclosure | V-220929 |
+
+## Additional Network Security
+
+See also [Networking Tweaks](/reference/tweaks/networking) for additional security-related network configurations:
+- Restrict Anonymous Share Enumeration
+- Restrict Anonymous Share Access
+- Disable LLMNR Protocol
+
+## YAML Structure
+
+Security tweaks use these action types:
+
+```yaml
+---
+title: Security Tweak Name
+description: Security issue being addressed
+actions:
+  # Modify registry for security setting
+  - !registryValue:
+    path: 'HKLM\SYSTEM\Path\To\Key'
+    value: 'SecurityValue'
+    data: '1'
+    type: REG_DWORD
+  
+  # Configure firewall rules
+  - !run:
+    exe: 'netsh'
+    args: 'advfirewall firewall set rule group="Service" new enable=no'
+```
+
+## Security Benefits
+
+These security tweaks provide:
+
+1. **Reduced Attack Surface**
+   - Fewer remote access vectors
+   - Limited information disclosure
+   - Disabled unused features
+
+2. **Network Hardening**
+   - Blocked anonymous enumeration
+   - Restricted remote capabilities
+   - Firewall rule enforcement
+
+3. **Compliance**
+   - Follows DISA STIG guidelines
+   - Implements security best practices
+   - Hardens default Windows configuration
+
+## Security vs Functionality Balance
+
+AtlasOS security tweaks aim to:
+- Disable genuinely unused features (Remote Assistance)
+- Prevent information leakage (anonymous enumeration)
+- Maintain usability for typical desktop use cases
+- Allow users to re-enable features if specifically needed
+
+## DISA STIG Compliance
+
+AtlasOS implements several DISA Security Technical Implementation Guide (STIG) findings:
+
+### V-220929: Anonymous SAM Enumeration
+**Severity**: Medium  
+**Vulnerability**: Anonymous enumeration of SAM accounts allows attackers to identify user accounts  
+**Fix**: Set `RestrictAnonymousSAM` to `1`
+
+For more security configurations, see the networking tweaks which implement additional STIG findings related to anonymous share access.
+
+## Implementation Details
+
+### Registry Modifications
+
+Security tweaks modify these key registry locations:
+
+```
+HKLM\SYSTEM\CurrentControlSet\Control\Remote Assistance
+├── fAllowFullControl: 0 (disabled)
+└── fAllowToGetHelp: 0 (disabled)
+
+HKLM\SYSTEM\CurrentControlSet\Control\Lsa
+└── RestrictAnonymousSAM: 1 (enabled)
+```
+
+### Firewall Rules
+
+Windows Firewall rules are configured via `netsh` commands:
+
+```cmd
+netsh advfirewall firewall set rule group="Remote Assistance" new enable=no
+```
+
+## Reverting Security Tweaks
+
+If you need to re-enable a security feature:
+
+### Re-enable Remote Assistance
+
+```cmd
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Remote Assistance" /v fAllowToGetHelp /t REG_DWORD /d 1 /f
+netsh advfirewall firewall set rule group="Remote Assistance" new enable=yes
+```
+
+### Allow Anonymous SAM Enumeration (Not Recommended)
+
+```cmd
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Lsa" /v RestrictAnonymousSAM /t REG_DWORD /d 0 /f
+```
+
+## Best Practices
+
+- Keep security tweaks enabled unless you have a specific need
+- Remote Assistance is rarely needed for personal use
+- Anonymous enumeration should remain blocked
+- Use secure remote desktop alternatives if needed (SSH, secure VPN)
+- Review networking security tweaks for additional hardening

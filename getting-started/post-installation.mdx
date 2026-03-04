@@ -1,0 +1,276 @@
+---
+title: Post-installation
+description: Essential first steps after installing AtlasOS and how to use the Atlas folder to configure your system.
+---
+
+After installing AtlasOS, you'll find an **Atlas** folder on your desktop containing all the tools and scripts you need to configure and customize your system. This guide covers the important first steps and how to navigate the Atlas configuration options.
+
+## The Atlas folder
+
+The Atlas folder is your central hub for managing Atlas settings. It contains organized categories of configuration scripts, shortcuts to useful tools, and links to documentation.
+
+<Info>
+All Atlas configurations are portable scripts that can be run at any time. You can reconfigure settings whenever needed without reinstalling Atlas.
+</Info>
+
+## Configuration categories
+
+The Atlas folder is organized into nine main categories:
+
+<Accordion title="1. Software">
+  Manage installed applications and install additional software.
+  
+  **Available options:**
+  - Install or remove Microsoft Edge
+  - Install additional software through the Atlas installer
+  - Remove Python Store prompt
+  
+  <Tip>
+  Even if you removed Edge during installation, you can reinstall it at any time using the scripts in this folder.
+  </Tip>
+</Accordion>
+
+<Accordion title="2. Drivers">
+  Manage device drivers and update system drivers.
+  
+  **Available options:**
+  - Run driver updates
+  - Enable/disable drivers from Windows Update
+  - Links to GPU driver tools (NVCleanInstall, Display Driver Uninstaller)
+  - Bluetooth and Apple device driver links
+  
+  <Note>
+  Check the Driver Documentation (Recommended) link for best practices on managing drivers in Atlas.
+  </Note>
+</Accordion>
+
+<Accordion title="3. General Configuration">
+  Configure core Windows features and Atlas-specific settings.
+  
+  **Available options:**
+  - **AI Features**: Enable/disable Microsoft Copilot and Recall
+  - **Automatic Updates**: Toggle automatic Windows updates
+  - **Background Apps**: Control background app permissions
+  - **CPU Idle**: Configure CPU idle states for performance
+  - **Delivery Optimization**: Toggle Windows Update P2P delivery
+  - **FSO and Game Bar**: Enable/disable Game Bar and Full Screen Optimizations
+  - **File Sharing**: Configure network file sharing options
+  
+  And many more configuration options for fine-tuning your system.
+</Accordion>
+
+<Accordion title="4. Interface Tweaks">
+  Customize the Windows visual experience and interface behavior.
+  
+  **Available options:**
+  - **Visual Effects**: Adjust animations and visual effects for performance or aesthetics
+  - **Verbose Status Messages**: Enable detailed boot/shutdown messages
+  - **Recent Items**: Control recent files and folders in File Explorer
+  
+  These tweaks help you balance visual appeal with system performance.
+</Accordion>
+
+<Accordion title="5. Windows Settings">
+  Quick access to common Windows configuration panels.
+  
+  **Available shortcuts:**
+  - Taskbar settings
+  - Privacy settings
+  - Default apps
+  - Region and language
+  - Date & time
+  - Desktop icons
+  - Windows activation
+  - Default graphics settings (HAGS)
+  - Colors and themes
+  
+  <Info>
+  These are convenient shortcuts to Windows' built-in settings that Atlas doesn't override.
+  </Info>
+</Accordion>
+
+<Accordion title="6. Advanced Configuration">
+  Advanced system configuration for power users.
+  
+  **Available options:**
+  - **Services**: Configure Bluetooth, printing, network discovery, SuperFetch, etc.
+  - **Microsoft Store**: Enable or disable the Microsoft Store
+  - **Process Explorer**: Install/uninstall Process Explorer as Task Manager replacement
+  - **Boot Configuration**: Customize boot behavior and appearance
+  - **Driver Configuration**: Tools for interrupt affinity, MSI mode, and GPU affinity
+  
+  <Warning>
+  Advanced configuration options can affect system stability if misconfigured. Read the documentation before making changes.
+  </Warning>
+</Accordion>
+
+<Accordion title="7. Security">
+  Manage security features and configure protection levels.
+  
+  **Available options:**
+  - **Defender**: Toggle Windows Defender on/off, configure Security Health tray
+  - **Mitigations**: Enable/disable CPU security mitigations (Spectre, Meltdown protection)
+  - **Core Isolation (VBS)**: Enable/disable Virtualization-based Security
+  
+  Each option includes links to documentation explaining the security implications.
+  
+  <Tip>
+  The Security Documentation link provides detailed information about the pros and cons of each security option.
+  </Tip>
+</Accordion>
+
+<Accordion title="8. Additional Tools">
+  Links to recommended third-party tools for system monitoring and management.
+  
+  **Recommended tools:**
+  - HWInfo: Comprehensive hardware information and monitoring
+  - HWMonitor: Simple hardware temperature and voltage monitoring
+  - Everything Search: Fast file search utility
+  - Autoruns: Manage startup programs and services
+  
+  These tools complement Atlas and help you monitor and optimize your system.
+</Accordion>
+
+<Accordion title="9. Troubleshooting">
+  Tools and scripts to resolve common issues.
+  
+  **Available options:**
+  - Reset services to defaults
+  - Repair Windows components
+  - Network troubleshooting (reset to defaults)
+  - Safe Mode boot options
+  - Fix MSI installer errors (2502 and 2503)
+  - Telemetry components check
+  - Reset this PC guide
+  
+  <Info>
+  If you experience issues after configuring Atlas, the troubleshooting folder contains tools to revert changes or diagnose problems.
+  </Info>
+</Accordion>
+
+## How to use configuration scripts
+
+Most Atlas configurations are Windows batch files (`.cmd`) or registry files (`.reg`):
+
+<Steps>
+  <Step title="Navigate to the desired category">
+    Open the Atlas folder on your desktop and browse to the configuration category you want to modify.
+  </Step>
+  
+  <Step title="Read the documentation">
+    Many categories include documentation links (`.url` files). Click these to understand the implications of each option before proceeding.
+  </Step>
+  
+  <Step title="Run the script">
+    Double-click the desired `.cmd` file to run it. Some scripts may require administrator privileges and will prompt for UAC confirmation.
+    
+    For `.reg` files, you'll be asked to confirm adding the registry entries.
+  </Step>
+  
+  <Step title="Restart if needed">
+    Some changes require a system restart to take effect. The script will notify you if a restart is necessary.
+  </Step>
+</Steps>
+
+<Warning>
+Always read the script names carefully. Many options come in pairs (enable/disable) - make sure you're running the correct one.
+</Warning>
+
+## Important first steps
+
+After installing Atlas, we recommend completing these tasks:
+
+<Steps>
+  <Step title="Update your drivers">
+    Run the `Run Update Drivers.cmd` script in the **2. Drivers** folder to ensure all drivers are current.
+    
+    Visit the Driver Documentation link for guidance on GPU drivers and other specialized drivers.
+  </Step>
+  
+  <Step title="Install essential software">
+    Use the **1. Software** folder to install any applications you need. Consider installing:
+    
+    - A web browser (if not installed during setup)
+    - Microsoft Edge (if you removed it but need it for specific sites)
+    - Essential applications for your workflow
+  </Step>
+  
+  <Step title="Configure security settings">
+    Review the **7. Security** folder and ensure your security settings match your needs:
+    
+    - If you disabled Defender during installation, consider re-enabling it
+    - Review mitigation settings for your CPU generation
+    - Configure Core Isolation based on your security requirements
+  </Step>
+  
+  <Step title="Explore general configuration">
+    Browse the **3. General Configuration** folder to customize Atlas to your preferences:
+    
+    - Configure automatic updates
+    - Adjust power settings for your use case
+    - Enable/disable features you need or don't need
+  </Step>
+  
+  <Step title="Customize the interface">
+    Visit **4. Interface Tweaks** and **5. Windows Settings** to personalize your Windows experience:
+    
+    - Adjust visual effects for your preference
+    - Configure taskbar and desktop
+    - Set your default apps and colors
+  </Step>
+</Steps>
+
+## Atlas desktop shortcuts
+
+The Atlas folder also includes quick links to:
+
+- **Atlas Website**: Official AtlasOS website
+- **Atlas Documentation**: Comprehensive online documentation
+- **Atlas Discord**: Community support and discussions
+- **Atlas GitHub**: Source code and issue tracking
+- **Atlas Discussions**: Community forum
+- **Install AtlasOS Toolbox**: Graphical configuration tool (if not installed during setup)
+
+## Getting help
+
+If you need assistance with Atlas:
+
+<CardGroup cols={2}>
+  <Card title="Documentation" icon="book" href="https://docs.atlasos.net">
+    Comprehensive guides and FAQs
+  </Card>
+  <Card title="Discord Community" icon="discord" href="https://discord.atlasos.net">
+    Real-time support from the community
+  </Card>
+  <Card title="GitHub Discussions" icon="github" href="https://github.com/Atlas-OS/Atlas/discussions">
+    Ask questions and share experiences
+  </Card>
+  <Card title="General FAQ" icon="circle-question" href="https://docs.atlasos.net/general-faq/atlas-and-security/">
+    Common questions about Atlas
+  </Card>
+</CardGroup>
+
+## Reverting changes
+
+Most Atlas configurations can be reversed:
+
+1. Navigate to the same category where you made the change
+2. Look for the opposite script (e.g., if you ran "Disable X", run "Enable X")
+3. Scripts labeled "(default)" represent Atlas's default configuration
+
+<Tip>
+If you want to completely reset Atlas settings, the **9. Troubleshooting** folder includes scripts to reset services and components to Windows defaults.
+</Tip>
+
+## Next steps
+
+Now that you're familiar with the Atlas folder:
+
+- Explore each category to discover all available configurations
+- Bookmark the Atlas documentation for reference
+- Join the Discord community to learn tips from other users
+- Check GitHub for updates and new features
+
+<Info>
+Atlas is designed to be flexible. Don't hesitate to experiment with different configurations - most changes can be easily reversed if they don't work for you.
+</Info>

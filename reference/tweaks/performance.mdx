@@ -1,0 +1,196 @@
+---
+title: Performance Tweaks
+description: AtlasOS performance tweaks that optimize system responsiveness, power management, and resource usage
+---
+
+AtlasOS includes performance tweaks designed to optimize Windows for better system responsiveness, reduced latency, and efficient resource usage. These tweaks are defined in YAML configuration files located in `Configuration/tweaks/performance/`.
+
+## Overview
+
+Performance tweaks in AtlasOS focus on:
+
+- System optimizations for responsiveness
+- Power management and efficiency
+- Startup and shutdown improvements
+- Resource allocation and prioritization
+- Disabling unnecessary background processes
+
+## System Optimizations
+
+### Prioritize Foreground Applications
+
+```yaml
+---
+title: Prioritize Foreground Applications
+description: Prioritizes foreground applications for process scheduling by setting Win32PrioritySeparation to 26 hex, meaning a short quantum, variable, high foreground boost
+actions:
+  - !registryValue:
+    path: 'HKLM\SYSTEM\CurrentControlSet\Control\PriorityControl'
+    value: 'Win32PrioritySeparation'
+    data: '38'
+    type: REG_DWORD
+```
+
+This tweak prioritizes the active foreground application, providing better responsiveness for the program you're currently using.
+
+### Configure Multimedia Class Scheduler Service
+
+```yaml
+---
+title: Configure the Multimedia Class Scheduler Service
+description: Configures MMCSS for the best performance
+actions:
+  - !registryValue:
+    path: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile'
+    value: 'SystemResponsiveness'
+    data: '10'
+    type: REG_DWORD
+```
+
+Sets system responsiveness to 10%, allocating less CPU resources to multimedia tasks so other applications remain responsive.
+
+### Optimize NTFS
+
+```yaml
+---
+title: Optimize NTFS
+description: Optimizes NTFS options for optimal QoL, performance and privacy
+actions:
+  - !run: {exe: 'fsutil', args: 'behavior set disablelastaccess 1'}
+  - !run: {exe: 'fsutil', args: '8dot3name set 1'}
+```
+
+Optimizes NTFS file system by:
+- Disabling last access time updates for better performance
+- Disabling 8.3 character-length file names for security and performance
+
+### Disable Service Host Split
+
+Prevents Windows from splitting services into individual svchost.exe processes, reducing memory overhead on systems with less than 3.5GB of RAM.
+
+## Power Management
+
+### Disable Sleep Study
+
+Disables Windows Sleep Study diagnostic tool to reduce background activity and improve system performance.
+
+### Respect Power Modes in Search
+
+Configures Windows Search to respect power modes, reducing indexing activity during battery-saving modes.
+
+## Background Process Management
+
+### Disable Background Apps
+
+Prevents Universal Windows Platform (UWP) apps from running in the background, saving system resources and improving battery life.
+
+### Disable Game Bar
+
+```yaml
+---
+title: Disable Game Bar
+description: Disables XBOX Game Bar, which is known as a bloatware feature
+actions:
+  - !registryValue:
+    path: 'HKCU\System\GameConfigStore'
+    value: 'GameDVR_Enabled'
+    data: '0'
+    type: REG_DWORD
+  - !registryValue:
+    path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\GameDVR'
+    value: 'AppCaptureEnabled'
+    data: '0'
+    type: REG_DWORD
+  - !registryValue:
+    path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\GameDVR'
+    value: 'AllowGameDVR'
+    data: '0'
+    type: REG_DWORD
+```
+
+Disables Xbox Game Bar and Game DVR recording features, freeing up system resources.
+
+### Disable Fault Tolerant Heap
+
+Disables Windows Fault Tolerant Heap (FTH) to prevent automatic performance degradation of applications.
+
+## Startup and Maintenance
+
+### Configure Automatic Maintenance
+
+Configures Windows automatic maintenance to run at optimal times without impacting system performance during use.
+
+### Disable Auto Folder Discovery
+
+Disables automatic folder type discovery in File Explorer, improving navigation performance.
+
+## Memory and Paging
+
+### Disable Paging Executive
+
+Prevents Windows from paging kernel-mode drivers and system code to disk, keeping them in physical RAM for better performance. This is beneficial on systems with adequate RAM.
+
+## Configuration Location
+
+All performance tweak YAML files are located in:
+
+```
+src/playbook/Configuration/tweaks/performance/
+├── system/
+│   ├── disable-paging.yml
+│   ├── disable-service-host-split.yml
+│   ├── optimize-ntfs.yml
+│   └── win32-priority-separation.yml
+├── config-automatic-maintenance.yml
+├── config-mmcss.yml
+├── disable-auto-folder-discovery.yml
+├── disable-background-apps.yml
+├── disable-fth.yml
+├── disable-game-bar.yml
+├── disable-sleep-study.yml
+└── respect-power-modes-search.yml
+```
+
+## Performance Tweaks Summary
+
+| Tweak | Purpose | Impact |
+|-------|---------|--------|
+| Win32 Priority Separation | Foreground app prioritization | High responsiveness |
+| MMCSS Configuration | Multimedia resource allocation | Better multitasking |
+| NTFS Optimization | File system performance | Reduced disk overhead |
+| Disable Game Bar | Remove gaming overlay | Resource savings |
+| Disable Background Apps | Stop UWP background tasks | CPU/battery savings |
+| Disable Paging Executive | Keep kernel in RAM | Faster system operations |
+| Disable Service Host Split | Reduce process count | Memory savings |
+| Disable FTH | Prevent app throttling | Consistent performance |
+| Disable Sleep Study | Remove diagnostics | Less background activity |
+| Configure Auto Maintenance | Optimize maintenance timing | Reduced interruptions |
+
+## YAML Structure
+
+Performance tweaks use various action types:
+
+```yaml
+---
+title: Tweak Name
+description: Performance improvement description
+actions:
+  # Registry modification
+  - !registryValue:
+    path: 'HKEY\Path\To\Key'
+    value: 'ValueName'
+    data: '0'
+    type: REG_DWORD
+  
+  # Run system utility
+  - !run:
+    exe: 'fsutil'
+    args: 'behavior set disablelastaccess 1'
+```
+
+## Best Practices
+
+- Performance tweaks are optimized for modern hardware
+- Some tweaks like disabling paging executive work best with 8GB+ RAM
+- Tweaks prioritize responsiveness over background tasks
+- All modifications can be reverted if needed

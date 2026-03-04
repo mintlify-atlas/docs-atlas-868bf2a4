@@ -1,0 +1,583 @@
+---
+title: Executables
+description: Scripts, tools, and modules in the AtlasOS Executables folder
+---
+
+## Overview
+
+The `Executables/` directory contains all scripts, tools, and resources that AtlasOS deploys to the system during installation. These files are copied to `C:\Windows\` and provide both user-facing utilities and internal automation.
+
+## Directory Structure
+
+```
+Executables/
+├── AtlasDesktop/              # User-facing Atlas folder (C:\Windows\AtlasDesktop)
+│   ├── 1. Software/
+│   ├── 2. Drivers/
+│   ├── 3. General Configuration/
+│   ├── 4. Interface Tweaks/
+│   ├── 5. Windows Settings/
+│   ├── 6. Advanced Configuration/
+│   ├── 7. Security/
+│   ├── 8. Additional Tools/
+│   ├── 9. Troubleshooting/
+│   ├── *.url                  # Documentation and support links
+│   └── Install AtlasOS Toolbox.cmd
+├── AtlasModules/              # Internal modules (C:\Windows\AtlasModules)
+│   ├── Acknowledgements/
+│   ├── Other/
+│   ├── Packages/
+│   ├── Scripts/
+│   ├── Toolbox/
+│   ├── Tools/
+│   ├── Wallpapers/
+│   ├── initPowerShell.ps1
+│   └── README.md
+├── *.ps1                      # Setup PowerShell scripts
+├── *.cmd                      # Setup batch scripts
+├── *.reg                      # Registry configuration files
+├── Themes/                    # Windows theme files
+├── Layout.xml                 # Start menu layout
+└── ViVeTool*.zip             # Windows feature manipulation tool
+```
+
+## AtlasDesktop Folder
+
+The user-facing Atlas folder is copied to `C:\Windows\AtlasDesktop` and provides easy access to system configuration utilities.
+
+### 1. Software
+
+Package installation and management utilities.
+
+<Accordion title="Software utilities">
+  - Browser installers (Brave, Firefox, LibreWolf, Chrome)
+  - Package manager setup (winget, Chocolatey)
+  - Common application installers
+  - Software removal tools
+</Accordion>
+
+### 2. Drivers
+
+Driver installation and management tools.
+
+<Accordion title="Driver tools">
+  - GPU driver installers (NVIDIA, AMD, Intel)
+  - Driver update utilities
+  - Legacy driver support
+  - Driver backup tools
+</Accordion>
+
+### 3. General Configuration
+
+Core system configuration options.
+
+<AccordionGroup>
+  <Accordion title="Location">
+    - Enable/Disable Location services
+    - Privacy-preserving location settings
+  </Accordion>
+  
+  <Accordion title="Search Indexing">
+    - Minimal Search Indexing (default)
+    - Full Search Indexing
+    - Disable Search Indexing
+    - Custom indexing configuration
+  </Accordion>
+  
+  <Accordion title="Automatic Updates">
+    - Enable/Disable automatic Windows updates
+    - Security-only updates
+    - Manual update configuration
+  </Accordion>
+  
+  <Accordion title="Power Options">
+    - Hibernation settings
+    - Fast Startup configuration
+    - Power plan management
+  </Accordion>
+</AccordionGroup>
+
+### 4. Interface Tweaks
+
+Visual customization and UI modifications.
+
+<Accordion title="Interface options">
+  - Taskbar customization
+  - Start menu configuration
+  - File Explorer settings
+  - Context menu tweaks
+  - Wallpaper management
+  - Theme application
+</Accordion>
+
+### 5. Windows Settings
+
+Quick access to important Windows settings.
+
+<Accordion title="Settings shortcuts">
+  - Privacy settings
+  - Display configuration
+  - Sound settings
+  - Network configuration
+  - Storage management
+</Accordion>
+
+### 6. Advanced Configuration
+
+Power user tools and advanced system settings.
+
+<AccordionGroup>
+  <Accordion title="Performance">
+    - CPU affinity settings
+    - Timer resolution configuration
+    - Background process management
+    - Resource allocation tweaks
+  </Accordion>
+  
+  <Accordion title="System Tools">
+    - Process Explorer installation
+    - Registry editor shortcuts
+    - Event viewer presets
+    - System information tools
+  </Accordion>
+  
+  <Accordion title="Troubleshooting">
+    - DISM repair tools
+    - SFC scan utilities
+    - Component cleanup
+    - System diagnostics
+  </Accordion>
+</AccordionGroup>
+
+### 7. Security
+
+Security configuration and antivirus management.
+
+<AccordionGroup>
+  <Accordion title="Windows Defender">
+    - Enable/Disable Windows Defender
+    - Real-time protection toggle
+    - Exclusion management
+    - Scan scheduling
+  </Accordion>
+  
+  <Accordion title="Security Mitigations">
+    - Enable/Disable CPU mitigations (Spectre, Meltdown)
+    - Core Isolation configuration
+    - Memory integrity settings
+    - Exploit protection
+  </Accordion>
+  
+  <Accordion title="Firewall">
+    - Firewall rules management
+    - Network profile configuration
+    - Port management
+  </Accordion>
+</AccordionGroup>
+
+### 8. Additional Tools
+
+Extra utilities and helpful scripts.
+
+<Accordion title="Available tools">
+  - System cleanup utilities
+  - File association management
+  - Startup program control
+  - Disk space analyzers
+  - Network diagnostics
+</Accordion>
+
+### 9. Troubleshooting
+
+Problem-solving tools and recovery utilities.
+
+<Accordion title="Troubleshooting tools">
+  - Windows Update repair
+  - Network reset tools
+  - Graphics driver reset
+  - Registry cleanup
+  - System restore utilities
+</Accordion>
+
+### Documentation Links
+
+Direct access to AtlasOS resources:
+
+- `Atlas Documentation.url` - Official documentation
+- `Atlas GitHub.url` - Source code repository
+- `Atlas Discord.url` - Community support
+- `Atlas Discussions.url` - GitHub discussions
+- `Atlas Website.url` - Main website
+
+## AtlasModules Folder
+
+Internal modules and tools used by Atlas scripts and the user-facing folder.
+
+### Scripts Directory
+
+PowerShell modules and utility scripts.
+
+#### initPowerShell.ps1
+
+Initializes the PowerShell environment for Atlas scripts.
+
+<CodeGroup>
+```powershell initPowerShell.ps1
+# Loaded by all Atlas PowerShell scripts
+# Sets up execution environment and imports required modules
+```
+</CodeGroup>
+
+#### Modules Subdirectory
+
+PowerShell modules organized by category:
+
+<AccordionGroup>
+  <Accordion title="AllRegistryUsers">
+    Apply registry changes to all user profiles
+  </Accordion>
+  
+  <Accordion title="Debloat">
+    App removal and bloatware cleanup functions
+  </Accordion>
+  
+  <Accordion title="Miscellaneous">
+    General utility functions
+  </Accordion>
+  
+  <Accordion title="Performance">
+    Performance optimization functions
+  </Accordion>
+  
+  <Accordion title="Privacy">
+    Privacy enhancement functions
+  </Accordion>
+  
+  <Accordion title="Qol">
+    Quality of life improvement functions
+  </Accordion>
+  
+  <Accordion title="Scripts">
+    Complex automation scripts
+  </Accordion>
+  
+  <Accordion title="Shortcuts">
+    Shortcut creation and management
+  </Accordion>
+  
+  <Accordion title="Themes">
+    Theme application and customization
+  </Accordion>
+</AccordionGroup>
+
+#### ScriptWrappers
+
+Wrapper scripts that provide command-line interfaces to module functions.
+
+### Tools Directory
+
+Binary utilities and third-party tools.
+
+<AccordionGroup>
+  <Accordion title="multichoice.exe">
+    Interactive choice utility for batch scripts
+    
+    **Source:** [Atlas-Utilities](https://github.com/Atlas-OS/Atlas-Utilities)
+    
+    **License:** GPLv3
+    
+    **Purpose:** Provides user-friendly menu selection in scripts
+  </Accordion>
+  
+  <Accordion title="SetTimerResolution.exe">
+    Windows timer resolution configuration tool
+    
+    **Purpose:** Adjust system timer resolution for reduced latency
+    
+    **Use Case:** Performance optimization for games and real-time applications
+  </Accordion>
+  
+  <Accordion title="MeasureSleep.exe">
+    Measures actual sleep precision
+    
+    **Purpose:** Verify timer resolution changes
+    
+    **Use Case:** Testing and validation
+  </Accordion>
+</AccordionGroup>
+
+<Note>
+All binary tools are documented in `AtlasModules/README.md` with SHA256 hashes and source links for verification.
+</Note>
+
+### Other Directory
+
+Backup files and system state preservation.
+
+<Accordion title="Backup files">
+  - `winServices.reg` - Original Windows service configurations
+  - System restore points
+  - Default configurations
+</Accordion>
+
+### Packages Directory
+
+Package manifests and installation definitions.
+
+### Toolbox Directory
+
+AtlasOS Toolbox resources and installation files.
+
+### Wallpapers Directory
+
+Atlas-branded wallpapers and backgrounds.
+
+### Acknowledgements Directory
+
+Third-party software credits and licenses.
+
+## Setup Scripts
+
+Scripts executed during playbook installation.
+
+### APPLYDUHIVE.ps1
+
+Applies registry changes to the default user hive.
+
+<CodeGroup>
+```powershell Usage
+.\APPLYDUHIVE.ps1
+```
+</CodeGroup>
+
+<Info>
+Ensures new users get Atlas configurations automatically.
+</Info>
+
+### CLEANUP.ps1
+
+Runs Windows Disk Cleanup with Atlas-optimized settings.
+
+<CodeGroup>
+```powershell Example
+function Invoke-AtlasDiskCleanup {
+    # Kill running cleanmgr instances
+    Get-Process -Name cleanmgr -EA 0 | Stop-Process -Force -EA 0
+    
+    # Configure cleanup presets
+    $baseKey = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches'
+    $regValues = @{
+        "Active Setup Temp Folders"             = 2  # Enabled
+        "BranchCache"                           = 2  # Enabled
+        "D3D Shader Cache"                      = 0  # Disabled
+        "Delivery Optimization Files"           = 2  # Enabled
+        "Diagnostic Data Viewer database files" = 2  # Enabled
+        # ... more settings
+    }
+    # ...
+}
+```
+</CodeGroup>
+
+### SOFTWARE.ps1
+
+Installs user-selected software (browsers, toolbox).
+
+<CodeGroup>
+```powershell Usage
+param (
+    [switch]$Chrome,
+    [switch]$Brave,
+    [switch]$Firefox,
+    [switch]$Toolbox
+)
+
+.\AtlasModules\initPowerShell.ps1
+
+$timeouts = @("--connect-timeout", "10", "--retry", "5")
+$msiArgs = "/qn /quiet /norestart ALLUSERS=1 REBOOT=ReallySuppress"
+
+# Create temporary directory
+$tempDir = Join-Path -Path $env:TEMP -ChildPath ([guid]::NewGuid().ToString())
+New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
+
+# Download and install selected software
+if ($Toolbox) {
+    & curl.exe -LSs "https://github.com/Atlas-OS/atlas-toolbox/releases/latest/download/AtlasToolbox-Setup.exe" -o "$tempDir\toolbox.exe" $timeouts
+    # ...
+}
+```
+</CodeGroup>
+
+### SHORTCUTS.ps1
+
+Creates desktop and Start menu shortcuts.
+
+### TASKBARPINS.ps1
+
+Configures default taskbar pins.
+
+### STARTMENU.ps1
+
+Applies custom Start menu layout from `Layout.xml`.
+
+### FILEASSOC.cmd
+
+Configures file associations and default programs.
+
+### BACKUP.ps1
+
+Backs up system configurations before modifications.
+
+<CodeGroup>
+```powershell Usage
+.\BACKUP.ps1 -FilePath "C:\Windows\AtlasModules\Other\winServices.reg"
+```
+</CodeGroup>
+
+### SETPATHS.ps1
+
+Corrects registry paths that may have been broken during installation.
+
+### STOPFOLDERPROC.ps1
+
+Stops processes that may lock the AtlasDesktop/AtlasModules folders during upgrades.
+
+### DEFAULT.ps1 & DEFAULT.reg
+
+Apply default Atlas settings and registry configurations.
+
+### DISABLENOTIFS.cmd & ENABLENOTIFS.cmd
+
+Toggle Windows notifications (disabled during installation, re-enabled after).
+
+## Configuration Files
+
+### Layout.xml
+
+Defines the default Start menu layout.
+
+<CodeGroup>
+```xml Layout.xml
+<LayoutModificationTemplate 
+    xmlns="http://schemas.microsoft.com/Start/2014/LayoutModification"
+    xmlns:defaultlayout="http://schemas.microsoft.com/Start/2014/FullDefaultLayout"
+    xmlns:start="http://schemas.microsoft.com/Start/2014/StartLayout"
+    Version="1">
+  <!-- Start menu pin configuration -->
+</LayoutModificationTemplate>
+```
+</CodeGroup>
+
+### DEFAULT.reg
+
+Registry file with default Atlas system settings.
+
+<Info>
+Applied to ensure consistent configuration across installations.
+</Info>
+
+## Third-Party Tools
+
+### ViVeTool
+
+Enables or disables Windows feature flags.
+
+**Included versions:**
+- `ViVeTool-v0.3.3.zip` - x64 version
+- `ViVeTool-v0.3.3-ARM64CLR.zip` - ARM64 version
+
+<CodeGroup>
+```cmd Example Usage
+ViVeTool.exe /enable /id:12345678
+ViVeTool.exe /disable /id:87654321
+```
+</CodeGroup>
+
+**Use Cases:**
+- Enable hidden Windows features
+- Disable experimental features
+- Test Windows insider features
+
+## Themes Directory
+
+Windows theme files (`.theme`, `.deskthemepack`) that are copied to `C:\Windows\Resources\Themes`.
+
+## Best Practices
+
+<CardGroup cols={2}>
+  <Card title="Script Initialization" icon="play">
+    Always source `initPowerShell.ps1` at the start of custom scripts:
+    
+    ```powershell
+    .\AtlasModules\initPowerShell.ps1
+    ```
+  </Card>
+  
+  <Card title="Error Handling" icon="triangle-exclamation">
+    Use proper error handling in scripts:
+    
+    ```powershell
+    if (!$?) { exit 1 }
+    ```
+  </Card>
+  
+  <Card title="Silent Execution" icon="volume-xmark">
+    Support `/silent` flag for automated execution:
+    
+    ```cmd
+    script.cmd /silent
+    ```
+  </Card>
+  
+  <Card title="Elevated Privileges" icon="shield">
+    Check for admin rights when required:
+    
+    ```powershell
+    if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]"Administrator")) {
+        Write-Error "Requires admin"
+        exit 1
+    }
+    ```
+  </Card>
+</CardGroup>
+
+## Modifying Executables
+
+<Steps>
+  <Step title="Test Changes">
+    Test script modifications in a virtual machine before deployment
+  </Step>
+  
+  <Step title="Update Documentation">
+    Document any changes to script functionality or parameters
+  </Step>
+  
+  <Step title="Verify Hashes">
+    When updating binary tools, document SHA256 hashes in `AtlasModules/README.md`
+  </Step>
+  
+  <Step title="Rebuild Playbook">
+    Run `build-playbook.cmd` or `build-playbook.sh` to package changes
+  </Step>
+</Steps>
+
+## Security Considerations
+
+<Warning>
+- All scripts run with elevated privileges during installation
+- Binary tools should be verified against official sources
+- Downloaded content uses HTTPS with retry and timeout protection
+- Registry modifications are backed up before changes
+</Warning>
+
+## Related Resources
+
+<CardGroup cols={2}>
+  <Card title="Playbook Structure" icon="folder-tree" href="/reference/playbook-structure">
+    Understand how executables integrate with the playbook
+  </Card>
+  <Card title="Configuration Files" icon="file-code" href="/reference/configuration-files">
+    Learn how YAML files invoke these scripts
+  </Card>
+</CardGroup>
